@@ -41,7 +41,7 @@ import {
 } from "./lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const SITE_URL = process.env.SITE_URL || "https://topcorner.bricoamgoun.com";
+const SITE_URL = process.env.SITE_URL || "https://topcorner.pages.dev";
 const TIME_ZONE = process.env.TIME_ZONE || "Africa/Casablanca";
 const STATE_PATH = path.join(HERE, "state.json");
 const MAPPING_PATH = path.join(HERE, "mapping.json");
@@ -111,11 +111,13 @@ async function fetchBoard(date) {
     ? sessionRes.headers.getSetCookie()
     : [];
   const cookie = setCookie.map((c) => c.split(";")[0]).join("; ");
+  // No Origin/Referer headers: the worker gate passes on the session cookie
+  // alone, and those headers would fail its allowed-hosts check on the
+  // pages.dev host (which is not in ALLOWED_API_HOSTS). The cookie is the
+  // credential that matters here.
   const res = await fetch(`${SITE_URL}/api/board?date=${date}`, {
     headers: {
       Cookie: cookie,
-      Origin: SITE_URL,
-      Referer: `${SITE_URL}/`,
     },
     signal: AbortSignal.timeout(40000),
   });

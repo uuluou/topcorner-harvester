@@ -1,0 +1,1 @@
+{"dependencies":{"playwright":"^1.49.0"},"description":"Scheduled Flashscore harvester for TOPCORNER: stats, events, lineups, missing players, odds. Writes payload files, never posts.","engines":{"node":">=18"},"name":"topcorner-harvester","private":true,"scripts":{"harvest":"node harvest.mjs","test":"node --test test.mjs"},"type":"module","version":"1.0.0"}

@@ -206,6 +206,34 @@ export function parseTimelineLine(line) {
 // file therefore always contains only fully valid matches, which makes it
 // acceptable to a whole-batch worker too, but the RECOMMENDED worker
 // contract for /api/fs/ingest is per-entry results.
+//
+// WORKER-MIRROR RULE (run #2, 2026-10-27): the live /api/fs/ingest
+// validator REJECTS explicit null for stats, events, lineups sides'
+// xi/subs/bench, missing, coaches and odds, even though it ALLOWS null
+// for xgHome/xgAway, referee, venue, capacity and attendance. The writer
+// MUST therefore clean null sections (delete the key) before validating
+// or writing, so "valid" here always means "accepted by the worker".
+export function cleanEntryForWorker(e) {
+  if (!e || typeof e !== "object") return e;
+  const out = { ...e };
+  for (const k of ["stats", "events", "lineups", "missing", "coaches", "odds"]) {
+    if (out[k] === null) delete out[k];
+  }
+  if (out.lineups && typeof out.lineups === "object") {
+    const l = { ...out.lineups };
+    for (const side of ["home", "away"]) {
+      if (l[side] && typeof l[side] === "object") {
+        const s = { ...l[side] };
+        for (const k of Object.keys(s)) if (s[k] === null) delete s[k];
+        l[side] = s;
+      } else if (l[side] === null) {
+        delete l[side];
+      }
+    }
+    out.lineups = l;
+  }
+  return out;
+}
 export function validateMatchEntry(e) {
   const errors = [];
   if (!e || typeof e !== "object") return ["entry is not an object"];
@@ -221,14 +249,34 @@ export function validateMatchEntry(e) {
       errors.push(`${k} must be null or a finite number 0-15`);
     }
   }
-  if (e.stats !== null && e.stats !== undefined && typeof e.stats !== "object") {
-    errors.push("stats must be an object or null");
+  if (e.stats !== undefined && (e.stats === null || typeof e.stats !== "object")) {
+    errors.push("stats must be an object or absent (worker rejects null)");
   }
-  if (e.events !== null && e.events !== undefined && !Array.isArray(e.events)) {
-    errors.push("events must be an array or null");
+  if (e.events !== undefined && !Array.isArray(e.events)) {
+    errors.push("events must be an array or absent (worker rejects null)");
   }
-  if (e.odds !== null && e.odds !== undefined) {
-    if (typeof e.odds !== "object" || !Array.isArray(e.odds.bookmakers)) {
+  if (e.missing !== undefined && !Array.isArray(e.missing)) {
+    errors.push("missing must be an array or absent (worker rejects null)");
+  }
+  if (e.coaches !== undefined && (e.coaches === null || typeof e.coaches !== "object")) {
+    errors.push("coaches must be an object or absent (worker rejects null)");
+  }
+  if (e.lineups !== undefined && (e.lineups === null || typeof e.lineups !== "object")) {
+    errors.push("lineups must be an object or absent (worker rejects null)");
+  } else if (e.lineups && typeof e.lineups === "object") {
+    for (const side of ["home", "away"]) {
+      const s = e.lineups[side];
+      if (s === undefined) continue;
+      if (s === null || typeof s !== "object") { errors.push(`lineups.${side} must be an object or absent`); continue; }
+      for (const k of ["xi", "subs", "bench"]) {
+        if (s[k] !== undefined && !Array.isArray(s[k])) errors.push(`lineups.${side}.${k} must be an array or absent (worker rejects null)`);
+      }
+    }
+  }
+  if (e.odds !== undefined) {
+    if (e.odds === null || typeof e.odds !== "object") {
+      errors.push("odds must be an object or absent (worker rejects null)");
+    } else if (e.odds.bookmakers !== undefined && !Array.isArray(e.odds.bookmakers)) {
       errors.push("odds.bookmakers must be an array");
     }
   }

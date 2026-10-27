@@ -14,6 +14,7 @@ import {
   parseTimelineLine,
   validateMatchEntry,
   filterBatch,
+  cleanEntryForWorker,
 } from "./lib.mjs";
 
 const MAPPING = {
@@ -117,9 +118,7 @@ describe("payload validation (per-entry contract)", () => {
     xgAway: 0.65,
     source: "flashscore",
     matchUrl: "https://www.flashscore.com/match/football/lyon-2akflumR/psg-CjhkPw0k/?mid=zyZq2xcL",
-    stats: null,
     events: [],
-    odds: null,
     ...over,
   });
   it("accepts a good entry and rejects bad ones with reasons", () => {
@@ -128,6 +127,32 @@ describe("payload validation (per-entry contract)", () => {
     assert.ok(validateMatchEntry(good({ date: "26-10-2026" })).length > 0);
     assert.ok(validateMatchEntry(good({ home: "" })).length > 0);
     assert.ok(validateMatchEntry(good({ source: "espn" })).length > 0);
+  });
+  it("rejects worker-rejected null sections (run #2 regression)", () => {
+    assert.ok(validateMatchEntry(good({ stats: null })).length > 0);
+    assert.ok(validateMatchEntry(good({ events: null })).length > 0);
+    assert.ok(validateMatchEntry(good({ missing: null })).length > 0);
+    assert.ok(validateMatchEntry(good({ coaches: null })).length > 0);
+    assert.ok(validateMatchEntry(good({ odds: null })).length > 0);
+    assert.ok(validateMatchEntry(good({ lineups: { home: { formation: null, xi: null, subs: null, bench: null } } })).length > 0);
+  });
+  it("cleans a run #2-shaped entry into a worker-valid entry", () => {
+    const raw = good({
+      xgHome: null, xgAway: null, stats: null, odds: null, missing: [],
+      coaches: { home: null, away: null },
+      lineups: {
+        home: { formation: null, xi: null, subs: null, bench: null },
+        away: { formation: null, xi: null, subs: null, bench: null },
+      },
+      referee: "Brisard J.", venue: "Parc des Princes", capacity: 48229, attendance: 47000,
+    });
+    const cleaned = cleanEntryForWorker(raw);
+    assert.equal("stats" in cleaned, false);
+    assert.equal("odds" in cleaned, false);
+    assert.equal(cleaned.lineups.home.xi, undefined);
+    assert.equal(cleaned.xgHome, null);
+    assert.equal(cleaned.referee, "Brisard J.");
+    assert.deepEqual(validateMatchEntry(cleaned), []);
   });
   it("keeps good entries when a sibling is bad", () => {
     const { valid, rejected } = filterBatch([

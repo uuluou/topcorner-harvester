@@ -1,0 +1,81 @@
+# Flashscore harvest for TOPCORNER — runs every 10 minutes, 24/7.
+# Harvests finished + upcoming fixtures, writes payload files, updates
+# state.json, and posts each payload to the site's /api/fs/ingest endpoint
+# using the HARVEST_TOKEN repo secret. A session cookie from /api/session
+# is fetched first because the worker's visitor gate requires it.
+name: Flashscore harvest
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: topcorner-harvest
+  cancel-in-progress: true
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run harvester
+        run: node harvest.mjs
+        env:
+          SITE_URL: https://topcorner.bricoamgoun.com
+          TIME_ZONE: Africa/Casablanca
+
+      - name: Post payloads to TOPCORNER
+        env:
+          HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
+        run: |
+          curl -sS -c cookies.txt "https://topcorner.bricoamgoun.com/api/session" > /dev/null
+          for f in out/payload-*.json; do
+            [ -e "$f" ] || continue
+            echo "posting $f"
+            curl -sS -b cookies.txt -X POST "https://topcorner.bricoamgoun.com/api/fs/ingest" \
+              -H "x-harvest-token: $HARVEST_TOKEN" \
+              -H "content-type: application/json" \
+              --data @"$f"
+            echo
+          done
+
+      - name: Upload payload files
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: payload-${{ github.run_id }}
+          path: out/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Commit state back
+        run: |
+          git config user.name "topcorner-harvester"
+          git config user.email "harvester@topcorner.local"
+          git add state.json
+          git diff --cached --quiet || (git commit -m "harvest state $(date -u +%Y-%m-%dT%H:%M:%SZ)" && git push)
+
+      # (posting step is now enabled above as "Post payloads to TOPCORNER";
+      # it requires the HARVEST_TOKEN repo secret and the matching Pages
+      # secret, both set. The session cookie from /api/session is fetched
+      # first because the worker's visitor gate requires it.)

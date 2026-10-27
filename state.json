@@ -1,1 +1,31 @@
-{"discovered":{},"harvested":[],"lastRun":null,"pending":[],"version":1}
+{
+  "discovered": {
+    "2026-10-27|abha|al faisaly": "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d/?mid=MumpnBeo",
+    "2026-10-27|sassuolo|lazio": "https://www.flashscore.com/match/football/lazio-URcSl02h/sassuolo-QDdvI0zl/?mid=QgHKnTUq"
+  },
+  "harvested": [
+    "2026-10-26|paris saint germain|lyon",
+    "2026-10-27|abha|al faisaly",
+    "2026-10-27|sassuolo|lazio"
+  ],
+  "lastRun": "2026-10-27T20:44:52.763Z",
+  "pending": [
+    {
+      "date": "2026-10-26",
+      "home": "Santa Clara",
+      "away": "Benfica",
+      "league": "por.1",
+      "leagueName": "Portuguese Primeira Liga",
+      "reason": "no flashscore url (mapping + discovery missed)"
+    },
+    {
+      "date": "2026-10-26",
+      "home": "Sevilla",
+      "away": "Osasuna",
+      "league": "esp.1",
+      "leagueName": "Spanish LALIGA",
+      "reason": "no flashscore url (mapping + discovery missed)"
+    }
+  ],
+  "version": 1
+}

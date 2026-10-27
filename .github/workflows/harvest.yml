@@ -41,18 +41,18 @@ jobs:
       - name: Run harvester
         run: node harvest.mjs
         env:
-          SITE_URL: https://topcorner.bricoamgoun.com
+          SITE_URL: https://topcorner.pages.dev
           TIME_ZONE: Africa/Casablanca
 
       - name: Post payloads to TOPCORNER
         env:
           HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
         run: |
-          curl -sS -c cookies.txt "https://topcorner.bricoamgoun.com/api/session" > /dev/null
+          curl -sS -c cookies.txt "https://topcorner.pages.dev/api/session" > /dev/null
           for f in out/payload-*.json; do
             [ -e "$f" ] || continue
             echo "posting $f"
-            curl -sS -b cookies.txt -X POST "https://topcorner.bricoamgoun.com/api/fs/ingest" \
+            curl -sS -b cookies.txt -X POST "https://topcorner.pages.dev/api/fs/ingest" \
               -H "x-harvest-token: $HARVEST_TOKEN" \
               -H "content-type: application/json" \
               --data @"$f"

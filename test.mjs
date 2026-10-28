@@ -34,6 +34,8 @@ import {
   updateRequeuePool,
   applyPostResult,
   applyOddsHashes,
+  isEmptyFinishedEntry,
+  poolFixture,
 } from "./lib.mjs";
 
 const MAPPING = {
@@ -657,5 +659,94 @@ describe("size budget (Abha full-inventory fixture)", () => {
     const c = compactEntry(small, MAX_ENTRY_BYTES);
     assert.equal(c.truncated, false);
     assert.deepEqual(c.notes, []);
+  });
+});
+
+describe("pool extraction fix (run #11 regression)", () => {
+  const skeleton = (home, away) => ({
+    date: "2026-10-27", home, away,
+    xgHome: null, xgAway: null, source: "flashscore",
+    matchUrl: "https://www.flashscore.com/match/football/x/1/y/2/?mid=Z",
+    referee: null, venue: null, capacity: null, attendance: null,
+  });
+  const real = {
+    date: "2026-10-27", home: "Abha", away: "Al Faisaly",
+    xgHome: 1.68, xgAway: 0.95, source: "flashscore",
+    matchUrl: "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d/?mid=MumpnBeo",
+    stats: { top: { xgHome: 1.68, xgAway: 0.95 } },
+  };
+  const oddsOnly = {
+    date: "2026-10-28", home: "AC Milan", away: "Bologna",
+    xgHome: null, xgAway: null, source: "flashscore",
+    matchUrl: "https://www.flashscore.com/match/football/x/1/y/2/?mid=Z",
+    odds: { "1": 1.5, X: 3.4, "2": 6.0 },
+  };
+
+  it("isEmptyFinishedEntry: skeleton (identity only) is empty", () => {
+    assert.equal(isEmptyFinishedEntry(skeleton("Abha", "Al Faisaly")), true);
+    assert.equal(isEmptyFinishedEntry(skeleton("Sassuolo", "Lazio")), true);
+  });
+
+  it("isEmptyFinishedEntry: any one content signal passes", () => {
+    assert.equal(isEmptyFinishedEntry(real), false);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), xgHome: 0.5 }), false);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), events: [{ minute: 70, team: "away", type: "goal" }] }), false);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), lineups: { home: { formation: "4-2-3-1" } } }), false);
+  });
+
+  it("isEmptyFinishedEntry: extras alone do not save a skeleton", () => {
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), missing: [{ team: "home", player: "X" }] }), true);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), coaches: { home: "Buric", away: null }, referee: "Ali" }), true);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), stats: {} }), true);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), events: [] }), true);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), lineups: {} }), true);
+  });
+
+  it("isEmptyFinishedEntry: degenerate empty groups/sides do not count", () => {
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), stats: { top: {} } }), true);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), lineups: { home: {} } }), true);
+    assert.equal(isEmptyFinishedEntry({ ...skeleton("A", "B"), stats: { top: { xgHome: 1.68 } } }), false);
+  });
+
+  it("filterBatch with finished keys rejects skeletons as 'empty extraction' and keeps real + odds rows", () => {
+    const batch = [skeleton("Abha", "Al Faisaly"), skeleton("Sassuolo", "Lazio"), real, oddsOnly];
+    const finishedKeys = [buildKey("2026-10-27", "Abha", "Al Faisaly"), buildKey("2026-10-27", "Sassuolo", "Lazio")];
+    const { valid, rejected } = filterBatch(batch, finishedKeys);
+    assert.equal(valid.length, 2);
+    assert.equal(rejected.length, 2);
+    assert.deepEqual(rejected.map((r) => r.reasons), [["empty extraction"], ["empty extraction"]]);
+    assert.ok(valid.some((e) => e.home === "Abha" && e.stats.top.xgHome === 1.68));
+    assert.ok(valid.some((e) => e.home === "AC Milan"));
+  });
+
+  it("filterBatch without finished keys is the pure worker mirror (skeleton passes vacuously)", () => {
+    const { valid, rejected } = filterBatch([skeleton("Abha", "Al Faisaly")]);
+    assert.equal(valid.length, 1);
+    assert.equal(rejected.length, 0);
+  });
+
+  it("run #11-shaped manifest: cleaned skeletons are guard-rejected, real entry posts", () => {
+    const raw = [skeleton("Abha", "Al Faisaly"), skeleton("Sassuolo", "Lazio"), real];
+    const cleaned = raw.map(cleanEntryForWorker);
+    const finishedKeys = [buildKey("2026-10-27", "Abha", "Al Faisaly"), buildKey("2026-10-27", "Sassuolo", "Lazio")];
+    const { valid, rejected } = filterBatch(cleaned, finishedKeys);
+    assert.equal(valid.length, 1);
+    assert.equal(rejected.length, 2);
+    assert.ok(rejected.every((r) => r.reasons.includes("empty extraction")));
+    assert.equal(valid[0].stats.top.xgHome, 1.68);
+  });
+
+  it("poolFixture: pool row becomes a finished fixture on the shared extraction path", () => {
+    const fx = poolFixture({ key: "2026-10-27|abha|al faisaly", date: "2026-10-27", home: "abha", away: "al faisaly" });
+    assert.equal(fx.boardDate, "2026-10-27");
+    assert.equal(fx.home.name, "abha");
+    assert.equal(fx.away.name, "al faisaly");
+    assert.equal(fx.fromRequeue, true);
+    assert.equal(isFinished(fx), true);
+  });
+
+  it("poolFixture: incomplete pool entry yields null (never a fixture without identity)", () => {
+    assert.equal(poolFixture({ key: "2026-10-27|abha|al faisaly", date: "2026-10-27", home: "abha" }), null);
+    assert.equal(poolFixture(null), null);
   });
 });

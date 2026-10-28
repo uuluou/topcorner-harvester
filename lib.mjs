@@ -841,13 +841,78 @@ export function validateMatchEntry(e) {
   return errors;
 }
 
+// ---- Empty-extraction guard (pool fix) -----------------------------------
+// A finished entry is EMPTY when it carries NO stats AND NO xG AND NO
+// events AND NO lineups. Such an entry is an extraction failure wearing an
+// identity: extractFinished returns all-null when every sub-page load
+// fails silently (gotoWithRetry false, no throw), cleanEntryForWorker
+// deletes the null sections, and the worker-mirror validator passes the
+// skeleton vacuously (absent fields are legal) — run #11 posted exactly
+// two such skeletons for the requeued Abha and Sassuolo rows, and the
+// post-step read-back correctly classified both "empty".
+// The guard MUST apply to finished entries only: upcoming odds entries
+// legitimately carry no stats/xG/events/lineups (their content is `odds`),
+// so callers pass finished keys and filterBatch guards only those keys.
+// A sparse-but-real row passes: ANY ONE of (non-empty stats, non-null
+// xG, >= 1 event, lineups present) is enough. Missing, coaches,
+// referee/venue, odds, halves, market value and player stats are
+// deliberately NOT in the predicate: they are optional extras, and a row
+// with stats but no missing/coaches is real content, not a skeleton.
+export function isEmptyFinishedEntry(e) {
+  if (!e || typeof e !== "object") return true;
+  const xgPresent =
+    (typeof e.xgHome === "number" && Number.isFinite(e.xgHome)) ||
+    (typeof e.xgAway === "number" && Number.isFinite(e.xgAway));
+  // Non-empty means at least one group/side carrying at least one key:
+  // degenerate {top: {}} or {home: {}} shapes (extractFinished can emit
+  // an empty side when a page loads but yields no rows) do NOT count.
+  const statsPresent = e.stats && typeof e.stats === "object" &&
+    Object.values(e.stats).some((g) => g && typeof g === "object" && Object.keys(g).length > 0);
+  const eventsPresent = Array.isArray(e.events) && e.events.length > 0;
+  const lineupsPresent = e.lineups && typeof e.lineups === "object" &&
+    Object.values(e.lineups).some((s) => s && typeof s === "object" && Object.keys(s).length > 0);
+  return !xgPresent && !statsPresent && !eventsPresent && !lineupsPresent;
+}
+
+// Build the pseudo-fixture for a requeue-pool row. Pool rows are finished
+// matches by construction; the status field is what routes them into the
+// finished branch (isFinished requires state post/completed), so they run
+// the SAME extractFinished path as board rows — there is no fromRequeue
+// branch anywhere in the fixture loop. Returns null for an incomplete
+// pool entry (never build a fixture without identity).
+export function poolFixture(p) {
+  if (!p || !p.key || !p.date || !p.home || !p.away) return null;
+  return {
+    boardDate: p.date,
+    home: { name: p.home },
+    away: { name: p.away },
+    league: p.league || null,
+    leagueName: null,
+    id: p.id || null,
+    matchId: p.id || null,
+    status: { state: "post", completed: true },
+    fromRequeue: true,
+  };
+}
+
 // Split a batch into valid entries and rejected entries with reasons.
 // Good entries are NEVER dropped because of a bad sibling.
-export function filterBatch(entries) {
+// When finishedKeys is given (harvester manifest path), finished entries
+// that fail the empty-extraction guard are rejected with reason "empty
+// extraction" instead of posting as skeletons; without it, filterBatch is
+// the pure worker mirror (the worker itself still accepts skeletons —
+// see the worker follow-up in PATCH-NOTES).
+export function filterBatch(entries, finishedKeys) {
+  const finished = finishedKeys ? new Set(finishedKeys) : null;
   const valid = [];
   const rejected = [];
   for (let i = 0; i < (entries || []).length; i++) {
     const errors = validateMatchEntry(entries[i]);
+    if (errors.length === 0 && finished && entries[i] && typeof entries[i] === "object" &&
+      finished.has(buildKey(entries[i].date, entries[i].home, entries[i].away)) &&
+      isEmptyFinishedEntry(entries[i])) {
+      errors.push("empty extraction");
+    }
     if (errors.length === 0) {
       valid.push(entries[i]);
     } else {

@@ -33,6 +33,9 @@
 //   5. Clean (worker-mirror null rules), compact to the 256KB entry budget
 //      (never dropping xG/formations/ratings/events), validate the whole
 //      batch, and write the payload file + a post manifest in its meta.
+//      Finished entries that extracted nothing (no stats, xG, events, or
+//      lineups) are rejected here as "empty extraction": they stay pooled
+//      for retry and are never posted or marked harvested.
 //
 // Extraction anchors: href patterns, heading/section text, table thead/tbody
 // structure, document order. NEVER CSS class names. Fields that cannot be
@@ -65,6 +68,7 @@ import {
   needsReharvest,
   reharvestDecision,
   requeueLegacyCapped,
+  poolFixture,
 } from "./lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -756,7 +760,19 @@ async function extractFinished(page, matchUrl, fixture) {
     await extractForwardCompatible(page, split, result);
   }
   if (result.statsHalves === undefined && result.marketValue === undefined && result.playerStats === undefined) {
-    console.warn(`forward-compatible fields all absent for ${fixture.home} vs ${fixture.away} (${fixture.date}); core data kept`);
+    // The §4 pass ran twice and still yielded nothing. Only claim "core
+    // data kept" when core actually loaded: run #11 proved the old wording
+    // misleading, because an extraction that loaded NOTHING (all sub-page
+    // loads failed silently) also reached this line and was posted as an
+    // identity-only skeleton. An empty extraction is now rejected by the
+    // empty-extraction guard instead of posting.
+    const corePresent = result.stats !== null || result.xgHome !== null || result.xgAway !== null ||
+      (Array.isArray(result.events) && result.events.length > 0) || result.lineups !== null;
+    if (corePresent) {
+      console.warn(`forward-compatible fields all absent for ${fixture.home} vs ${fixture.away} (${fixture.date}); core data kept`);
+    } else {
+      console.warn(`extraction empty for ${fixture.home} vs ${fixture.away} (${fixture.date}); no stats, xG, events or lineups loaded — entry will be rejected as "empty extraction", not posted`);
+    }
   }
   // Finished-match odds: 1X2 full-time only (US books; 1xBet never appears).
   const odds = await extractOdds(page, matchUrl);
@@ -851,20 +867,14 @@ async function main() {
     poolToProcess.push(p);
   }
   for (const p of poolToProcess) {
-    fixtures.push({
-      boardDate: p.date,
-      home: { name: p.home },
-      away: { name: p.away },
-      league: p.league || null,
-      leagueName: null,
-      id: p.id || null,
-      matchId: p.id || null,
-      // Pool rows are finished matches by construction (they were
-      // harvested before); the status field is what routes them into
-      // the finished branch (isFinished requires state post/completed).
-      status: { state: "post", completed: true },
-      fromRequeue: true,
-    });
+    // Pool rows run the SAME finished branch as board rows: poolFixture
+    // marks them finished (status post/completed) and the loop below has
+    // no fromRequeue branch, so they go through resolveMatchUrl, live
+    // discovery, and the full extractFinished inventory. A pool row with
+    // no discovered URL lands in `unresolved` and stays pooled — it is
+    // NEVER posted as a skeleton (see the empty-extraction guard below).
+    const fx = poolFixture(p);
+    if (fx) fixtures.push(fx);
   }
 
   const entries = [];
@@ -1058,7 +1068,15 @@ async function main() {
     }
     compacted.push(c.entry);
   }
-  const { valid, rejected } = filterBatch(compacted);
+  const { valid, rejected } = filterBatch(compacted, newFinishedKeys);
+  // EMPTY-EXTRACTION GUARD (pool fix): filterBatch above, given the
+  // finished keys, rejects finished entries that extracted nothing (no
+  // stats, xG, events, or lineups) with reason "empty extraction". A
+  // guard-rejected key is therefore absent from valid, from
+  // postFinishedKeys, and from the post manifest, so it is never posted,
+  // never marked harvested, and — for pool rows — stays in requeuePool
+  // for the next run's retry (post-step only removes succeeded keys).
+  // Upcoming odds entries are NOT guarded (their content is `odds`).
   const validKeys = new Set(valid.map((e) => buildKey(e.date, e.home, e.away)));
   const postFinishedKeys = newFinishedKeys.filter((k) => validKeys.has(k));
   // SELF-HEALING: only validated entries join harvestedSet. Rejected

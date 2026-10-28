@@ -15,7 +15,7 @@
     "2026-10-27|abha|al faisaly",
     "2026-10-27|sassuolo|lazio"
   ],
-  "lastRun": "2026-10-28T15:52:56.966Z",
+  "lastRun": "2026-10-28T17:50:58.057Z",
   "pending": [
     {
       "date": "2026-10-27",
@@ -47,38 +47,6 @@
         ],
         "away": [
           "como"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "AC Milan",
-      "away": "Bologna",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Parma",
-      "away": "Udinese",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Venezia",
-      "away": "Internazionale",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "venezia"
-        ],
-        "away": [
-          "internazionale"
         ]
       }
     },
@@ -312,8 +280,8 @@
   ],
   "version": 1,
   "reharvestAttempts": {
-    "2026-10-27|abha|al faisaly": 2,
-    "2026-10-27|sassuolo|lazio": 2
+    "2026-10-27|abha|al faisaly": 3,
+    "2026-10-27|sassuolo|lazio": 3
   },
   "oddsHashes": {}
 }

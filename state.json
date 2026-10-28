@@ -13,7 +13,7 @@
   "harvested": [
     "2026-10-26|paris saint germain|lyon"
   ],
-  "lastRun": "2026-10-28T18:34:09.238Z",
+  "lastRun": "2026-10-28T20:42:45.102Z",
   "pending": [
     {
       "date": "2026-10-27",
@@ -50,19 +50,19 @@
     },
     {
       "date": "2026-10-28",
-      "home": "Genoa",
-      "away": "Juventus",
+      "home": "Venezia",
+      "away": "Internazionale",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Monza",
-      "away": "Napoli",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "venezia"
+        ],
+        "away": [
+          "internazionale"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -307,19 +307,21 @@
     }
   ],
   "lastPost": {
-    "at": "2026-10-28T18:34:10.168Z",
-    "sent": 2,
-    "stored": 2,
+    "at": "2026-10-28T20:42:46.514Z",
+    "sent": 4,
+    "stored": 4,
     "keptHarvested": true,
     "prunedKeys": []
   },
   "verifiedStored": {},
   "lastVerify": {
-    "at": "2026-10-28T18:34:11.673Z",
+    "at": "2026-10-28T20:42:47.360Z",
     "verified": [],
     "failed": {
-      "2026-10-27|abha|al faisaly": "empty",
-      "2026-10-27|sassuolo|lazio": "empty"
+      "2026-10-27|abha|al faisaly": "read failed",
+      "2026-10-27|sassuolo|lazio": "read failed",
+      "2026-10-28|ac milan|bologna": "read failed",
+      "2026-10-28|parma|udinese": "read failed"
     }
   }
 }

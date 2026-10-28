@@ -1,9 +1,11 @@
 # Mandatory modeling pass for TOPCORNER world boards — no prediction, no show.
 # Calls the site's /api/warm endpoint with mode=model (Pages worker, POST with
-# the HARVEST_TOKEN repo secret). Each call models a bounded batch (max 40
-# matches) from the stored world boards and returns modeled/failed/remaining;
-# the caller repeats every 10 minutes until remaining hits 0, then keeps
-# polling so newly published fixtures get modeled too.
+# the HARVEST_TOKEN repo secret). Each call models a bounded batch (max 20
+# matches per call as of worker v39 — 20 matches cost at most 40 subrequests,
+# safely under the ~50 cap; the old 40-match batch could exceed it) from the
+# stored world boards and returns modeled/failed/remaining; the caller loops
+# (max 6 iterations per run) until remaining hits 0, and the 10-minute
+# schedule keeps polling so newly published fixtures get modeled too.
 # Apply AFTER the in-flight warm.yml apply lands (never concurrently).
 # No secret value lives in this file — only the secrets.HARVEST_TOKEN reference.
 #
@@ -42,12 +44,16 @@ jobs:
           HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
         run: |
           Y=$(date -u -d 'yesterday' +%F); T=$(date -u +%F); M=$(date -u -d 'tomorrow' +%F)
-          curl -sS --max-time 600 -X POST "https://topcorner.pages.dev/api/warm" \
-            -H "x-harvest-token: $HARVEST_TOKEN" \
-            -H 'content-type: application/json' \
-            --data "{\"mode\":\"model\",\"dates\":[\"$Y\",\"$T\",\"$M\"]}" | tee /tmp/model-response.json
-          echo
-          python3 -c "import json; d=json.load(open('/tmp/model-response.json'))['data']; print('modeled:', d['modeled'], '| failed:', d['failed'], '| remaining:', d['remaining']); [print(' ', x['date'], 'pre:', x['pre'], 'attempted:', x['attempted'], 'modeled:', x['modeled'], 'failed:', x['failed'], 'remaining:', x['remaining']) for x in d['dates']]"
+          for i in 1 2 3 4 5 6; do
+            curl -sS --max-time 600 -X POST "https://topcorner.pages.dev/api/warm" \
+              -H "x-harvest-token: $HARVEST_TOKEN" \
+              -H 'content-type: application/json' \
+              --data "{\"mode\":\"model\",\"dates\":[\"$Y\",\"$T\",\"$M\"]}" | tee /tmp/model-response.json
+            echo
+            REM=$(python3 -c "import json; print(json.load(open('/tmp/model-response.json'))['data']['remaining'])" 2>/dev/null || echo "?")
+            echo "iteration $i remaining: $REM"
+            if [ "$REM" = "0" ]; then break; fi
+          done
 
       - name: Log world-board row counts (today, sessioned read)
         continue-on-error: true

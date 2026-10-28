@@ -3,6 +3,14 @@
 # state.json, and posts each payload to the site's /api/fs/ingest endpoint
 # using the HARVEST_TOKEN repo secret. A session cookie from /api/session
 # is fetched first because the worker's visitor gate requires it.
+#
+# PATCHED: the post step is now post-step.mjs (not a bare curl loop). It
+# reads the worker's honest {stored, failed} reply and amends state.json
+# BEFORE the commit step: harvested-marking is gated on stored == sent
+# (a short post prunes the whole batch for retry), and upcoming-odds
+# hashes apply only on post success. A bare curl loop cannot do this, and
+# it is exactly how poisoned rows were marked harvested despite failed
+# writes in the past.
 name: Flashscore harvest
 
 on:
@@ -47,16 +55,12 @@ jobs:
       - name: Post payloads to TOPCORNER
         env:
           HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
+          SITE_URL: https://topcorner.pages.dev
         run: |
-          curl -sS -c cookies.txt "https://topcorner.pages.dev/api/session" > /dev/null
           for f in out/payload-*.json; do
             [ -e "$f" ] || continue
             echo "posting $f"
-            curl -sS -b cookies.txt -X POST "https://topcorner.pages.dev/api/fs/ingest" \
-              -H "x-harvest-token: $HARVEST_TOKEN" \
-              -H "content-type: application/json" \
-              --data @"$f"
-            echo
+            node post-step.mjs "$f"
           done
 
       - name: Upload payload files
@@ -74,8 +78,3 @@ jobs:
           git config user.email "harvester@topcorner.local"
           git add state.json
           git diff --cached --quiet || (git commit -m "harvest state $(date -u +%Y-%m-%dT%H:%M:%SZ)" && git push)
-
-      # (posting step is now enabled above as "Post payloads to TOPCORNER";
-      # it requires the HARVEST_TOKEN repo secret and the matching Pages
-      # secret, both set. The session cookie from /api/session is fetched
-      # first because the worker's visitor gate requires it.)

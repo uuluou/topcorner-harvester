@@ -1,0 +1,59 @@
+# Mandatory modeling pass for TOPCORNER world boards — no prediction, no show.
+# Calls the site's /api/warm endpoint with mode=model (Pages worker, POST with
+# the HARVEST_TOKEN repo secret). Each call models a bounded batch (max 40
+# matches) from the stored world boards and returns modeled/failed/remaining;
+# the caller repeats every 10 minutes until remaining hits 0, then keeps
+# polling so newly published fixtures get modeled too.
+# Apply AFTER the in-flight warm.yml apply lands (never concurrently).
+# No secret value lives in this file — only the secrets.HARVEST_TOKEN reference.
+#
+# CONCURRENCY NOTE (deliberate deviation from warm.yml): this workflow uses
+# its own group topcorner-model, NOT topcorner-warm. warm.yml's jobs use
+# cancel-in-progress: true, so sharing its group would let this 10-minute
+# job cancel long full sweeps (up to ~54 minutes for 3 dates) and live
+# passes, and vice versa. Modeling progress persists per match in KV, so a
+# cancelled model run loses nothing but its in-flight batch; still, a
+# separate group avoids the fight entirely. Schedule is offset by 5 minutes
+# (5,15,25,...) so model calls never spike against warm.yml's :00/:10 live
+# passes either.
+name: World board modeling pass
+
+on:
+  schedule:
+    - cron: "5,15,25,35,45,55 * * * *" # every 10 minutes, offset by 5
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: topcorner-model
+  cancel-in-progress: true
+
+jobs:
+  model:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '5,15,25,35,45,55 * * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Model unmodeled world-board rows (yesterday, today, tomorrow)
+        id: warm
+        env:
+          HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
+        run: |
+          Y=$(date -u -d 'yesterday' +%F); T=$(date -u +%F); M=$(date -u -d 'tomorrow' +%F)
+          curl -sS --max-time 600 -X POST "https://topcorner.pages.dev/api/warm" \
+            -H "x-harvest-token: $HARVEST_TOKEN" \
+            -H 'content-type: application/json' \
+            --data "{\"mode\":\"model\",\"dates\":[\"$Y\",\"$T\",\"$M\"]}" | tee /tmp/model-response.json
+          echo
+          python3 -c "import json; d=json.load(open('/tmp/model-response.json'))['data']; print('modeled:', d['modeled'], '| failed:', d['failed'], '| remaining:', d['remaining']); [print(' ', x['date'], 'pre:', x['pre'], 'attempted:', x['attempted'], 'modeled:', x['modeled'], 'failed:', x['failed'], 'remaining:', x['remaining']) for x in d['dates']]"
+
+      - name: Log world-board row counts (today, sessioned read)
+        continue-on-error: true
+        run: |
+          T=$(date -u +%F)
+          JAR=/tmp/tc-jar.txt
+          curl -sS --max-time 60 -c "$JAR" -o /dev/null "https://topcorner.pages.dev/api/session"
+          curl -sS --max-time 60 -b "$JAR" "https://topcorner.pages.dev/api/board?date=$T&scope=world" -o /tmp/world-board.json
+          python3 -c "import json; d=json.load(open('/tmp/world-board.json'))['data']; ms=d.get('matches', []); nomodel=[m for m in ms if m.get('hasModel') is False]; print('world board rows:', len(ms), '| hasModel=false (hidden on Matchday):', len(nomodel))"

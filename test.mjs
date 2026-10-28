@@ -36,6 +36,12 @@ import {
   applyOddsHashes,
   isEmptyFinishedEntry,
   poolFixture,
+  classifyNavError,
+  detectChallengePage,
+  loadModeBucket,
+  formatLoadFailure,
+  createLoadFailureRecorder,
+  gotoWithLogging,
 } from "./lib.mjs";
 
 const MAPPING = {
@@ -748,5 +754,115 @@ describe("pool extraction fix (run #11 regression)", () => {
   it("poolFixture: incomplete pool entry yields null (never a fixture without identity)", () => {
     assert.equal(poolFixture({ key: "2026-10-27|abha|al faisaly", date: "2026-10-27", home: "abha" }), null);
     assert.equal(poolFixture(null), null);
+  });
+});
+
+describe("load-failure visibility + bounded retry (run #13)", () => {
+  const ctx = { key: "2026-10-27|abha|al faisaly", kind: "stats-overall", url: "https://www.flashscore.com/match/football/abha-x/al-faisaly-y/?mid=MumpnBeo" };
+
+  it("classifyNavError: timeouts bucket separately, other errors keep a one-line message", () => {
+    assert.equal(classifyNavError(new Error("page.goto: Timeout 60000ms exceeded")), "timeout");
+    assert.equal(classifyNavError(new Error("net::ERR_TUNNEL_CONNECTION_FAILED at https://x")), "nav:net::ERR_TUNNEL_CONNECTION_FAILED at https://x");
+    assert.equal(classifyNavError(new Error("line one\nline two")), "nav:line one line two");
+    assert.equal(classifyNavError(new Error("x".repeat(200))), `nav:${"x".repeat(120)}`);
+  });
+
+  it("detectChallengePage: challenge markers hit, normal page text does not", () => {
+    assert.equal(detectChallengePage("Verify you are human\nPlease complete"), true);
+    assert.equal(detectChallengePage("Checking your browser before accessing"), true);
+    assert.equal(detectChallengePage("Attention Required! | Cloudflare"), true);
+    assert.equal(detectChallengePage("Abha 0 - 1 Al Faisaly\nFull statistics"), false);
+    assert.equal(detectChallengePage(""), false);
+  });
+
+  it("loadModeBucket: http codes stay distinct, nav messages collapse", () => {
+    assert.equal(loadModeBucket("timeout"), "timeout");
+    assert.equal(loadModeBucket("challenge"), "challenge");
+    assert.equal(loadModeBucket("http:403"), "http:403");
+    assert.equal(loadModeBucket("http:404"), "http:404");
+    assert.equal(loadModeBucket("nav:net::ERR_FAILED"), "nav");
+  });
+
+  it("formatLoadFailure: one compact line carries key + kind + url + mode + attempt", () => {
+    assert.equal(
+      formatLoadFailure({ ...ctx, mode: "http:403", attempt: 2 }),
+      "load failed: 2026-10-27|abha|al faisaly stats-overall https://www.flashscore.com/match/football/abha-x/al-faisaly-y/?mid=MumpnBeo http:403 attempt 2"
+    );
+  });
+
+  it("gotoWithLogging: failed-then-succeeding retry returns true and the caller yields data", async () => {
+    const recorder = createLoadFailureRecorder();
+    const logged = [];
+    let calls = 0;
+    const attemptFn = async () => (++calls === 1 ? { ok: false, mode: "timeout" } : { ok: true, mode: "ok" });
+    // Caller shape mirrors extractStatsPage: on goto success, evaluate -> data.
+    const ok = await gotoWithLogging(attemptFn, ctx, recorder, (l) => logged.push(l));
+    const data = ok ? { top: { xgHome: 1.68, xgAway: 0.95 } } : null;
+    assert.equal(ok, true);
+    assert.equal(calls, 2);
+    assert.ok(data && data.top.xgHome === 1.68);
+    assert.equal(logged.length, 2);
+    assert.match(logged[0], /load failed: .* stats-overall .* timeout attempt 1/);
+    assert.match(logged[1], /load recovered: .* stats-overall .* attempt 2/);
+    const s = recorder.summary();
+    assert.equal(s.total, 1);
+    assert.equal(s.byKind["stats-overall"], 1);
+    assert.equal(s.byMode.timeout, 1);
+    assert.equal(s.recovered, 1);
+  });
+
+  it("gotoWithLogging: twice-failed group logs twice, returns false, caller yields nothing", async () => {
+    const recorder = createLoadFailureRecorder();
+    const logged = [];
+    let calls = 0;
+    const attemptFn = async () => {
+      calls++;
+      return { ok: false, mode: "http:403" };
+    };
+    const ok = await gotoWithLogging(attemptFn, ctx, recorder, (l) => logged.push(l));
+    const data = ok ? { top: {} } : null;
+    assert.equal(ok, false);
+    assert.equal(calls, 2);
+    assert.equal(data, null);
+    assert.equal(logged.length, 2);
+    assert.match(logged[0], /attempt 1/);
+    assert.match(logged[1], /http:403 attempt 2/);
+    assert.equal(recorder.summary().total, 2);
+    assert.equal(recorder.summary().byMode["http:403"], 2);
+    assert.equal(recorder.summary().recovered, 0);
+  });
+
+  it("gotoWithLogging: challenge mode is logged as challenge, not as a generic nav error", async () => {
+    const recorder = createLoadFailureRecorder();
+    const logged = [];
+    const ok = await gotoWithLogging(async () => ({ ok: false, mode: "challenge" }), ctx, recorder, (l) => logged.push(l));
+    assert.equal(ok, false);
+    assert.match(logged[0], /challenge attempt 1/);
+    assert.equal(recorder.summary().byMode.challenge, 2);
+  });
+
+  it("twice-failed extraction still hits the empty-extraction guard (never posts)", () => {
+    // The caller yielded nothing, so the finished entry is a skeleton.
+    // Through the real pipeline (clean, then filter) the guard (unchanged)
+    // must reject it, exactly as in run #13.
+    const skeleton = {
+      date: "2026-10-27", home: "Abha", away: "Al Faisaly",
+      xgHome: null, xgAway: null, source: "flashscore",
+      stats: null, events: null, lineups: null, missing: null, coaches: null,
+      referee: null, venue: null, capacity: null, attendance: null,
+    };
+    const { valid, rejected } = filterBatch([cleanEntryForWorker(skeleton)], ["2026-10-27|abha|al faisaly"]);
+    assert.equal(valid.length, 0);
+    assert.equal(rejected.length, 1);
+    assert.deepEqual(rejected[0].reasons, ["empty extraction"]);
+  });
+
+  it("recorder: reset clears lines and counts for the next run", () => {
+    const recorder = createLoadFailureRecorder();
+    recorder.record(ctx.key, ctx.kind, ctx.url, "timeout", 1);
+    assert.equal(recorder.summary().total, 1);
+    recorder.reset();
+    assert.equal(recorder.summary().total, 0);
+    assert.deepEqual(recorder.lines, []);
   });
 });

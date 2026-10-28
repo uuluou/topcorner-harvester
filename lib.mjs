@@ -533,6 +533,114 @@ export function updateRequeuePool(pool, succeededKeys) {
   return (pool || []).filter((e) => !done.has(e.key));
 }
 
+// ---- Load-failure visibility + bounded retry (run #13) ------------------
+// Run #13 proved the empty-extraction guard works, but a 0-valid run was
+// still undiagnosable: extractFinished returns all-null when every sub-page
+// load fails, and the old gotoWithRetry swallowed every failure mode. The
+// machinery below makes every load failure LOUD (one compact log line with
+// match key, sub-page kind, URL, and failure mode) and countable in the
+// payload meta, and retries each failed sub-page group exactly once.
+// It is deliberately Playwright-free: harvest.mjs passes a closure over
+// page.goto as attemptFn, so these functions unit-test with fake
+// attempt functions and `npm test` stays dependency-free (no browser).
+
+// Body/title markers of a bot-challenge or block page served with a 200.
+export const LOAD_CHALLENGE_MARKERS = [
+  /verify you are human/i,
+  /checking your browser/i,
+  /attention required/i,
+  /cf-challenge/i,
+  /please verify/i,
+  /are you a robot/i,
+  /unusual traffic/i,
+];
+
+export function detectChallengePage(text) {
+  const s = String(text || "");
+  return LOAD_CHALLENGE_MARKERS.some((re) => re.test(s));
+}
+
+// One-line failure mode from a navigation error. Timeouts get their own
+// bucket (transient egress); everything else keeps a truncated message.
+export function classifyNavError(err) {
+  const msg = String((err && err.message) || err || "unknown").replace(/\s+/g, " ").trim().slice(0, 120);
+  if (/timeout|timed out/i.test(msg)) return "timeout";
+  return `nav:${msg}`;
+}
+
+// Coarse bucket for summary counts: timeouts and challenges keep their
+// names, HTTP statuses keep their code (403 vs 404 mean different things),
+// nav messages collapse to one bucket (full text stays in the log line).
+export function loadModeBucket(mode) {
+  if (mode === "timeout" || mode === "challenge") return mode;
+  if (/^http:\d+$/.test(mode)) return mode;
+  return "nav";
+}
+
+// Exact log-line format for one failed load attempt.
+export function formatLoadFailure({ key, kind, url, mode, attempt }) {
+  return `load failed: ${key} ${kind} ${url} ${mode} attempt ${attempt}`;
+}
+
+export function formatLoadRecovered({ key, kind, url }) {
+  return `load recovered: ${key} ${kind} ${url} attempt 2`;
+}
+
+// Per-run recorder: failure lines + per-kind / per-mode counts + recovery
+// count. main() resets it at run start and writes summary() into
+// payload meta.loadFailures (lines capped there, not here).
+export function createLoadFailureRecorder() {
+  let lines = [];
+  let byKind = {};
+  let byMode = {};
+  let recovered = 0;
+  return {
+    record(key, kind, url, mode, attempt) {
+      const line = formatLoadFailure({ key, kind, url, mode, attempt });
+      lines.push(line);
+      byKind[kind] = (byKind[kind] || 0) + 1;
+      const b = loadModeBucket(mode);
+      byMode[b] = (byMode[b] || 0) + 1;
+      return line;
+    },
+    recordRecovery(entry) {
+      recovered++;
+      return formatLoadRecovered(entry);
+    },
+    get lines() {
+      return [...lines];
+    },
+    summary() {
+      return { total: lines.length, byKind: { ...byKind }, byMode: { ...byMode }, recovered };
+    },
+    reset() {
+      lines = [];
+      byKind = {};
+      byMode = {};
+      recovered = 0;
+    },
+  };
+}
+
+// Bounded retry around one sub-page load. attemptFn is the Playwright-
+// touching closure in harvest.mjs: async () => ({ ok: true } |
+// { ok: false, mode }). Attempt 1 failure logs + attempt 2 runs; a
+// recovery logs its own line (counted separately, never as a failure);
+// a double failure returns false and the caller moves on — no infinite
+// loops, no extra runs. log defaults to console.warn (the workflow log).
+export async function gotoWithLogging(attemptFn, { key, kind, url }, recorder, log = console.warn) {
+  const first = await attemptFn();
+  if (first.ok) return true;
+  log(recorder.record(key, kind, url, first.mode, 1));
+  const second = await attemptFn();
+  if (second.ok) {
+    log(recorder.recordRecovery({ key, kind, url }));
+    return true;
+  }
+  log(recorder.record(key, kind, url, second.mode, 2));
+  return false;
+}
+
 // ---- Change detection (upcoming odds) -----------------------------------
 // Stable stringify: object keys sorted recursively, so equal content always
 // hashes equal regardless of insertion order.

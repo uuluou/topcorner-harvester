@@ -69,6 +69,10 @@ import {
   reharvestDecision,
   requeueLegacyCapped,
   poolFixture,
+  classifyNavError,
+  detectChallengePage,
+  createLoadFailureRecorder,
+  gotoWithLogging,
 } from "./lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -78,6 +82,11 @@ const STATE_PATH = path.join(HERE, "state.json");
 const MAPPING_PATH = path.join(HERE, "mapping.json");
 const OUT_DIR = path.join(HERE, "out");
 const PAGE_TIMEOUT_MS = 60000;
+
+// Per-run load-failure recorder (run #13: 0-valid runs were undiagnosable
+// because every sub-page failure was swallowed). Reset in main(); its
+// summary lands in payload meta.loadFailures and the run-done line.
+const loadFailures = createLoadFailureRecorder();
 
 function loadJson(p, fallback) {
   try {
@@ -208,18 +217,46 @@ function parseEvents(text) {
 }
 
 // ---- Page navigation -----------------------------------------------------
-async function gotoWithRetry(page, url) {
+// One navigation attempt: goto + HTTP-status + challenge checks. A 200
+// challenge page and a 4xx/5xx response are BOTH failures here — the old
+// code treated any resolved goto as success and then evaluated an empty
+// or challenge DOM into silence. Returns { ok, mode } where mode is
+// "ok" | "timeout" | "http:<status>" | "challenge" | "nav:<message>".
+async function attemptGoto(page, url) {
+  let resp = null;
   try {
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: PAGE_TIMEOUT_MS });
-    return true;
-  } catch {
-    try {
-      await page.goto(url, { waitUntil: "domcontentloaded", timeout: PAGE_TIMEOUT_MS });
-      return true;
-    } catch {
-      return false;
-    }
+    resp = await page.goto(url, { waitUntil: "domcontentloaded", timeout: PAGE_TIMEOUT_MS });
+  } catch (err) {
+    return { ok: false, mode: classifyNavError(err) };
   }
+  try {
+    const status = resp && typeof resp.status === "function" ? resp.status() : null;
+    if (status && status >= 400) return { ok: false, mode: `http:${status}` };
+  } catch {
+    // Status probe failure is not itself a load failure; fall through.
+  }
+  try {
+    const probe = await page.evaluate(challengeProbeEvaluate).catch(() => "");
+    if (detectChallengePage(probe)) return { ok: false, mode: "challenge" };
+  } catch {
+    // Probe failure is not itself a load failure; fall through.
+  }
+  return { ok: true, mode: "ok" };
+}
+
+// Named (not inline) so fake pages in tests can answer by function name.
+function challengeProbeEvaluate() {
+  return (document.title || "") + "\n" + (document.body ? document.body.innerText || "" : "");
+}
+
+// Logged, bounded-retry navigation: attempt 1, then exactly one fresh
+// re-navigate on failure (attempt 2), then give up on THIS group and let
+// the caller move on. ctx { key, kind } names the match + sub-page in
+// every log line; a missing ctx still logs under "unknown" — never silent.
+async function gotoWithRetry(page, url, ctx) {
+  const key = (ctx && ctx.key) || "unknown";
+  const kind = (ctx && ctx.kind) || "unknown";
+  return gotoWithLogging(() => attemptGoto(page, url), { key, kind, url }, loadFailures);
 }
 
 // Split a Flashscore match URL into its base path + mid. Every derived page
@@ -609,9 +646,14 @@ function shapeMissing(blocks) {
 }
 
 // ---- Extraction ------------------------------------------------------------
-async function extractStatsPage(page, split, suffix) {
+async function extractStatsPage(page, split, suffix, key) {
   const url = pageUrl(split, suffix);
-  if (!(await gotoWithRetry(page, url))) return null;
+  const kind = suffix.includes("1st-half")
+    ? "stats-1st-half"
+    : suffix.includes("2nd-half")
+      ? "stats-2nd-half"
+      : "stats-overall";
+  if (!(await gotoWithRetry(page, url, { key, kind }))) return null;
   await page.waitForTimeout(2500).catch(() => {});
   const dom = await page.evaluate(statsPageEvaluate).catch(() => null);
   const groups = shapeStatsGroups(dom);
@@ -627,9 +669,9 @@ async function extractStatsPage(page, split, suffix) {
 // absence stays absent (undefined), never null — the worker rejects
 // explicit null for these fields (run #8: whole entries were rejected
 // for null playerStats/marketValue/statsHalves, losing core data).
-async function extractForwardCompatible(page, split, result) {
-  const firstHalf = await extractStatsPage(page, split, "/summary/stats/1st-half/");
-  const secondHalf = await extractStatsPage(page, split, "/summary/stats/2nd-half/");
+async function extractForwardCompatible(page, split, result, key) {
+  const firstHalf = await extractStatsPage(page, split, "/summary/stats/1st-half/", key);
+  const secondHalf = await extractStatsPage(page, split, "/summary/stats/2nd-half/", key);
   if (firstHalf || secondHalf) {
     result.statsHalves = {
       ...(firstHalf ? { firstHalf } : {}),
@@ -637,7 +679,7 @@ async function extractForwardCompatible(page, split, result) {
     };
   }
   // Market value: best-effort only when € totals render (absence is normal).
-  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/market-value/"))) {
+  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/market-value/"), { key, kind: "market-value" })) {
     await page.waitForTimeout(2500).catch(() => {});
     const text = await page.evaluate(() => document.body.innerText).catch(() => "");
     const totals = [...String(text || "").matchAll(/€\s*([\d.,]+)\s*m/gi)].map((m) => m[0].replace(/\s+/g, ""));
@@ -657,7 +699,7 @@ async function extractForwardCompatible(page, split, result) {
   const playerStats = {};
   for (const cat of categories) {
     const url = pageUrl(split, `/summary/player-stats/${cat}/`);
-    if (!(await gotoWithRetry(page, url))) continue;
+    if (!(await gotoWithRetry(page, url, { key, kind: `player-stats:${cat}` }))) continue;
     await page.waitForTimeout(2000).catch(() => {});
     const dom = await page.evaluate(playerStatsEvaluate).catch(() => null);
     const shaped = shapePlayerStats(dom);
@@ -683,8 +725,9 @@ async function extractFinished(page, matchUrl, fixture) {
   };
   const split = splitMatchUrl(matchUrl);
   if (!split) return result;
+  const key = buildKey(fixture.date, fixture.home, fixture.away);
   // Main page: events + match info.
-  if (await gotoWithRetry(page, matchUrl)) {
+  if (await gotoWithRetry(page, matchUrl, { key, kind: "main" })) {
     await page.waitForTimeout(3000).catch(() => {});
     const mainText = await page.evaluate(() => document.body.innerText).catch(() => "");
     const events = parseEvents(mainText);
@@ -692,7 +735,7 @@ async function extractFinished(page, matchUrl, fixture) {
     Object.assign(result, parseMatchInfo(mainText));
   }
   // Full stats page (NEVER the Summary preview: possession differs).
-  const overall = await extractStatsPage(page, split, "/summary/stats/overall/");
+  const overall = await extractStatsPage(page, split, "/summary/stats/overall/", key);
   if (overall) {
     result.stats = overall;
     const top = overall.top || {};
@@ -701,9 +744,9 @@ async function extractFinished(page, matchUrl, fixture) {
   }
   // §4 forward-compatible fields (halves, market value, player stats).
   // Keys are assigned ONLY when the sub-pages yield data — never null.
-  await extractForwardCompatible(page, split, result);
+  await extractForwardCompatible(page, split, result, key);
   // Lineups page: formations, coaches, missing, players.
-  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/"))) {
+  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/"), { key, kind: "lineups" })) {
     await page.waitForTimeout(3000).catch(() => {});
     const text = await page.evaluate(() => document.body.innerText).catch(() => "");
     const formations = [...String(text || "").matchAll(/(?<!\d)(\d-\d-\d)(?!\d)/g)].map((m) => m[1]);
@@ -742,7 +785,7 @@ async function extractFinished(page, matchUrl, fixture) {
     if (missing !== null) result.missing = missing;
   }
   // Team average ratings ride in lineups sides (worker-accepted field).
-  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/avg-rating/"))) {
+  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/avg-rating/"), { key, kind: "avg-rating" })) {
     await page.waitForTimeout(2500).catch(() => {});
     const text = await page.evaluate(() => document.body.innerText).catch(() => "");
     const ratings = [...String(text || "").matchAll(/(?<!\d)(\d\.\d)(?!\d)/g)].map((m) => Number(m[1]));
@@ -757,7 +800,7 @@ async function extractFinished(page, matchUrl, fixture) {
   // persistently absent market value ALONE is normal (no sub-tab bar
   // for some matches); only the all-absent case warns.
   if (result.statsHalves === undefined && result.marketValue === undefined && result.playerStats === undefined) {
-    await extractForwardCompatible(page, split, result);
+    await extractForwardCompatible(page, split, result, key);
   }
   if (result.statsHalves === undefined && result.marketValue === undefined && result.playerStats === undefined) {
     // The §4 pass ran twice and still yielded nothing. Only claim "core
@@ -775,17 +818,17 @@ async function extractFinished(page, matchUrl, fixture) {
     }
   }
   // Finished-match odds: 1X2 full-time only (US books; 1xBet never appears).
-  const odds = await extractOdds(page, matchUrl);
+  const odds = await extractOdds(page, matchUrl, key);
   if (odds) result.odds = odds;
   return result;
 }
 
 // Odds page (shared by finished + upcoming): 1X2 full-time table only.
-async function extractOdds(page, matchUrl) {
+async function extractOdds(page, matchUrl, key) {
   const split = splitMatchUrl(matchUrl);
   if (!split) return null;
   const url = pageUrl(split, "/odds/1x2-odds/full-time/");
-  if (!(await gotoWithRetry(page, url))) return null;
+  if (!(await gotoWithRetry(page, url, { key, kind: "odds-1x2" }))) return null;
   await page.waitForTimeout(3000).catch(() => {});
   const bookmakers = await page.evaluate(oddsPageEvaluate).catch(() => null);
   if (bookmakers && bookmakers.length) return { bookmakers };
@@ -798,7 +841,8 @@ async function extractOdds(page, matchUrl) {
 // caller on unresolved entries so a miss names exactly what was tried.
 async function discoverMatchUrl(page, fixture) {
   try {
-    const ok = await gotoWithRetry(page, "https://www.flashscore.com/football/");
+    const key = buildKey(fixture.date, fixture.home, fixture.away);
+    const ok = await gotoWithRetry(page, "https://www.flashscore.com/football/", { key, kind: "discovery-schedule" });
     if (!ok) return null;
     await page.waitForTimeout(4000).catch(() => {});
     const links = await page
@@ -818,6 +862,8 @@ async function discoverMatchUrl(page, fixture) {
 
 // ---- Main ------------------------------------------------------------------
 async function main() {
+  // Fresh load-failure accounting per run (never carried across runs).
+  loadFailures.reset();
   const mapping = loadJson(MAPPING_PATH, { version: 1, aliases: {}, matches: {} });
   let state = loadJson(STATE_PATH, {
     version: 1,
@@ -1006,7 +1052,7 @@ async function main() {
             });
             continue;
           }
-          const odds = await extractOdds(page, url);
+          const odds = await extractOdds(page, url, key);
           if (!odds) {
             unresolved.push({ ...fixture, reason: "odds page yielded no 1X2 table" });
             continue;
@@ -1089,6 +1135,10 @@ async function main() {
     if (validKeys.has(k)) postOddsHashes[k] = v;
   }
   const allRejected = [...rejected, ...oversize.map((o) => ({ ...o, reasons: [o.reason] }))];
+  // Load-failure accounting for this run (run #13: without it a 0-valid
+  // run was undiagnosable). Lines capped at 100 in meta; the full lines
+  // are in the workflow log as console.warn output.
+  const loadSummary = loadFailures.summary();
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -1106,6 +1156,13 @@ async function main() {
       droppedMissingTeamUnknown: droppedMissingTotal,
       rejected: allRejected,
       unresolved,
+      loadFailures: {
+        total: loadSummary.total,
+        byKind: loadSummary.byKind,
+        byMode: loadSummary.byMode,
+        recovered: loadSummary.recovered,
+        lines: loadFailures.lines.slice(0, 100),
+      },
       // Post manifest for post-step.mjs (worker ignores payload.meta;
       // it reads only matches). Do NOT hand-edit: the post step consumes
       // this to gate harvested-marking and odds hashes on stored == sent.
@@ -1126,11 +1183,22 @@ async function main() {
   state.pending = unresolved;
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
   console.log(
-    `run done: ${valid.length} valid, ${allRejected.length} rejected, ${unresolved.length} unresolved, ${skipped.length} skipped, ${skippedOddsUnchanged} odds unchanged, ${reharvested} reharvested, ${requeued} requeued -> ${outPath}`
+    `run done: ${valid.length} valid, ${allRejected.length} rejected, ${unresolved.length} unresolved, ${skipped.length} skipped, ${skippedOddsUnchanged} odds unchanged, ${reharvested} reharvested, ${requeued} requeued, ${loadSummary.total} load failures (${loadSummary.recovered} recovered) -> ${outPath}`
   );
 }
 
-main().catch((err) => {
-  console.error(`fatal: ${err && err.stack ? err.stack : err}`);
-  process.exit(1);
-});
+// Exports for ad-hoc verification scripts only. The committed test suite
+// deliberately imports lib.mjs alone so `npm test` stays dependency-free
+// (no Playwright install, no browser); importing this file requires the
+// playwright package. Nothing in the workflow imports these.
+export { extractFinished, loadFailures };
+
+// Run only when executed directly (`node harvest.mjs`, the workflow path).
+// Importing this file (verification scripts) must not start a harvest.
+const isDirectRun = Boolean(process.argv[1]) && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isDirectRun) {
+  main().catch((err) => {
+    console.error(`fatal: ${err && err.stack ? err.stack : err}`);
+    process.exit(1);
+  });
+}

@@ -15,7 +15,7 @@
     "2026-10-27|abha|al faisaly",
     "2026-10-27|sassuolo|lazio"
   ],
-  "lastRun": "2026-10-28T15:25:56.022Z",
+  "lastRun": "2026-10-28T15:52:56.966Z",
   "pending": [
     {
       "date": "2026-10-27",
@@ -312,8 +312,8 @@
   ],
   "version": 1,
   "reharvestAttempts": {
-    "2026-10-27|abha|al faisaly": 1,
-    "2026-10-27|sassuolo|lazio": 1
+    "2026-10-27|abha|al faisaly": 2,
+    "2026-10-27|sassuolo|lazio": 2
   },
   "oddsHashes": {}
 }

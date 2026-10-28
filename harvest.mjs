@@ -1,28 +1,39 @@
-// TOPCORNER Flashscore harvester.
+// TOPCORNER Flashscore harvester (patched).
 // Runs on GitHub Actions (or locally) with Playwright/Chromium.
-// It NEVER posts to any endpoint: it writes one JSON payload file per run
-// to out/ and updates state.json. Posting is a separate, later step.
+// It writes one JSON payload file per run to out/ and updates state.json.
+// Posting is done by post-step.mjs (a separate workflow step), which reads
+// the POST response {data:{stored, failed}} and amends state.json BEFORE
+// the workflow commits it: harvested-marking is gated on stored == sent,
+// and upcoming-odds hashes are applied only on post success. The harvester
+// itself therefore NEVER trusts a mark it has not seen confirmed.
 //
 // Flow per run:
-//   1. Fetch the TOPCORNER board for yesterday/today/tomorrow (session
-//      cookie first, then board, sequential, never parallel).
-//   2. For each FINISHED match not already in state.json: resolve its
-//      Flashscore URL (mapping.json, then state.discovered, then a
-//      schedule-page discovery fallback) and extract summary timeline,
-//      referee/venue/capacity/attendance, full stats groups, lineups,
-//      missing players, coaches, and player-stat rows.
-//   3. For each UPCOMING match today: extract odds with bookmaker names
-//      exactly as displayed (never invent a bookmaker or a price).
-//   4. Validate every entry (per-entry filtering: a bad entry is dropped
-//      and reported, good siblings are kept) and write the payload file.
-//   5. Update state.json (harvested finished keys, discovered URLs,
-//      unresolved fixtures) so re-runs skip finished work.
+//   1. One session cookie, then the TOPCORNER board for yesterday/today/
+//      tomorrow (sequential, never parallel, no Origin/Referer headers:
+//      the worker gate rejects a pages.dev Origin and passes on cookie).
+//   2. For each FINISHED match already in state.json: VERIFY-BEFORE-SKIP
+//      via a sessioned model-route read. A row that is absent, or carries
+//      neither xG nor any stats (the poisoned-row signature), is unmarked
+//      for re-harvest (attempt cap 3 in state.json, then accepted).
+//   3. For each unharvested FINISHED match: resolve its Flashscore URL
+//      (mapping.json, then state.discovered, then schedule-page discovery
+//      with spelling variants) and extract the FULL inventory: full stats
+//      page groups (overall + halves), xG/xGOT/xA/goals prevented,
+//      lineups (formations, XI with shirt/name/(G)/(C)/rating, used subs
+//      with replaced+minute, bench, coaches, missing players only when the
+//      section exists), player-stat tables (all categories), events by
+//      half, match info, and 1X2 full-time odds.
+//   4. For each UPCOMING match today: extract 1X2 full-time odds and post
+//      them ONLY when their content hash differs from the last posted hash
+//      (change detection kills the every-10-minutes rewrite blowup).
+//   5. Clean (worker-mirror null rules), compact to the 256KB entry budget
+//      (never dropping xG/formations/ratings/events), validate the whole
+//      batch, and write the payload file + a post manifest in its meta.
 //
-// This script runs on runners with clean egress. It cannot be live-tested
-// from the author's VM (which cannot reach Flashscore), so every page
-// interaction is defensive: timeouts, one retry on navigation, and a
-// per-match try/catch so one failure never kills the run. Fields that
-// cannot be read are null, never invented.
+// Extraction anchors: href patterns, heading/section text, table thead/tbody
+// structure, document order. NEVER CSS class names. Fields that cannot be
+// read are null/omitted, never invented. Every page interaction is
+// defensive: timeouts, one retry on navigation, per-match try/catch.
 
 import { chromium } from "playwright";
 import fs from "node:fs";
@@ -32,13 +43,23 @@ import {
   normalizeName,
   buildKey,
   resolveMatchUrl,
+  linkMatchesFixture,
+  nameVariants,
   isFinished,
   isUpcoming,
   dayStr,
-  parseStatLines,
   parseTimelineLine,
+  groupStatsRows,
+  TOP_ICON_ROWS,
+  labelToKey,
   filterBatch,
   cleanEntryForWorker,
+  compactEntry,
+  entryByteSize,
+  MAX_ENTRY_BYTES,
+  contentHash,
+  needsReharvest,
+  reharvestDecision,
 } from "./lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -49,51 +70,6 @@ const MAPPING_PATH = path.join(HERE, "mapping.json");
 const OUT_DIR = path.join(HERE, "out");
 const PAGE_TIMEOUT_MS = 60000;
 
-const STAT_LABELS = [
-  "Expected goals (xG)",
-  "xG on target (xGOT)",
-  "Expected assists (xA)",
-  "Goals prevented",
-  "Ball possession",
-  "Big chances",
-  "Touches in opposition box",
-  "Total shots",
-  "Shots on target",
-  "Shots off target",
-  "Blocked shots",
-  "Shots inside the box",
-  "Shots outside the box",
-  "Hit the woodwork",
-  "Headed goals",
-  "Corner kicks",
-  "Free kicks",
-  "Offsides",
-  "Passes",
-  "Accurate passes",
-  "Long passes",
-  "Accurate long passes",
-  "Passes in final third",
-  "Accurate passes in final third",
-  "Crosses",
-  "Accurate crosses",
-  "Key passes",
-  "Throw-ins",
-  "Fouls",
-  "Duels won",
-  "Tackles",
-  "Tackles won",
-  "Interceptions",
-  "Clearances",
-  "Errors leading to shot",
-  "Errors leading to goal",
-  "Goalkeeper saves",
-  "xGOT faced",
-  "Goals conceded",
-  "Goal kicks",
-  "Big chances scored",
-  "Big chances missed",
-];
-
 function loadJson(p, fallback) {
   try {
     return JSON.parse(fs.readFileSync(p, "utf8"));
@@ -102,55 +78,83 @@ function loadJson(p, fallback) {
   }
 }
 
-// ---- Board fetching (native fetch, cookie jar by hand) -------------------
-async function fetchBoard(date) {
-  const sessionRes = await fetch(`${SITE_URL}/api/session`, {
+// ---- Board + model fetching (native fetch, one shared cookie) ------------
+async function fetchSessionCookie() {
+  const res = await fetch(`${SITE_URL}/api/session`, {
     signal: AbortSignal.timeout(15000),
   });
-  if (!sessionRes.ok) throw new Error(`session ${sessionRes.status}`);
-  const setCookie = sessionRes.headers.getSetCookie
-    ? sessionRes.headers.getSetCookie()
-    : [];
-  const cookie = setCookie.map((c) => c.split(";")[0]).join("; ");
+  if (!res.ok) throw new Error(`session ${res.status}`);
+  const setCookie = res.headers.getSetCookie ? res.headers.getSetCookie() : [];
+  return setCookie.map((c) => c.split(";")[0]).join("; ");
+}
+
+async function fetchBoard(date, cookie) {
   // No Origin/Referer headers: the worker gate rejects a pages.dev Origin
   // (host not in ALLOWED_API_HOSTS) and passes on the cookie alone.
   // This was the run #3 regression: the null fix reintroduced these headers.
   const res = await fetch(`${SITE_URL}/api/board?date=${date}`, {
-    headers: {
-      Cookie: cookie,
-    },
+    headers: { Cookie: cookie },
     signal: AbortSignal.timeout(40000),
   });
   if (!res.ok) throw new Error(`board ${date} ${res.status}`);
   const json = await res.json();
-  const matches = (json && json.data && json.data.matches) || [];
-  return matches;
+  return (json && json.data && json.data.matches) || [];
 }
 
-// ---- Small text parsers --------------------------------------------------
+// Sessioned model-route read for verify-before-skip. Returns the parsed
+// JSON or null on any failure (fail-safe: unverifiable keeps harvested).
+async function fetchModel(league, id, cookie) {
+  try {
+    const res = await fetch(`${SITE_URL}/api/model/match/${league}/${id}`, {
+      headers: { Cookie: cookie },
+      signal: AbortSignal.timeout(40000),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+// ---- Small text parsers (section-anchored, no classes) -------------------
 function parseMatchInfo(text) {
-  const pick = (re) => {
-    const m = text.match(re);
-    return m ? m[1].trim() : null;
-  };
-  const num = (re) => {
-    const v = pick(re);
+  const lines = String(text || "").split("\n");
+  let inSection = false;
+  const out = { referee: null, venue: null, capacity: null, attendance: null };
+  const num = (v) => {
     if (!v) return null;
     const n = Number(v.replace(/\s/g, ""));
     return Number.isFinite(n) ? n : null;
   };
-  return {
-    referee: pick(/REFEREE:\s*([^\n]+)/i),
-    venue: pick(/VENUE:\s*([^\n]+)/i),
-    capacity: num(/CAPACITY:\s*([\d\s]+)/i),
-    attendance: num(/ATTENDANCE:\s*([\d\s]+)/i),
-  };
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (/^MATCH INFORMATION/i.test(line)) { inSection = true; continue; }
+    if (inSection && /^([A-Z][A-Z ]{2,})\s*$/.test(line) && !/^(REFEREE|VENUE|CAPACITY|ATTENDANCE)/i.test(line)) {
+      // A new all-caps heading ends the section (unless it is one of ours).
+      if (line.length < 40) { inSection = false; continue; }
+    }
+    if (!inSection) continue;
+    const m = line.match(/^(REFEREE|VENUE|CAPACITY|ATTENDANCE)\s*:?\s*(.+)$/i);
+    if (!m) continue;
+    const key = m[1].toLowerCase();
+    if (key === "capacity" || key === "attendance") out[key] = num(m[2]);
+    else out[key] = m[2].trim();
+  }
+  return out;
 }
 
-function parseTimeline(text) {
+// Events from main-page innerText, split by half headings in document order.
+// Each event row is classified by parseTimelineLine; goals keep their
+// running score, cards keep their reason, subs keep replaced + minute.
+function parseEvents(text) {
+  const lines = String(text || "").split("\n");
   const events = [];
-  for (const raw of String(text || "").split("\n")) {
+  let half = null;
+  for (const raw of lines) {
     const line = raw.trim();
+    if (!line) continue;
+    if (/^1st half/i.test(line) || /^first half/i.test(line)) { half = "first"; continue; }
+    if (/^2nd half/i.test(line) || /^second half/i.test(line)) { half = "second"; continue; }
     const parsed = parseTimelineLine(line);
     if (!parsed) continue;
     let team = null;
@@ -186,43 +190,15 @@ function parseTimeline(text) {
       team,
       player,
       detail,
+      text: parsed.text,
+      half,
+      ...(parsed.score ? { score: parsed.score } : {}),
     });
   }
   return events;
 }
 
-function parseLineupsSection(text) {
-  const out = {
-    home: { formation: null, xi: null, subs: null, bench: null },
-    away: { formation: null, xi: null, subs: null, bench: null },
-  };
-  const formations = [...String(text || "").matchAll(/(?<!\d)(\d-\d-\d)(?!\d)/g)].map(
-    (m) => m[1]
-  );
-  if (formations[0]) out.home.formation = formations[0];
-  if (formations[1]) out.away.formation = formations[1];
-  const missing = [];
-  const missIdx = text.search(/MISSING PLAYERS/i);
-  if (missIdx >= 0) {
-    const chunk = text.slice(missIdx, missIdx + 2000);
-    for (const raw of chunk.split("\n").slice(1, 40)) {
-      const line = raw.trim();
-      if (!line) continue;
-      if (/^(COACH|MARKET VALUE|AGE|HEIGHT|AVG\. RATING|SUBSTITUTES)/i.test(line)) break;
-      const m = line.match(/^(.+?)\s*[—–-]\s*(.+)$/);
-      if (m) missing.push({ player: m[1].trim(), reason: m[2].trim(), team: null });
-    }
-  }
-  const coachMatch = text.match(/COACHES?:\s*([^\n]+)/i);
-  const coaches = coachMatch ? coachMatch[1].split("/").map((s) => s.trim()) : [];
-  return {
-    lineups: out,
-    missing,
-    coaches: { home: coaches[0] || null, away: coaches[1] || null },
-  };
-}
-
-// ---- Page extraction (all best-effort, nulls on absence) -----------------
+// ---- Page navigation -----------------------------------------------------
 async function gotoWithRetry(page, url) {
   try {
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: PAGE_TIMEOUT_MS });
@@ -237,17 +213,412 @@ async function gotoWithRetry(page, url) {
   }
 }
 
-function statsUrlOf(matchUrl) {
+// Split a Flashscore match URL into its base path + mid. Every derived page
+// keeps ?mid= (dropping it lands on a different match or an error page).
+function splitMatchUrl(matchUrl) {
   const m = String(matchUrl || "").match(/^(https:\/\/www\.flashscore\.com\/match\/[^?]+)\?mid=([^&]+)/);
   if (!m) return null;
-  return `${m[1]}/summary/stats/overall/?mid=${m[2]}`;
+  return { base: m[1], mid: m[2] };
 }
 
-async function extractFinished(page, matchUrl) {
+function pageUrl(split, suffix) {
+  return `${split.base}${suffix}?mid=${split.mid}`;
+}
+
+// ---- DOM extractors (self-contained evaluate callbacks: DOM APIs +
+// heading text + table structure + document order only, never classes) ------
+
+// Stats page: tables grouped by their nearest preceding heading (or by an
+// in-table group subheader row). Returns {group: [{home,label,away}]}.
+function statsPageEvaluate() {
+  const txt = (el) => ((el.innerText || el.textContent || "").replace(/\s+/g, " ").trim());
+  const groupOf = (h) => {
+    const s = h.toLowerCase();
+    if (s.includes("top stats")) return "top";
+    if (s.includes("shots")) return "shots";
+    if (s.includes("attack")) return "attack";
+    if (s.includes("passes")) return "passes";
+    if (s.includes("defense") || s.includes("defence")) return "defense";
+    if (s.includes("goalkeeping")) return "goalkeeping";
+    return null;
+  };
+  const heads = [...document.querySelectorAll("h1,h2,h3,h4,h5,h6")];
+  const groups = {};
+  const push = (g, row) => {
+    if (!g) return;
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(row);
+  };
+  for (const t of document.querySelectorAll("table")) {
+    let g = null;
+    const cap = t.querySelector("caption");
+    if (cap) g = groupOf(txt(cap));
+    if (!g) {
+      for (const h of heads) {
+        if (h.compareDocumentPosition(t) & 4) g = h;
+        else break;
+      }
+      g = g ? groupOf(txt(g)) : null;
+    }
+    const trs = t.querySelectorAll("tbody tr").length
+      ? t.querySelectorAll("tbody tr")
+      : t.querySelectorAll("tr");
+    for (const tr of trs) {
+      const cells = [...tr.querySelectorAll("td,th")];
+      if (cells.length === 1) {
+        const maybe = groupOf(txt(cells[0]));
+        if (maybe) { g = maybe; continue; }
+      }
+      if (cells.length < 3) continue;
+      if (cells.every((c) => c.tagName === "TH")) continue;
+      const vals = cells.map((c) => txt(c));
+      push(g, { home: vals[0], label: vals[1], away: vals[2] });
+    }
+  }
+  return groups;
+}
+
+// Lineups page, missing-players section: blocks in document order. Each
+// block is one team's list when the section splits into two blocks; a single
+// flat block cannot be attributed, so its rows carry team null (the cleaner
+// drops them and counts them — never guessed).
+function missingPageEvaluate() {
+  const txt = (el) => ((el.innerText || el.textContent || "").replace(/\s+/g, " ").trim());
+  const heads = [...document.querySelectorAll("h1,h2,h3,h4,h5,h6")];
+  let section = null;
+  for (const h of heads) {
+    if (txt(h).toLowerCase().includes("missing players")) { section = h; break; }
+  }
+  if (!section) return null;
+  // Section root: walk up until an element that contains more than just
+  // the heading (i.e. the section body), capped at 4 levels.
+  let root = section.parentElement;
+  for (let i = 0; i < 4 && root; i++) {
+    if (txt(root).length > txt(section).length + 10) break;
+    root = root.parentElement;
+  }
+  if (!root) return null;
+  const blocks = [];
+  const kids = [...root.children].filter((c) => c !== section && txt(c).length > 0);
+  const rowTexts = (el) => {
+    const rows = [];
+    const trs = el.querySelectorAll("tr");
+    if (trs.length) {
+      for (const tr of trs) {
+        const cells = [...tr.querySelectorAll("td,th")].map((c) => txt(c)).filter(Boolean);
+        if (cells.length >= 2) rows.push(cells.join(" - "));
+        else if (cells.length === 1) rows.push(cells[0]);
+      }
+      return rows;
+    }
+    for (const line of txt(el).split("\n")) {
+      const l = line.trim();
+      if (l) rows.push(l);
+    }
+    return rows;
+  };
+  for (const kid of kids) {
+    const rows = rowTexts(kid).filter((r) => !/missing players/i.test(r));
+    if (rows.length) blocks.push(rows);
+  }
+  if (!blocks.length) {
+    const body = txt(root).split("\n").map((s) => s.trim()).filter((s) => s && !/missing players/i.test(s));
+    if (body.length) blocks.push(body);
+  }
+  return blocks;
+}
+
+// Lineups page, player rows: tables in document order, split into teams by
+// the first team-name headings in document order. Returns rows with raw
+// cell texts; Node assigns XI/subs/bench by position in each team's list.
+function lineupsPlayersEvaluate(homeName, awayName) {
+  const txt = (el) => ((el.innerText || el.textContent || "").replace(/\s+/g, " ").trim());
+  const norm = (s) => s.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+  const hn = norm(homeName);
+  const an = norm(awayName);
+  const els = [...document.querySelectorAll("body *")];
+  let homePos = -1;
+  let awayPos = -1;
+  for (let i = 0; i < els.length; i++) {
+    const t = norm(txt(els[i]));
+    if (!t) continue;
+    if (homePos < 0 && t === hn) homePos = i;
+    if (awayPos < 0 && t === an) awayPos = i;
+    if (homePos >= 0 && awayPos >= 0) break;
+  }
+  const rows = [];
+  for (let i = 0; i < els.length; i++) {
+    const el = els[i];
+    if (el.tagName !== "TR" && el.tagName !== "LI") continue;
+    const cells = el.tagName === "TR"
+      ? [...el.querySelectorAll("td,th")].map((c) => txt(c))
+      : [txt(el)];
+    if (cells.length === 0 || cells.every((c) => !c)) continue;
+    let team = null;
+    if (homePos >= 0 && awayPos >= 0) {
+      if (i > homePos && i < awayPos) team = homePos < awayPos ? "home" : "away";
+      else if (i > awayPos) team = homePos < awayPos ? "away" : "home";
+    }
+    rows.push({ team, cells, text: cells.join(" ") });
+  }
+  return rows;
+}
+
+// Player-stats page: thead th names are the columns; tbody rows are data.
+// Returns null when no headed table parses (category omitted, never faked).
+function playerStatsEvaluate() {
+  const txt = (el) => ((el.innerText || el.textContent || "").replace(/\s+/g, " ").trim());
+  for (const t of document.querySelectorAll("table")) {
+    const ths = [...t.querySelectorAll("thead th")].map((c) => txt(c)).filter(Boolean);
+    const trs = [...t.querySelectorAll("tbody tr")];
+    if (!ths.length || !trs.length) continue;
+    const rows = [];
+    for (const tr of trs) {
+      const cells = [...tr.querySelectorAll("td,th")].map((c) => txt(c));
+      if (cells.length) rows.push(cells);
+    }
+    if (rows.length) return { columns: ths, rows };
+  }
+  return null;
+}
+
+// Odds page (1X2 full-time only): header tokens 1 / X / 2 identify the
+// table; rows are [bookmaker, 1, X, 2]. Bookmaker names exactly as shown.
+function oddsPageEvaluate() {
+  const txt = (el) => ((el.innerText || el.textContent || "").replace(/\s+/g, " ").trim());
+  for (const t of document.querySelectorAll("table")) {
+    const trs = [...t.querySelectorAll("tr")];
+    if (trs.length < 2) continue;
+    const header = [...trs[0].querySelectorAll("th,td")].map((c) => txt(c).toLowerCase());
+    if (!(header.includes("1") && header.includes("x") && header.includes("2"))) continue;
+    const out = [];
+    for (const tr of trs.slice(1)) {
+      const cells = [...tr.querySelectorAll("td,th")].map((c) => txt(c));
+      if (cells.length < 4) continue;
+      if (!cells[0] || cells[0] === "-") continue;
+      const prices = cells.slice(1, 4).map((c) => {
+        const n = Number(c);
+        return Number.isFinite(n) ? n : null;
+      });
+      if (prices.some((p) => p === null)) continue;
+      out.push({ name: cells[0], markets: { "1X2": prices } });
+    }
+    if (out.length) return out;
+  }
+  return null;
+}
+
+// ---- Node-side shaping of DOM extracts ------------------------------------
+function shapeStatsGroups(domGroups) {
+  const out = {};
+  for (const [group, rows] of Object.entries(domGroups || {})) {
+    const scalars = groupStatsRows(rows, group === "top" ? TOP_ICON_ROWS : []);
+    if (Object.keys(scalars).length > 0) out[group] = scalars;
+  }
+  return out;
+}
+
+// Text fallback for stats when no tables parse: label -> group membership is
+// approximate (page headings are authoritative); used only so a table-less
+// render still yields worker-valid grouped scalars instead of nothing.
+const FALLBACK_GROUP = {
+  xg: "top", xgot: "top", xa: "top", goalsPrevented: "top", possession: "top",
+  bigChances: "top", touchesInBox: "top", corners: "top", yellowCards: "top", redCards: "top",
+  totalShots: "shots", shotsOnTarget: "shots", shotsOffTarget: "shots", blockedShots: "shots",
+  shotsInsideBox: "shots", shotsOutsideBox: "shots", hitWoodwork: "shots", headedGoals: "shots",
+  bigChancesScored: "shots", bigChancesMissed: "shots",
+  freeKicks: "attack", offsides: "attack", keyPasses: "attack", crosses: "attack",
+  accurateCrosses: "attack", throwIns: "attack",
+  passes: "passes", accuratePasses: "passes", longPasses: "passes", accurateLongPasses: "passes",
+  passesFinalThird: "passes", accurateFinalThird: "passes",
+  fouls: "defense", duelsWon: "defense", tackles: "defense", tacklesWon: "defense",
+  interceptions: "defense", clearances: "defense", errorsToShot: "defense", errorsToGoal: "defense",
+  saves: "goalkeeping", xgotFaced: "goalkeeping", goalsConceded: "goalkeeping", goalKicks: "goalkeeping",
+};
+
+function shapeStatsTextFallback(lines) {
+  const groups = {};
+  let pending = null;
+  const flush = () => {
+    if (!pending) return;
+    const key = labelToKey(pending.label);
+    const group = FALLBACK_GROUP[key];
+    if (group && key) {
+      if (!groups[group]) groups[group] = {};
+      groups[group][`${key}Home`] = pending.home;
+      groups[group][`${key}Away`] = pending.away;
+    }
+    pending = null;
+  };
+  for (let i = 0; i < lines.length; i++) {
+    const line = String(lines[i] || "").trim();
+    if (!line) continue;
+    const m = line.match(/^(.+?)\s+(-?\d+(?:\.\d+)?%?)\s+(-?\d+(?:\.\d+)?%?)\s*$/);
+    if (m && labelToKey(m[1])) {
+      flush();
+      pending = { label: m[1], home: Number(m[2].replace("%", "")), away: Number(m[3].replace("%", "")) };
+      flush();
+      continue;
+    }
+    if (pending === null) {
+      // Label on its own line; values follow on the next two lines.
+      const home = Number(String(lines[i + 1] || "").replace("%", "").trim());
+      const away = Number(String(lines[i + 2] || "").replace("%", "").trim());
+      if (labelToKey(line) && Number.isFinite(home) && Number.isFinite(away)) {
+        pending = { label: line, home, away };
+        flush();
+      }
+    }
+  }
+  flush();
+  return groups;
+}
+
+const POSITION_TOKENS = new Set(["GK", "G", "DF", "D", "CB", "LB", "RB", "LWB", "RWB",
+  "MF", "M", "CDM", "CM", "CAM", "LM", "RM", "LW", "RW", "FW", "F", "ST", "CF", "SS"]);
+
+function splitNamePosition(cellText) {
+  const parts = String(cellText || "").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
+  if (parts.length >= 2 && POSITION_TOKENS.has(parts[parts.length - 1].toUpperCase())) {
+    return { name: parts.slice(0, -1).join(" "), position: parts[parts.length - 1].toUpperCase() };
+  }
+  const m = String(cellText || "").match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+  if (m && POSITION_TOKENS.has(m[2].toUpperCase())) {
+    return { name: m[1].trim(), position: m[2].toUpperCase() };
+  }
+  return { name: String(cellText || "").trim(), position: null };
+}
+
+function shapePlayerStats(dom) {
+  if (!dom || !dom.columns || !dom.rows) return null;
+  const columns = dom.columns.map((c) => labelToKey(c));
+  const rows = [];
+  for (const cells of dom.rows) {
+    if (!cells.length) continue;
+    const first = splitNamePosition(cells[0]);
+    if (!first.name) continue;
+    const row = { player: first.name, ...(first.position ? { position: first.position } : {}) };
+    for (let i = 1; i < cells.length && i < dom.columns.length; i++) {
+      const key = columns[i];
+      if (!key || key === columns[0]) continue;
+      const raw = String(cells[i] ?? "").trim();
+      if (raw === "" || raw === "-") row[key] = null;
+      else {
+        const n = Number(raw);
+        row[key] = Number.isFinite(n) && /^-?\d+(\.\d+)?$/.test(raw) ? n : raw;
+      }
+    }
+    rows.push(row);
+  }
+  return rows.length ? { columns: columns.slice(1), rows } : null;
+}
+
+// Parse one team's ordered player rows into XI / used subs / bench.
+// Document order is the structure: first 11 = XI, rows with substitution
+// info after that = used subs, the rest = bench. Fewer than 11 rows means
+// the parse failed, not a short lineup: return null rather than invent.
+function shapeTeamPlayers(rows) {
+  if (!rows || rows.length < 11) return null;
+  const parseRow = (r) => {
+    const text = r.text || "";
+    const markers = {
+      goalkeeper: /\(G\)/i.test(text),
+      captain: /\(C\)/i.test(text),
+    };
+    let number = null;
+    let name = null;
+    let rating = null;
+    let minute = null;
+    let replaced = null;
+    for (const c of r.cells) {
+      const cell = String(c || "").trim();
+      if (cell === "") continue;
+      if (number === null && /^\d{1,2}$/.test(cell)) { number = Number(cell); continue; }
+      if (minute === null && /^\d+\+?\d*'$/.test(cell)) { minute = cell; continue; }
+      if (rating === null && /^\d{1,2}\.\d$/.test(cell)) { rating = Number(cell); continue; }
+      if (name === null && /[A-Za-zÀ-ÿ]/.test(cell)) {
+        name = cell.replace(/\s*\((G|C)\)\s*/gi, "").trim();
+      }
+    }
+    const subM = text.match(/^(.+?)\s+in,?\s+(.+?)\s+out/i);
+    if (subM) {
+      if (!name) name = subM[1].replace(/\s*\((G|C)\)\s*/gi, "").trim();
+      replaced = subM[2].replace(/\s*\((G|C)\)\s*/gi, "").trim();
+    }
+    if (!name) return null;
+    return { number, name, rating, minute, replaced, ...markers };
+  };
+  const parsed = rows.map(parseRow).filter(Boolean);
+  if (parsed.length < 11) return null;
+  const xi = parsed.slice(0, 11).map((p) => ({
+    ...(p.number !== null ? { number: p.number } : {}),
+    name: p.name,
+    ...(p.rating !== null ? { rating: p.rating } : {}),
+    ...(p.goalkeeper ? { goalkeeper: true } : {}),
+    ...(p.captain ? { captain: true } : {}),
+  }));
+  const rest = parsed.slice(11);
+  const subs = [];
+  const bench = [];
+  for (const p of rest) {
+    if (p.minute !== null || p.replaced !== null) {
+      subs.push({
+        name: p.name,
+        ...(p.minute !== null ? { minute: p.minute } : {}),
+        ...(p.rating !== null ? { rating: p.rating } : {}),
+        ...(p.replaced !== null ? { replaced: p.replaced } : {}),
+      });
+    } else {
+      bench.push({ name: p.name, ...(p.rating !== null ? { rating: p.rating } : {}) });
+    }
+  }
+  return { xi, subs, bench };
+}
+
+function shapeMissing(blocks) {
+  if (!blocks) return null; // Section absent: omit (never infer "none").
+  if (blocks.length === 2) {
+    const out = [];
+    const sides = ["home", "away"];
+    for (let s = 0; s < 2; s++) {
+      for (const rowText of blocks[s]) {
+        const m = rowText.match(/^(.+?)\s*[—–-]\s*(.+)$/);
+        if (m) out.push({ team: sides[s], player: m[1].trim(), reason: m[2].trim() });
+      }
+    }
+    return out;
+  }
+  // Single flat block: rows carry no team label, so they cannot be posted
+  // (worker requires team). Return them team-less for the cleaner to drop
+  // with a count, rather than attributing them to the wrong team.
+  const out = [];
+  for (const rowText of blocks[0] || []) {
+    const m = rowText.match(/^(.+?)\s*[—–-]\s*(.+)$/);
+    if (m) out.push({ team: null, player: m[1].trim(), reason: m[2].trim() });
+  }
+  return out;
+}
+
+// ---- Extraction ------------------------------------------------------------
+async function extractStatsPage(page, split, suffix) {
+  const url = pageUrl(split, suffix);
+  if (!(await gotoWithRetry(page, url))) return null;
+  await page.waitForTimeout(2500).catch(() => {});
+  const dom = await page.evaluate(statsPageEvaluate).catch(() => null);
+  const groups = shapeStatsGroups(dom);
+  if (Object.keys(groups).length > 0) return groups;
+  // Table-less fallback: grouped scalars from page text lines.
+  const text = await page.evaluate(() => document.body.innerText).catch(() => "");
+  const fallback = shapeStatsTextFallback(text.split("\n"));
+  return Object.keys(fallback).length > 0 ? fallback : null;
+}
+
+async function extractFinished(page, matchUrl, fixture) {
   const result = {
     xgHome: null,
     xgAway: null,
     stats: null,
+    statsHalves: null,
     events: null,
     lineups: null,
     missing: null,
@@ -256,100 +627,136 @@ async function extractFinished(page, matchUrl) {
     venue: null,
     capacity: null,
     attendance: null,
+    playerStats: null,
+    marketValue: null,
+    odds: null,
   };
-  if (!(await gotoWithRetry(page, matchUrl))) return result;
-  await page.waitForTimeout(3000).catch(() => {});
-  const mainText = await page.evaluate(() => document.body.innerText).catch(() => "");
-  result.events = parseTimeline(mainText);
-  const info = parseMatchInfo(mainText);
-  Object.assign(result, info);
-  const lineupInfo = parseLineupsSection(mainText);
-  result.lineups = lineupInfo.lineups;
-  result.missing = lineupInfo.missing;
-  result.coaches = lineupInfo.coaches;
-  const statsUrl = statsUrlOf(matchUrl);
-  if (statsUrl && (await gotoWithRetry(page, statsUrl))) {
+  const split = splitMatchUrl(matchUrl);
+  if (!split) return result;
+  // Main page: events + match info.
+  if (await gotoWithRetry(page, matchUrl)) {
     await page.waitForTimeout(3000).catch(() => {});
-    const statsText = await page.evaluate(() => document.body.innerText).catch(() => "");
-    const lines = statsText.split("\n");
-    const parsed = parseStatLines(lines, STAT_LABELS);
-    if (parsed && Object.keys(parsed).length > 0) {
-      result.stats = parsed;
-      if (parsed.xg) {
-        result.xgHome = parsed.xg.home;
-        result.xgAway = parsed.xg.away;
-      }
+    const mainText = await page.evaluate(() => document.body.innerText).catch(() => "");
+    const events = parseEvents(mainText);
+    if (events.length) result.events = events;
+    Object.assign(result, parseMatchInfo(mainText));
+  }
+  // Full stats page (NEVER the Summary preview: possession differs).
+  const overall = await extractStatsPage(page, split, "/summary/stats/overall/");
+  if (overall) {
+    result.stats = overall;
+    const top = overall.top || {};
+    if (typeof top.xgHome === "number") result.xgHome = top.xgHome;
+    if (typeof top.xgAway === "number") result.xgAway = top.xgAway;
+  }
+  // Half-period stats (forward-compatible field; stripped by current worker).
+  const firstHalf = await extractStatsPage(page, split, "/summary/stats/1st-half/");
+  const secondHalf = await extractStatsPage(page, split, "/summary/stats/2nd-half/");
+  if (firstHalf || secondHalf) {
+    result.statsHalves = {
+      ...(firstHalf ? { firstHalf } : {}),
+      ...(secondHalf ? { secondHalf } : {}),
+    };
+  }
+  // Lineups page: formations, coaches, missing, players.
+  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/"))) {
+    await page.waitForTimeout(3000).catch(() => {});
+    const text = await page.evaluate(() => document.body.innerText).catch(() => "");
+    const formations = [...String(text || "").matchAll(/(?<!\d)(\d-\d-\d)(?!\d)/g)].map((m) => m[1]);
+    const coachMatch = text.match(/COACHES?:\s*([^\n]+)/i);
+    const coaches = coachMatch ? coachMatch[1].split("/").map((s) => s.trim()) : [];
+    const missingBlocks = await page.evaluate(missingPageEvaluate).catch(() => null);
+    const missing = shapeMissing(missingBlocks);
+    const playerRows = await page.evaluate(lineupsPlayersEvaluate, fixture.home, fixture.away).catch(() => []);
+    const homeRows = (playerRows || []).filter((r) => r.team === "home");
+    const awayRows = (playerRows || []).filter((r) => r.team === "away");
+    const home = shapeTeamPlayers(homeRows);
+    const away = shapeTeamPlayers(awayRows);
+    const lineups = {};
+    if (formations[0] || home) {
+      lineups.home = {
+        ...(formations[0] ? { formation: formations[0] } : {}),
+        ...(home || { xi: null, subs: null, bench: null }),
+      };
+      if (lineups.home.xi === null) delete lineups.home.xi;
+      if (lineups.home.subs === null) delete lineups.home.subs;
+      if (lineups.home.bench === null) delete lineups.home.bench;
+    }
+    if (formations[1] || away) {
+      lineups.away = {
+        ...(formations[1] ? { formation: formations[1] } : {}),
+        ...(away || { xi: null, subs: null, bench: null }),
+      };
+      if (lineups.away.xi === null) delete lineups.away.xi;
+      if (lineups.away.subs === null) delete lineups.away.subs;
+      if (lineups.away.bench === null) delete lineups.away.bench;
+    }
+    if (Object.keys(lineups).length) result.lineups = lineups;
+    if (coaches.length) {
+      result.coaches = { home: coaches[0] || null, away: coaches[1] || null };
+    }
+    if (missing !== null) result.missing = missing;
+  }
+  // Team average ratings ride in lineups sides (worker-accepted field).
+  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/avg-rating/"))) {
+    await page.waitForTimeout(2500).catch(() => {});
+    const text = await page.evaluate(() => document.body.innerText).catch(() => "");
+    const ratings = [...String(text || "").matchAll(/(?<!\d)(\d\.\d)(?!\d)/g)].map((m) => Number(m[1]));
+    if (ratings.length >= 2 && result.lineups) {
+      if (result.lineups.home) result.lineups.home.rating = ratings[0];
+      if (result.lineups.away) result.lineups.away.rating = ratings[1];
     }
   }
+  // Market value: best-effort only when € totals render (absence is normal).
+  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/market-value/"))) {
+    await page.waitForTimeout(2500).catch(() => {});
+    const text = await page.evaluate(() => document.body.innerText).catch(() => "");
+    const totals = [...String(text || "").matchAll(/€\s*([\d.,]+)\s*m/gi)].map((m) => m[0].replace(/\s+/g, ""));
+    if (totals.length >= 2) {
+      const num = (s) => {
+        const n = Number(s.replace(/[€m]/g, "").replace(",", "."));
+        return Number.isFinite(n) ? n : null;
+      };
+      result.marketValue = {
+        home: totals[0], away: totals[1],
+        homeMillions: num(totals[0]), awayMillions: num(totals[1]),
+      };
+    }
+  }
+  // Player-stat tables, all categories (thead th = columns, "-" = null).
+  const categories = ["top", "shots", "attack", "passes", "defense", "goalkeeping", "general"];
+  const playerStats = {};
+  for (const cat of categories) {
+    const url = pageUrl(split, `/summary/player-stats/${cat}/`);
+    if (!(await gotoWithRetry(page, url))) continue;
+    await page.waitForTimeout(2000).catch(() => {});
+    const dom = await page.evaluate(playerStatsEvaluate).catch(() => null);
+    const shaped = shapePlayerStats(dom);
+    if (shaped) playerStats[cat] = shaped;
+  }
+  if (Object.keys(playerStats).length) result.playerStats = playerStats;
+  // Finished-match odds: 1X2 full-time only (US books; 1xBet never appears).
+  const odds = await extractOdds(page, matchUrl);
+  if (odds) result.odds = odds;
   return result;
 }
 
-async function clickTab(page, label) {
-  const candidates = page.getByText(label, { exact: false });
-  const count = await candidates.count().catch(() => 0);
-  for (let i = 0; i < Math.min(count, 5); i++) {
-    try {
-      await candidates.nth(i).click({ timeout: 5000 });
-      await page.waitForTimeout(2500);
-      return true;
-    } catch {
-      // try the next matching element
-    }
-  }
-  return false;
-}
-
-// Odds tables: group rows by bookmaker, keyed by market heading text.
-// Only rows actually present on the page are recorded; nothing is guessed.
+// Odds page (shared by finished + upcoming): 1X2 full-time table only.
 async function extractOdds(page, matchUrl) {
-  if (!(await gotoWithRetry(page, matchUrl))) return null;
+  const split = splitMatchUrl(matchUrl);
+  if (!split) return null;
+  const url = pageUrl(split, "/odds/1x2-odds/full-time/");
+  if (!(await gotoWithRetry(page, url))) return null;
   await page.waitForTimeout(3000).catch(() => {});
-  await clickTab(page, "ODDS");
-  const tables = await page
-    .$$eval("table", (els) =>
-      els.map((t) => {
-        const rows = [...t.querySelectorAll("tr")].map((r) =>
-          [...r.querySelectorAll("th,td")].map((c) => (c.innerText || "").trim())
-        );
-        return rows.filter((r) => r.some((c) => c !== ""));
-      })
-    )
-    .catch(() => []);
-  const byBookmaker = new Map();
-  for (const rows of tables) {
-    if (rows.length < 2) continue;
-    const header = rows[0].join(" ").toLowerCase();
-    let market = null;
-    if (header.includes("1") && header.includes("x") && header.includes("2")) market = "1X2";
-    else if (header.includes("over") && header.includes("under")) market = "overUnder";
-    else if (header.includes("both teams")) market = "btts";
-    else if (header.includes("double chance")) market = "doubleChance";
-    else if (header.includes("asian")) market = "asianHandicap";
-    else if (header.includes("draw no bet")) market = "drawNoBet";
-    else if (header.includes("correct score")) market = "correctScore";
-    else if (header.includes("half time")) market = "halfTimeFullTime";
-    else if (header.includes("odd") && header.includes("even")) market = "oddEven";
-    if (!market) continue;
-    for (const row of rows.slice(1)) {
-      const name = row[0];
-      if (!name || name === "-") continue;
-      const prices = row.slice(1).map((p) => {
-        const n = Number(p);
-        return Number.isFinite(n) ? n : p;
-      });
-      if (!byBookmaker.has(name)) byBookmaker.set(name, {});
-      byBookmaker.get(name)[market] = prices;
-    }
-  }
-  if (byBookmaker.size === 0) return null;
-  const bookmakers = [...byBookmaker.entries()].map(([name, markets]) => ({ name, markets }));
-  return { bookmakers };
+  const bookmakers = await page.evaluate(oddsPageEvaluate).catch(() => null);
+  if (bookmakers && bookmakers.length) return { bookmakers };
+  return null;
 }
 
 // Discovery fallback: scan the Flashscore football schedule page for links
-// whose href or text matches both team names. The exact schedule-page URL
-// is the one unverified item in this script (see README): if it changes,
-// mapping.json stays the reliable path and fixtures land in `unresolved`.
+// whose href or text matches both team names under ANY spelling variant.
+// Returns {url, matched} or null. Every variant tried is logged by the
+// caller on unresolved entries so a miss names exactly what was tried.
 async function discoverMatchUrl(page, fixture) {
   try {
     const ok = await gotoWithRetry(page, "https://www.flashscore.com/football/");
@@ -360,11 +767,9 @@ async function discoverMatchUrl(page, fixture) {
         els.map((a) => ({ href: a.href, text: (a.innerText || "").trim() }))
       )
       .catch(() => []);
-    const home = normalizeName(fixture.home);
-    const away = normalizeName(fixture.away);
     for (const l of links) {
-      const hay = `${normalizeName(l.text)} ${normalizeName(l.href)}`;
-      if (hay.includes(home) && hay.includes(away)) return l.href;
+      const m = linkMatchesFixture(l.text, l.href, fixture);
+      if (m) return { url: l.href, matched: m };
     }
     return null;
   } catch {
@@ -381,14 +786,19 @@ async function main() {
     harvested: [],
     discovered: {},
     pending: [],
+    reharvestAttempts: {},
+    oddsHashes: {},
   });
+  if (!state.reharvestAttempts) state.reharvestAttempts = {};
+  if (!state.oddsHashes) state.oddsHashes = {};
   const harvestedSet = new Set(state.harvested || []);
   const dates = [dayStr(-1, TIME_ZONE), dayStr(0, TIME_ZONE), dayStr(1, TIME_ZONE)];
+  const cookie = await fetchSessionCookie();
   const fixtures = [];
   let boardsOk = 0;
   for (const date of dates) {
     try {
-      const matches = await fetchBoard(date);
+      const matches = await fetchBoard(date, cookie);
       boardsOk++;
       for (const m of matches) fixtures.push({ ...m, boardDate: date });
     } catch (err) {
@@ -403,6 +813,12 @@ async function main() {
   const entries = [];
   const unresolved = [];
   const skipped = [];
+  const proposedOddsHashes = {};
+  const newFinishedKeys = [];
+  let skippedOddsUnchanged = 0;
+  let reharvested = 0;
+  let reharvestAccepted = 0;
+  let unverifiable = 0;
   let browser = null;
   let page = null;
   const needBrowser = fixtures.some(
@@ -422,23 +838,61 @@ async function main() {
       const away = f.away && f.away.name;
       if (!home || !away) continue;
       const fixture = { date, home, away, league: f.league, leagueName: f.leagueName };
+      const key = buildKey(date, home, away);
       try {
         if (isFinished(f)) {
-          const key = buildKey(date, home, away);
+          // VERIFY-BEFORE-SKIP: never trust harvested[] blindly.
           if (harvestedSet.has(key)) {
-            skipped.push(key);
-            continue;
+            if (f.league && (f.id || f.matchId)) {
+              const model = await fetchModel(f.league, f.id || f.matchId, cookie);
+              const data = model && model.data;
+              if (data && !data.locked) {
+                if (!needsReharvest(data.fs)) {
+                  // Row is genuinely good: keep harvested, clear attempts.
+                  if (state.reharvestAttempts[key] !== undefined) delete state.reharvestAttempts[key];
+                  skipped.push(key);
+                  continue;
+                }
+                const decision = reharvestDecision(state.reharvestAttempts[key]);
+                if (decision.accept) {
+                  state.reharvestAttempts[key] = decision.attempts;
+                  reharvestAccepted++;
+                  skipped.push(key);
+                  continue;
+                }
+                state.reharvestAttempts[key] = decision.attempts;
+                harvestedSet.delete(key);
+                reharvested++;
+                // Fall through to re-harvest below.
+              } else {
+                // Locked, failed fetch, or missing data: fail-safe KEEP.
+                unverifiable++;
+                skipped.push(key);
+                continue;
+              }
+            } else {
+              unverifiable++;
+              skipped.push(key);
+              continue;
+            }
           }
           let url = resolveMatchUrl(fixture, mapping, state);
           if (!url && page) {
-            url = await discoverMatchUrl(page, fixture);
-            if (url) state.discovered[key] = url;
+            const found = await discoverMatchUrl(page, fixture);
+            if (found) {
+              url = found.url;
+              state.discovered[key] = url;
+            }
           }
           if (!url) {
-            unresolved.push({ ...fixture, reason: "no flashscore url (mapping + discovery missed)" });
+            unresolved.push({
+              ...fixture,
+              reason: "no flashscore url (mapping + discovery missed)",
+              tried: { home: nameVariants(home), away: nameVariants(away) },
+            });
             continue;
           }
-          const data = await extractFinished(page, url);
+          const data = await extractFinished(page, url, fixture);
           entries.push({
             date,
             home,
@@ -448,6 +902,7 @@ async function main() {
             source: "flashscore",
             matchUrl: url,
             stats: data.stats,
+            statsHalves: data.statsHalves,
             events: data.events,
             lineups: data.lineups,
             missing: data.missing,
@@ -456,20 +911,41 @@ async function main() {
             venue: data.venue,
             capacity: data.capacity,
             attendance: data.attendance,
-            odds: null,
+            playerStats: data.playerStats,
+            marketValue: data.marketValue,
+            odds: data.odds,
           });
           harvestedSet.add(key);
+          newFinishedKeys.push(key);
         } else if (isUpcoming(f) && date === dates[1]) {
           let url = resolveMatchUrl(fixture, mapping, state);
           if (!url && page) {
-            url = await discoverMatchUrl(page, fixture);
-            if (url) state.discovered[buildKey(date, home, away)] = url;
+            const found = await discoverMatchUrl(page, fixture);
+            if (found) {
+              url = found.url;
+              state.discovered[buildKey(date, home, away)] = url;
+            }
           }
           if (!url) {
-            unresolved.push({ ...fixture, reason: "no flashscore url for odds" });
+            unresolved.push({
+              ...fixture,
+              reason: "no flashscore url for odds",
+              tried: { home: nameVariants(home), away: nameVariants(away) },
+            });
             continue;
           }
           const odds = await extractOdds(page, url);
+          if (!odds) {
+            unresolved.push({ ...fixture, reason: "odds page yielded no 1X2 table" });
+            continue;
+          }
+          // CHANGE DETECTION: only post when the odds content changed.
+          const hash = contentHash(odds);
+          if (state.oddsHashes[key] === hash) {
+            skippedOddsUnchanged++;
+            continue;
+          }
+          proposedOddsHashes[key] = hash;
           entries.push({
             date,
             home,
@@ -479,6 +955,7 @@ async function main() {
             source: "flashscore",
             matchUrl: url,
             stats: null,
+            statsHalves: null,
             events: null,
             lineups: null,
             missing: null,
@@ -487,6 +964,8 @@ async function main() {
             venue: null,
             capacity: null,
             attendance: null,
+            playerStats: null,
+            marketValue: null,
             odds,
           });
         }
@@ -499,7 +978,36 @@ async function main() {
     if (browser) await browser.close().catch(() => {});
   }
 
-  const { valid, rejected } = filterBatch(entries.map(cleanEntryForWorker));
+  // Clean (worker-mirror rules), compact to budget, then validate.
+  // An entry that cannot fit even after compaction is dropped with a
+  // reason instead of poisoning the whole batch at the worker.
+  const cleaned = entries.map(cleanEntryForWorker);
+  const compacted = [];
+  const oversize = [];
+  let droppedMissingTotal = 0;
+  for (const e of cleaned) {
+    droppedMissingTotal += e.droppedMissingTeamUnknown || 0;
+    delete e.droppedMissingTeamUnknown;
+    const c = compactEntry(e, MAX_ENTRY_BYTES);
+    if (c === null) {
+      oversize.push({ date: e.date, home: e.home, away: e.away, bytes: entryByteSize(e), reason: "protected core exceeds 256KB budget" });
+      continue;
+    }
+    if (c.truncated) {
+      c.entry.truncated = true;
+      c.entry.truncatedNotes = c.notes;
+    }
+    compacted.push(c.entry);
+  }
+  const { valid, rejected } = filterBatch(compacted);
+  const validKeys = new Set(valid.map((e) => buildKey(e.date, e.home, e.away)));
+  const postFinishedKeys = newFinishedKeys.filter((k) => validKeys.has(k));
+  const postOddsHashes = {};
+  for (const [k, v] of Object.entries(proposedOddsHashes)) {
+    if (validKeys.has(k)) postOddsHashes[k] = v;
+  }
+  const allRejected = [...rejected, ...oversize.map((o) => ({ ...o, reasons: [o.reason] }))];
+
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const payload = {
@@ -509,8 +1017,20 @@ async function main() {
     meta: {
       totalFixtures: fixtures.length,
       skippedFinished: skipped.length,
-      rejected,
+      skippedOddsUnchanged,
+      reharvested,
+      reharvestAccepted,
+      unverifiable,
+      droppedMissingTeamUnknown: droppedMissingTotal,
+      rejected: allRejected,
       unresolved,
+      // Post manifest for post-step.mjs (worker ignores payload.meta;
+      // it reads only matches). Do NOT hand-edit: the post step consumes
+      // this to gate harvested-marking and odds hashes on stored == sent.
+      post: {
+        finishedKeys: postFinishedKeys,
+        oddsHashes: postOddsHashes,
+      },
     },
   };
   const outPath = path.join(OUT_DIR, `payload-${stamp}.json`);
@@ -520,7 +1040,7 @@ async function main() {
   state.pending = unresolved;
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
   console.log(
-    `run done: ${valid.length} valid, ${rejected.length} rejected, ${unresolved.length} unresolved, ${skipped.length} skipped -> ${outPath}`
+    `run done: ${valid.length} valid, ${allRejected.length} rejected, ${unresolved.length} unresolved, ${skipped.length} skipped, ${skippedOddsUnchanged} odds unchanged, ${reharvested} reharvested, ${reharvestAccepted} reharvest-accepted -> ${outPath}`
   );
 }
 

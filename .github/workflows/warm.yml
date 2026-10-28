@@ -4,6 +4,14 @@
 # board:<date>:world, a key the old */15 worker cron never touches.
 # Apply AFTER the in-flight harvester patch task finishes (never concurrently).
 # No secret value lives in this file — only the secrets.HARVEST_TOKEN reference.
+#
+# v39 CHUNKING NOTE: one request cannot carry all 220 leagues — Cloudflare
+# caps a request at ~50 subrequests, so whole-list full calls deterministically
+# fail every league past the first ~50 (proven live: 50 ok, 170 failed, 0
+# recovered by an in-request retry). The full job below pages through the
+# canonical list with leagueOffset/leagueLimit (40 per page) until
+# remainingLeagues is empty, then retries failed leagues as explicit
+# leagues chunks (max 40) for up to 2 rounds. Requires worker v39 or later.
 name: World board warm
 
 on:
@@ -59,15 +67,64 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Full sweep (all 220 leagues, one date per call)
+      - name: Full sweep, chunked (all 220 leagues, one date at a time)
         env:
           HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
         run: |
-          for D in $(date -u -d 'yesterday' +%F) $(date -u +%F) $(date -u -d 'tomorrow' +%F); do
-            echo "warming $D"
-            curl -sS --max-time 900 -X POST "https://topcorner.pages.dev/api/warm" \
-              -H "x-harvest-token: $HARVEST_TOKEN" \
-              -H 'content-type: application/json' \
-              --data "{\"mode\":\"full\",\"dates\":[\"$D\"]}"
-            echo
-          done
+          Y=$(date -u -d 'yesterday' +%F); T=$(date -u +%F); M=$(date -u -d 'tomorrow' +%F)
+          python3 -c '
+          import json, os, subprocess, sys
+          token = os.environ["HARVEST_TOKEN"]
+          def warm(payload):
+              p = subprocess.run(["curl", "-sS", "--max-time", "900", "-X", "POST", "https://topcorner.pages.dev/api/warm", "-H", "x-harvest-token: " + token, "-H", "content-type: application/json", "--data", json.dumps(payload)], capture_output=True, text=True)
+              print(p.stdout)
+              if p.returncode != 0:
+                  print("curl failed: " + p.stderr, file=sys.stderr)
+                  return None
+              try:
+                  return json.loads(p.stdout)
+              except Exception:
+                  print("unparseable response", file=sys.stderr)
+                  return None
+          def row_of(res):
+              try:
+                  return res["data"]["dates"][0]
+              except Exception:
+                  return None
+          incomplete = False
+          for date in sys.argv[1:]:
+              print("=== full sweep " + date + " ===")
+              failed = []
+              complete = False
+              offset = 0
+              for page in range(6):
+                  row = row_of(warm({"mode": "full", "dates": [date], "leagueOffset": offset, "leagueLimit": 40}))
+                  if row is None:
+                      break
+                  failed.extend(row.get("leaguesFailed", []))
+                  rem = row.get("remainingLeagues", [])
+                  print(date + " page offset " + str(offset) + ": matches " + str(row.get("matches")) + " failed " + str(len(row.get("leaguesFailed", []))) + " remaining " + str(len(rem)))
+                  if not rem:
+                      complete = True
+                      break
+                  offset += 40
+              for rnd in range(2):
+                  failed = sorted(set(failed))
+                  if not failed:
+                      break
+                  print(date + " retry round " + str(rnd + 1) + ": " + str(len(failed)) + " leagues")
+                  new_failed = []
+                  for i in range(0, len(failed), 40):
+                      chunk = failed[i:i+40]
+                      row = row_of(warm({"mode": "full", "dates": [date], "leagues": chunk}))
+                      if row is None:
+                          new_failed.extend(chunk)
+                          continue
+                      new_failed.extend(row.get("leaguesFailed", []))
+                  failed = new_failed
+              failed = sorted(set(failed))
+              print(date + " FINAL failed: " + str(failed))
+              if failed or not complete:
+                  incomplete = True
+          sys.exit(1 if incomplete else 0)
+          ' "$Y" "$T" "$M"

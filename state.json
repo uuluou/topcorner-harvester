@@ -11,11 +11,9 @@
     "2026-10-28|new york city fc|atlanta united fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/new-york-city-vZraQYnO/?mid=Kf05WyYa"
   },
   "harvested": [
-    "2026-10-26|paris saint germain|lyon",
-    "2026-10-27|abha|al faisaly",
-    "2026-10-27|sassuolo|lazio"
+    "2026-10-26|paris saint germain|lyon"
   ],
-  "lastRun": "2026-10-28T17:50:58.057Z",
+  "lastRun": "2026-10-28T18:34:09.238Z",
   "pending": [
     {
       "date": "2026-10-27",
@@ -280,8 +278,48 @@
   ],
   "version": 1,
   "reharvestAttempts": {
-    "2026-10-27|abha|al faisaly": 3,
-    "2026-10-27|sassuolo|lazio": 3
+    "2026-10-27|abha|al faisaly": 0,
+    "2026-10-27|sassuolo|lazio": 0
   },
-  "oddsHashes": {}
+  "oddsHashes": {},
+  "reharvestNote": {
+    "2026-10-27|abha|al faisaly": {
+      "priorAttempts": 3,
+      "requeuedAt": "2026-10-28T18:30:47.122Z"
+    },
+    "2026-10-27|sassuolo|lazio": {
+      "priorAttempts": 3,
+      "requeuedAt": "2026-10-28T18:30:47.122Z"
+    }
+  },
+  "requeuePool": [
+    {
+      "key": "2026-10-27|abha|al faisaly",
+      "date": "2026-10-27",
+      "home": "abha",
+      "away": "al faisaly"
+    },
+    {
+      "key": "2026-10-27|sassuolo|lazio",
+      "date": "2026-10-27",
+      "home": "sassuolo",
+      "away": "lazio"
+    }
+  ],
+  "lastPost": {
+    "at": "2026-10-28T18:34:10.168Z",
+    "sent": 2,
+    "stored": 2,
+    "keptHarvested": true,
+    "prunedKeys": []
+  },
+  "verifiedStored": {},
+  "lastVerify": {
+    "at": "2026-10-28T18:34:11.673Z",
+    "verified": [],
+    "failed": {
+      "2026-10-27|abha|al faisaly": "empty",
+      "2026-10-27|sassuolo|lazio": "empty"
+    }
+  }
 }

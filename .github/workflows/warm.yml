@@ -1,0 +1,73 @@
+# World-board warming for TOPCORNER — triggers the site's /api/warm endpoint
+# (Pages worker, POST with the HARVEST_TOKEN repo secret). The endpoint
+# fetches per-league fixtures from the football API and stores them under
+# board:<date>:world, a key the old */15 worker cron never touches.
+# Apply AFTER the in-flight harvester patch task finishes (never concurrently).
+# No secret value lives in this file — only the secrets.HARVEST_TOKEN reference.
+name: World board warm
+
+on:
+  schedule:
+    - cron: "0 * * * *" # tier1 refresh, hourly
+    - cron: "*/10 * * * *" # live pass, every 10 minutes
+    - cron: "0 5,17 * * *" # full sweep, twice a day (05:00 + 17:00 UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: topcorner-warm
+  cancel-in-progress: true
+
+jobs:
+  tier1:
+    # Manual dispatch runs tier1 too (full/live stay schedule-only).
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 * * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Warm tier1 boards (yesterday, today, tomorrow)
+        env:
+          HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
+        run: |
+          Y=$(date -u -d 'yesterday' +%F); T=$(date -u +%F); M=$(date -u -d 'tomorrow' +%F)
+          curl -sS --max-time 600 -X POST "https://topcorner.pages.dev/api/warm" \
+            -H "x-harvest-token: $HARVEST_TOKEN" \
+            -H 'content-type: application/json' \
+            --data "{\"mode\":\"tier1\",\"dates\":[\"$Y\",\"$T\",\"$M\"]}"
+          echo
+
+  live:
+    if: github.event.schedule == '*/10 * * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Live pass (in-play leagues only)
+        env:
+          HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
+        run: |
+          Y=$(date -u -d 'yesterday' +%F); T=$(date -u +%F); M=$(date -u -d 'tomorrow' +%F)
+          curl -sS --max-time 300 -X POST "https://topcorner.pages.dev/api/warm" \
+            -H "x-harvest-token: $HARVEST_TOKEN" \
+            -H 'content-type: application/json' \
+            --data "{\"mode\":\"live\",\"dates\":[\"$Y\",\"$T\",\"$M\"]}"
+          echo
+
+  full:
+    if: github.event.schedule == '0 5,17 * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Full sweep (all 220 leagues, one date per call)
+        env:
+          HARVEST_TOKEN: ${{ secrets.HARVEST_TOKEN }}
+        run: |
+          for D in $(date -u -d 'yesterday' +%F) $(date -u +%F) $(date -u -d 'tomorrow' +%F); do
+            echo "warming $D"
+            curl -sS --max-time 900 -X POST "https://topcorner.pages.dev/api/warm" \
+              -H "x-harvest-token: $HARVEST_TOKEN" \
+              -H 'content-type: application/json' \
+              --data "{\"mode\":\"full\",\"dates\":[\"$D\"]}"
+            echo
+          done

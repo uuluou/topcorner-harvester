@@ -442,12 +442,95 @@ export function needsReharvest(fs) {
   return !xgPresent && !statsPresent;
 }
 
-// Re-harvest attempt accounting. Returns {attempts, accept} where accept
-// means "stop retrying after the cap even though the row is still bad".
-export const MAX_REHARVEST_ATTEMPTS = 3;
+// Re-harvest attempt accounting (SELF-HEALING: no terminal give-up).
+// Returns {attempts} only. The counter exists for logging/backoff, never
+// for removing a row from the retry pool: a row leaves the pool ONLY when
+// storage is verified (see applyVerifyResult). There is no accept state.
+// LEGACY_REHARVEST_CAP is NOT a retry cap: it is only the threshold that
+// identifies rows the OLD code gave up on (attempts >= cap), so
+// requeueLegacyCapped can move them back into the retry pool.
+export const LEGACY_REHARVEST_CAP = 3;
 export function reharvestDecision(attemptsSoFar) {
-  const attempts = (attemptsSoFar || 0) + 1;
-  return { attempts, accept: attempts >= MAX_REHARVEST_ATTEMPTS };
+  return { attempts: (attemptsSoFar || 0) + 1 };
+}
+
+// ---- Legacy self-recovery ------------------------------------------------
+// On load, rows the old code accepted-at-cap must re-queue automatically:
+// a key still in harvested[] with attempts at/over the legacy cap and NO
+// verifiedStored flag is moved back into the retry pool. History is kept
+// (reharvestNote) while the retry counter resets to 0. Rows with a
+// verifiedStored flag are never touched, and rows below the cap are left
+// to the normal verify-before-skip path. Returns {state, requeued} where
+// state is a new object (same shape as applyPostResult's return) and
+// requeued is [{key, date, home, away}] parsed from the keys.
+export function requeueLegacyCapped(state) {
+  const s = state || {};
+  const harvested = [...(s.harvested || [])];
+  const attempts = { ...(s.reharvestAttempts || {}) };
+  const notes = { ...(s.reharvestNote || {}) };
+  const verified = s.verifiedStored || {};
+  const pool = [...(s.requeuePool || [])];
+  const poolKeys = new Set(pool.map((e) => e.key));
+  const requeued = [];
+  const kept = [];
+  for (const key of harvested) {
+    const n = attempts[key] || 0;
+    if (n >= LEGACY_REHARVEST_CAP && !verified[key]) {
+      notes[key] = { priorAttempts: n, requeuedAt: new Date().toISOString() };
+      attempts[key] = 0;
+      if (!poolKeys.has(key)) {
+        const parts = String(key).split("|");
+        pool.push({ key, date: parts[0] || null, home: parts[1] || null, away: parts[2] || null });
+        poolKeys.add(key);
+      }
+      requeued.push(key);
+    } else {
+      kept.push(key);
+    }
+  }
+  return {
+    state: { ...s, harvested: kept, reharvestAttempts: attempts, reharvestNote: notes, requeuePool: pool },
+    requeued,
+  };
+}
+
+// ---- Verify-after-post ---------------------------------------------------
+// Pure classification of one model-route read-back. fs is the data.fs value
+// (null when the route carries no fs row). locked is handled by the caller
+// (a locked response carries no fs by design and must not count as stored).
+// verified ⟺ NOT needsReharvest(fs): present AND non-empty (has xG or stats).
+export function classifyReadback(fs) {
+  if (fs === null || fs === undefined) return { ok: false, reason: "not stored" };
+  if (needsReharvest(fs)) return { ok: false, reason: "empty" };
+  return { ok: true, reason: null };
+}
+
+// Apply read-back results to state. verifiedKeys stay harvested and gain a
+// verifiedStored flag; failed keys (map key -> reason) are pruned from
+// harvested and lose any verifiedStored flag. The latest run's outcome is
+// recorded in lastVerify. Requeue-pool membership is handled separately
+// by updateRequeuePool (a failed key stays pooled; a verified key leaves).
+export function applyVerifyResult(state, verifiedKeys, failedMap) {
+  const s = state || {};
+  const verified = new Set(verifiedKeys || []);
+  const failed = failedMap || {};
+  const harvested = [...(s.harvested || [])].filter((k) => !Object.prototype.hasOwnProperty.call(failed, k));
+  const verifiedStored = { ...(s.verifiedStored || {}) };
+  for (const k of verified) verifiedStored[k] = true;
+  for (const k of Object.keys(failed)) delete verifiedStored[k];
+  return {
+    ...s,
+    harvested,
+    verifiedStored,
+    lastVerify: { at: new Date().toISOString(), verified: [...verified], failed: { ...failed } },
+  };
+}
+
+// Remove succeeded keys from the requeue pool. Keys that failed any gate
+// stay pooled so the next run retries them.
+export function updateRequeuePool(pool, succeededKeys) {
+  const done = new Set(succeededKeys || []);
+  return (pool || []).filter((e) => !done.has(e.key));
 }
 
 // ---- Change detection (upcoming odds) -----------------------------------

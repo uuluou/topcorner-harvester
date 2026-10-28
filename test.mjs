@@ -27,6 +27,11 @@ import {
   stableStringify,
   needsReharvest,
   reharvestDecision,
+  LEGACY_REHARVEST_CAP,
+  requeueLegacyCapped,
+  classifyReadback,
+  applyVerifyResult,
+  updateRequeuePool,
   applyPostResult,
   applyOddsHashes,
 } from "./lib.mjs";
@@ -398,11 +403,97 @@ describe("needsReharvest", () => {
     assert.equal(needsReharvest({ xgHome: 1.68, xgAway: 0.95, stats: null }), false);
     assert.equal(needsReharvest({ xgHome: 1.68, xgAway: 0.95, stats: { top: {} } }), false);
   });
-  it("caps re-harvest attempts at 3", () => {
-    assert.deepEqual(reharvestDecision(0), { attempts: 1, accept: false });
-    assert.deepEqual(reharvestDecision(1), { attempts: 2, accept: false });
-    assert.deepEqual(reharvestDecision(2), { attempts: 3, accept: true });
-    assert.deepEqual(reharvestDecision(3), { attempts: 4, accept: true });
+  it("never accepts: attempts count only, no terminal state at any count", () => {
+    assert.deepEqual(reharvestDecision(0), { attempts: 1 });
+    assert.deepEqual(reharvestDecision(1), { attempts: 2 });
+    assert.deepEqual(reharvestDecision(2), { attempts: 3 });
+    assert.deepEqual(reharvestDecision(3), { attempts: 4 });
+    assert.deepEqual(reharvestDecision(5), { attempts: 6 });
+    assert.deepEqual(reharvestDecision(100), { attempts: 101 });
+    assert.equal("accept" in reharvestDecision(100), false);
+    assert.equal(LEGACY_REHARVEST_CAP, 3);
+  });
+});
+
+// ---- SELF-HEALING (no terminal give-up; verify-after-post; legacy re-queue) ----
+describe("self-healing", () => {
+  it("a row at attempts 5+ still retries (no terminal accept)", () => {
+    const d = reharvestDecision(5);
+    assert.equal(d.attempts, 6);
+    assert.equal(d.accept, undefined);
+  });
+  it("classifyReadback: missing -> not stored; empty -> empty; good -> ok", () => {
+    assert.deepEqual(classifyReadback(null), { ok: false, reason: "not stored" });
+    assert.deepEqual(classifyReadback(undefined), { ok: false, reason: "not stored" });
+    assert.deepEqual(classifyReadback({ xgHome: null, xgAway: null, stats: {} }), { ok: false, reason: "empty" });
+    assert.deepEqual(classifyReadback({ xgHome: null, xgAway: null, stats: null }), { ok: false, reason: "empty" });
+    assert.deepEqual(classifyReadback({ xgHome: 1.68, xgAway: 0.95, stats: null }), { ok: true, reason: null });
+    assert.deepEqual(classifyReadback({ xgHome: null, xgAway: null, stats: { top: { possessionHome: 59 } } }), { ok: true, reason: null });
+  });
+  it("applyVerifyResult: verified stays harvested + flagged; failed pruned", () => {
+    const state = {
+      harvested: ["2026-10-27|abha|al faisaly", "2026-10-27|sassuolo|lazio", "2026-10-26|paris saint germain|lyon"],
+      verifiedStored: {},
+    };
+    const next = applyVerifyResult(
+      state,
+      ["2026-10-27|abha|al faisaly"],
+      { "2026-10-27|sassuolo|lazio": "not stored" }
+    );
+    assert.deepEqual(next.harvested, ["2026-10-27|abha|al faisaly", "2026-10-26|paris saint germain|lyon"]);
+    assert.equal(next.verifiedStored["2026-10-27|abha|al faisaly"], true);
+    assert.equal(next.verifiedStored["2026-10-27|sassuolo|lazio"], undefined);
+    assert.deepEqual(next.lastVerify.failed, { "2026-10-27|sassuolo|lazio": "not stored" });
+    assert.deepEqual(next.lastVerify.verified, ["2026-10-27|abha|al faisaly"]);
+  });
+  it("applyVerifyResult: read-back present but empty stays pending", () => {
+    const state = { harvested: ["2026-10-27|abha|al faisaly"], verifiedStored: {} };
+    const c = classifyReadback({ xgHome: null, xgAway: null, stats: {} });
+    assert.equal(c.ok, false);
+    const next = applyVerifyResult(state, [], { "2026-10-27|abha|al faisaly": c.reason });
+    assert.deepEqual(next.harvested, []);
+    assert.equal(next.lastVerify.failed["2026-10-27|abha|al faisaly"], "empty");
+  });
+  it("legacy capped rows re-queue on load (run #8/#10 poison rows)", () => {
+    const state = {
+      harvested: ["2026-10-27|abha|al faisaly", "2026-10-27|sassuolo|lazio", "2026-10-26|paris saint germain|lyon"],
+      reharvestAttempts: { "2026-10-27|abha|al faisaly": 3, "2026-10-27|sassuolo|lazio": 4, "2026-10-26|paris saint germain|lyon": 1 },
+      verifiedStored: {},
+      requeuePool: [],
+    };
+    const { state: next, requeued } = requeueLegacyCapped(state);
+    assert.deepEqual(requeued, ["2026-10-27|abha|al faisaly", "2026-10-27|sassuolo|lazio"]);
+    assert.deepEqual(next.harvested, ["2026-10-26|paris saint germain|lyon"]);
+    assert.equal(next.reharvestNote["2026-10-27|abha|al faisaly"].priorAttempts, 3);
+    assert.equal(next.reharvestNote["2026-10-27|sassuolo|lazio"].priorAttempts, 4);
+    assert.equal(next.reharvestAttempts["2026-10-27|abha|al faisaly"], 0);
+    assert.equal(next.reharvestAttempts["2026-10-27|sassuolo|lazio"], 0);
+    assert.equal(next.requeuePool.length, 2);
+    assert.equal(next.requeuePool[0].key, "2026-10-27|abha|al faisaly");
+    assert.equal(next.requeuePool[0].date, "2026-10-27");
+    assert.equal(next.requeuePool[0].home, "abha");
+    // Below-cap rows and verified rows are untouched.
+    assert.equal(next.reharvestAttempts["2026-10-26|paris saint germain|lyon"], 1);
+  });
+  it("legacy re-queue skips verified rows even at/over cap", () => {
+    const state = {
+      harvested: ["2026-10-27|abha|al faisaly"],
+      reharvestAttempts: { "2026-10-27|abha|al faisaly": 5 },
+      verifiedStored: { "2026-10-27|abha|al faisaly": true },
+      requeuePool: [],
+    };
+    const { state: next, requeued } = requeueLegacyCapped(state);
+    assert.deepEqual(requeued, []);
+    assert.deepEqual(next.harvested, ["2026-10-27|abha|al faisaly"]);
+    assert.deepEqual(next.requeuePool, []);
+  });
+  it("verified rows leave the pool; failed rows stay pooled", () => {
+    const pool = [
+      { key: "2026-10-27|abha|al faisaly", date: "2026-10-27", home: "abha", away: "al faisaly" },
+      { key: "2026-10-27|sassuolo|lazio", date: "2026-10-27", home: "sassuolo", away: "lazio" },
+    ];
+    const next = updateRequeuePool(pool, ["2026-10-27|abha|al faisaly"]);
+    assert.deepEqual(next.map((e) => e.key), ["2026-10-27|sassuolo|lazio"]);
   });
 });
 

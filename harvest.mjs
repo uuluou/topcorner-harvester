@@ -14,7 +14,11 @@
 //   2. For each FINISHED match already in state.json: VERIFY-BEFORE-SKIP
 //      via a sessioned model-route read. A row that is absent, or carries
 //      neither xG nor any stats (the poisoned-row signature), is unmarked
-//      for re-harvest (attempt cap 3 in state.json, then accepted).
+//      for re-harvest. There is NO terminal give-up: attempts are counted
+//      for logging only and a row leaves the retry pool ONLY when storage
+//      is verified (post-step read-back). Legacy rows the old code
+//      accepted-at-cap re-queue automatically on load (see
+//      requeueLegacyCapped in lib.mjs).
 //   3. For each unharvested FINISHED match: resolve its Flashscore URL
 //      (mapping.json, then state.discovered, then schedule-page discovery
 //      with spelling variants) and extract the FULL inventory: full stats
@@ -60,6 +64,7 @@ import {
   contentHash,
   needsReharvest,
   reharvestDecision,
+  requeueLegacyCapped,
 } from "./lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -798,7 +803,7 @@ async function discoverMatchUrl(page, fixture) {
 // ---- Main ------------------------------------------------------------------
 async function main() {
   const mapping = loadJson(MAPPING_PATH, { version: 1, aliases: {}, matches: {} });
-  const state = loadJson(STATE_PATH, {
+  let state = loadJson(STATE_PATH, {
     version: 1,
     lastRun: null,
     harvested: [],
@@ -809,6 +814,13 @@ async function main() {
   });
   if (!state.reharvestAttempts) state.reharvestAttempts = {};
   if (!state.oddsHashes) state.oddsHashes = {};
+  // SELF-HEALING (legacy recovery): rows the old code accepted-at-cap
+  // (attempts >= 3, no verifiedStored flag) re-queue automatically here,
+  // with zero manual state edits. History is kept in reharvestNote.
+  const legacy = requeueLegacyCapped(state);
+  state = legacy.state;
+  const requeuedKeys = legacy.requeued;
+  if (!state.requeuePool) state.requeuePool = [];
   const harvestedSet = new Set(state.harvested || []);
   const dates = [dayStr(-1, TIME_ZONE), dayStr(0, TIME_ZONE), dayStr(1, TIME_ZONE)];
   const cookie = await fetchSessionCookie();
@@ -827,19 +839,49 @@ async function main() {
     console.error("no board could be fetched; aborting run");
     process.exit(1);
   }
+  // SELF-HEALING: requeue-pool rows (legacy capped rows + any rows the
+  // post step left pooled) re-extract as pseudo-fixtures even when their
+  // match is no longer on the 3-day board. Board fixtures win on key
+  // collision (same match processed once, via the board path).
+  const boardKeys = new Set(fixtures.map((f) => buildKey(f.boardDate, f.home.name, f.away.name)));
+  const poolToProcess = [];
+  for (const p of state.requeuePool || []) {
+    if (!p || !p.key || !p.date || !p.home || !p.away) continue;
+    if (boardKeys.has(p.key)) continue;
+    poolToProcess.push(p);
+  }
+  for (const p of poolToProcess) {
+    fixtures.push({
+      boardDate: p.date,
+      home: { name: p.home },
+      away: { name: p.away },
+      league: p.league || null,
+      leagueName: null,
+      id: p.id || null,
+      matchId: p.id || null,
+      // Pool rows are finished matches by construction (they were
+      // harvested before); the status field is what routes them into
+      // the finished branch (isFinished requires state post/completed).
+      status: { state: "post", completed: true },
+      fromRequeue: true,
+    });
+  }
 
   const entries = [];
   const unresolved = [];
   const skipped = [];
   const proposedOddsHashes = {};
   const newFinishedKeys = [];
+  // Read-back candidates for post-step verification (league+id required
+  // for the model route; entries without them keep stored-count gating).
+  const verifyCandidates = [];
   let skippedOddsUnchanged = 0;
   let reharvested = 0;
-  let reharvestAccepted = 0;
+  const requeued = requeuedKeys.length;
   let unverifiable = 0;
   let browser = null;
   let page = null;
-  const needBrowser = fixtures.some(
+  const needBrowser = poolToProcess.length > 0 || fixtures.some(
     (f) => (isFinished(f) && !harvestedSet.has(buildKey(f.boardDate, f.home.name, f.away.name))) ||
       (isUpcoming(f) && f.boardDate === dates[1])
   );
@@ -871,13 +913,9 @@ async function main() {
                   skipped.push(key);
                   continue;
                 }
+                // SELF-HEALING: no terminal accept. Attempts count only;
+                // the row ALWAYS re-enters the retry pool below.
                 const decision = reharvestDecision(state.reharvestAttempts[key]);
-                if (decision.accept) {
-                  state.reharvestAttempts[key] = decision.attempts;
-                  reharvestAccepted++;
-                  skipped.push(key);
-                  continue;
-                }
                 state.reharvestAttempts[key] = decision.attempts;
                 harvestedSet.delete(key);
                 reharvested++;
@@ -933,8 +971,14 @@ async function main() {
             marketValue: data.marketValue,
             odds: data.odds,
           });
-          harvestedSet.add(key);
+          // SELF-HEALING: do NOT mark harvested at build time (the run #8
+          // poison path: rejected entries stayed harvested). Marking happens
+          // below, only for entries that pass validation; post-step then
+          // prunes on stored < sent and on read-back failure.
           newFinishedKeys.push(key);
+          if (f.league && (f.id || f.matchId)) {
+            verifyCandidates.push({ key, league: f.league, id: f.id || f.matchId });
+          }
         } else if (isUpcoming(f) && date === dates[1]) {
           let url = resolveMatchUrl(fixture, mapping, state);
           if (!url && page) {
@@ -1017,6 +1061,11 @@ async function main() {
   const { valid, rejected } = filterBatch(compacted);
   const validKeys = new Set(valid.map((e) => buildKey(e.date, e.home, e.away)));
   const postFinishedKeys = newFinishedKeys.filter((k) => validKeys.has(k));
+  // SELF-HEALING: only validated entries join harvestedSet. Rejected
+  // entries (and oversize-dropped ones) stay OUT, so they retry next run
+  // instead of poisoning harvested[].
+  for (const k of postFinishedKeys) harvestedSet.add(k);
+  const postVerify = verifyCandidates.filter((v) => validKeys.has(v.key));
   const postOddsHashes = {};
   for (const [k, v] of Object.entries(proposedOddsHashes)) {
     if (validKeys.has(k)) postOddsHashes[k] = v;
@@ -1034,7 +1083,7 @@ async function main() {
       skippedFinished: skipped.length,
       skippedOddsUnchanged,
       reharvested,
-      reharvestAccepted,
+      requeued,
       unverifiable,
       droppedMissingTeamUnknown: droppedMissingTotal,
       rejected: allRejected,
@@ -1045,6 +1094,10 @@ async function main() {
       post: {
         finishedKeys: postFinishedKeys,
         oddsHashes: postOddsHashes,
+        // Read-back manifest for post-step.mjs: model-route league+id per
+        // valid finished entry. Post-step verifies each via a sessioned
+        // model-route read and prunes read-back failures from harvested.
+        verify: postVerify,
       },
     },
   };
@@ -1055,7 +1108,7 @@ async function main() {
   state.pending = unresolved;
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
   console.log(
-    `run done: ${valid.length} valid, ${allRejected.length} rejected, ${unresolved.length} unresolved, ${skipped.length} skipped, ${skippedOddsUnchanged} odds unchanged, ${reharvested} reharvested, ${reharvestAccepted} reharvest-accepted -> ${outPath}`
+    `run done: ${valid.length} valid, ${allRejected.length} rejected, ${unresolved.length} unresolved, ${skipped.length} skipped, ${skippedOddsUnchanged} odds unchanged, ${reharvested} reharvested, ${requeued} requeued -> ${outPath}`
   );
 }
 

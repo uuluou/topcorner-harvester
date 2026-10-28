@@ -532,7 +532,13 @@ export function applyOddsHashes(state, proposedHashes, postOk) {
 export function cleanEntryForWorker(e) {
   if (!e || typeof e !== "object") return e;
   const out = { ...e };
-  for (const k of ["stats", "events", "lineups", "missing", "coaches", "odds"]) {
+  // Null sections must be DELETED, never posted: the worker rejects
+  // explicit null for every section below. Run #8 regression: the three
+  // §4 forward-compatible fields were missing from this list, so entries
+  // whose sub-pages yielded nothing arrived as explicit nulls and the
+  // validator rejected the whole entry (core stats/xG/events lost with it).
+  for (const k of ["stats", "events", "lineups", "missing", "coaches", "odds",
+    "playerStats", "marketValue", "statsHalves"]) {
     if (out[k] === null) delete out[k];
   }
   // (a) Stats: keep only worker-accepted groups, and only scalar values.

@@ -181,6 +181,80 @@ describe("payload validation (per-entry contract)", () => {
   });
 });
 
+// ---- RUN #8 REGRESSION: null §4 fields must never reject an entry -----
+// Run #8 (2026-10-28) produced 0 valid entries because the two
+// reharvested finished matches carried explicit null playerStats,
+// marketValue and statsHalves, which the worker-mirror validator rejects.
+// The builder must omit absent §4 fields (cleaner deletes nulls); real
+// §4 objects must survive cleaning untouched.
+describe("null §4 fields sanitize (run #8 regression)", () => {
+  const good = (over) => ({
+    date: "2026-10-27",
+    home: "Abha",
+    away: "Al Faisaly",
+    xgHome: 1.68,
+    xgAway: 0.95,
+    source: "flashscore",
+    matchUrl: "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d/?mid=MumpnBeo",
+    stats: { top: { xgHome: 1.68, xgAway: 0.95 } },
+    events: [{ minute: 70, team: "away", type: "goal", player: "Flavio" }],
+    ...over,
+  });
+  it("validator still rejects explicit null §4 fields (why cleaning matters)", () => {
+    assert.ok(validateMatchEntry(good({ playerStats: null })).some((r) => r.includes("playerStats")));
+    assert.ok(validateMatchEntry(good({ marketValue: null })).some((r) => r.includes("marketValue")));
+    assert.ok(validateMatchEntry(good({ statsHalves: null })).some((r) => r.includes("statsHalves")));
+  });
+  it("cleans a run #8-shaped entry into a worker-valid entry, core kept", () => {
+    const raw = good({ playerStats: null, marketValue: null, statsHalves: null, odds: null });
+    const cleaned = cleanEntryForWorker(raw);
+    assert.equal("playerStats" in cleaned, false);
+    assert.equal("marketValue" in cleaned, false);
+    assert.equal("statsHalves" in cleaned, false);
+    assert.equal("odds" in cleaned, false);
+    assert.equal(cleaned.stats.top.xgHome, 1.68);
+    assert.equal(cleaned.events.length, 1);
+    assert.deepEqual(validateMatchEntry(cleaned), []);
+  });
+  it("keeps real §4 objects through cleaning", () => {
+    const ps = { top: [{ name: "Flavio", rating: 7.5 }] };
+    const mv = { home: "€13.9m", away: "€9.2m", homeMillions: 13.9, awayMillions: 9.2 };
+    const sh = { firstHalf: { top: { xgHome: 0.5, xgAway: 0.2 } } };
+    const cleaned = cleanEntryForWorker(good({ playerStats: ps, marketValue: mv, statsHalves: sh }));
+    assert.deepEqual(cleaned.playerStats, ps);
+    assert.deepEqual(cleaned.marketValue, mv);
+    assert.deepEqual(cleaned.statsHalves, sh);
+    assert.deepEqual(validateMatchEntry(cleaned), []);
+  });
+  it("odds-only entry (no §4 keys at all) validates after cleaning", () => {
+    const raw = {
+      date: "2026-10-28", home: "AC Milan", away: "Bologna",
+      xgHome: null, xgAway: null, source: "flashscore",
+      matchUrl: "https://www.flashscore.com/match/football/ac-milan-MwxmYTFj/bologna-xyz/?mid=MwxmYTFj",
+      stats: null, events: null, lineups: null, missing: null, coaches: null,
+      referee: null, venue: null, capacity: null, attendance: null,
+      odds: { bookmakers: [{ name: "DraftKings", markets: {} }] },
+    };
+    const cleaned = cleanEntryForWorker(raw);
+    assert.equal("playerStats" in cleaned, false);
+    assert.equal("statsHalves" in cleaned, false);
+    assert.deepEqual(validateMatchEntry(cleaned), []);
+  });
+  it("sanitize does not strip real core data", () => {
+    const raw = good({
+      lineups: { home: { formation: "4-2-3-1", xi: [{ name: "Abha GK" }] } },
+      missing: [],
+      coaches: { home: "Buric D.", away: "Solinas G." },
+      referee: "Ali Bakri A.", venue: "Prince Sultan bin Abdul Aziz Stadium",
+    });
+    const cleaned = cleanEntryForWorker(raw);
+    assert.equal(cleaned.lineups.home.formation, "4-2-3-1");
+    assert.equal(cleaned.coaches.home, "Buric D.");
+    assert.equal(cleaned.referee, "Ali Bakri A.");
+    assert.deepEqual(validateMatchEntry(cleaned), []);
+  });
+});
+
 describe("state skip logic", () => {
   it("skips an already-harvested finished match, nothing else", () => {
     const harvested = new Set(["2026-10-26|psg|lyon"]);

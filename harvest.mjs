@@ -613,12 +613,55 @@ async function extractStatsPage(page, split, suffix) {
   return Object.keys(fallback).length > 0 ? fallback : null;
 }
 
+// §4 forward-compatible extraction: half-period stats, market value,
+// player-stat tables. Assigns keys ONLY when a sub-page yields data;
+// absence stays absent (undefined), never null — the worker rejects
+// explicit null for these fields (run #8: whole entries were rejected
+// for null playerStats/marketValue/statsHalves, losing core data).
+async function extractForwardCompatible(page, split, result) {
+  const firstHalf = await extractStatsPage(page, split, "/summary/stats/1st-half/");
+  const secondHalf = await extractStatsPage(page, split, "/summary/stats/2nd-half/");
+  if (firstHalf || secondHalf) {
+    result.statsHalves = {
+      ...(firstHalf ? { firstHalf } : {}),
+      ...(secondHalf ? { secondHalf } : {}),
+    };
+  }
+  // Market value: best-effort only when € totals render (absence is normal).
+  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/market-value/"))) {
+    await page.waitForTimeout(2500).catch(() => {});
+    const text = await page.evaluate(() => document.body.innerText).catch(() => "");
+    const totals = [...String(text || "").matchAll(/€\s*([\d.,]+)\s*m/gi)].map((m) => m[0].replace(/\s+/g, ""));
+    if (totals.length >= 2) {
+      const num = (s) => {
+        const n = Number(s.replace(/[€m]/g, "").replace(",", "."));
+        return Number.isFinite(n) ? n : null;
+      };
+      result.marketValue = {
+        home: totals[0], away: totals[1],
+        homeMillions: num(totals[0]), awayMillions: num(totals[1]),
+      };
+    }
+  }
+  // Player-stat tables, all categories (thead th = columns, "-" = null).
+  const categories = ["top", "shots", "attack", "passes", "defense", "goalkeeping", "general"];
+  const playerStats = {};
+  for (const cat of categories) {
+    const url = pageUrl(split, `/summary/player-stats/${cat}/`);
+    if (!(await gotoWithRetry(page, url))) continue;
+    await page.waitForTimeout(2000).catch(() => {});
+    const dom = await page.evaluate(playerStatsEvaluate).catch(() => null);
+    const shaped = shapePlayerStats(dom);
+    if (shaped) playerStats[cat] = shaped;
+  }
+  if (Object.keys(playerStats).length) result.playerStats = playerStats;
+}
+
 async function extractFinished(page, matchUrl, fixture) {
   const result = {
     xgHome: null,
     xgAway: null,
     stats: null,
-    statsHalves: null,
     events: null,
     lineups: null,
     missing: null,
@@ -627,8 +670,6 @@ async function extractFinished(page, matchUrl, fixture) {
     venue: null,
     capacity: null,
     attendance: null,
-    playerStats: null,
-    marketValue: null,
     odds: null,
   };
   const split = splitMatchUrl(matchUrl);
@@ -649,15 +690,9 @@ async function extractFinished(page, matchUrl, fixture) {
     if (typeof top.xgHome === "number") result.xgHome = top.xgHome;
     if (typeof top.xgAway === "number") result.xgAway = top.xgAway;
   }
-  // Half-period stats (forward-compatible field; stripped by current worker).
-  const firstHalf = await extractStatsPage(page, split, "/summary/stats/1st-half/");
-  const secondHalf = await extractStatsPage(page, split, "/summary/stats/2nd-half/");
-  if (firstHalf || secondHalf) {
-    result.statsHalves = {
-      ...(firstHalf ? { firstHalf } : {}),
-      ...(secondHalf ? { secondHalf } : {}),
-    };
-  }
+  // §4 forward-compatible fields (halves, market value, player stats).
+  // Keys are assigned ONLY when the sub-pages yield data — never null.
+  await extractForwardCompatible(page, split, result);
   // Lineups page: formations, coaches, missing, players.
   if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/"))) {
     await page.waitForTimeout(3000).catch(() => {});
@@ -707,34 +742,17 @@ async function extractFinished(page, matchUrl, fixture) {
       if (result.lineups.away) result.lineups.away.rating = ratings[1];
     }
   }
-  // Market value: best-effort only when € totals render (absence is normal).
-  if (await gotoWithRetry(page, pageUrl(split, "/summary/lineups/market-value/"))) {
-    await page.waitForTimeout(2500).catch(() => {});
-    const text = await page.evaluate(() => document.body.innerText).catch(() => "");
-    const totals = [...String(text || "").matchAll(/€\s*([\d.,]+)\s*m/gi)].map((m) => m[0].replace(/\s+/g, ""));
-    if (totals.length >= 2) {
-      const num = (s) => {
-        const n = Number(s.replace(/[€m]/g, "").replace(",", "."));
-        return Number.isFinite(n) ? n : null;
-      };
-      result.marketValue = {
-        home: totals[0], away: totals[1],
-        homeMillions: num(totals[0]), awayMillions: num(totals[1]),
-      };
-    }
+  // RESILIENCE (run #8): all three §4 groups absent at once means the
+  // sub-page session degraded, not that the match lacks the data — the
+  // core stats above already loaded, so retry the §4 pass once. A
+  // persistently absent market value ALONE is normal (no sub-tab bar
+  // for some matches); only the all-absent case warns.
+  if (result.statsHalves === undefined && result.marketValue === undefined && result.playerStats === undefined) {
+    await extractForwardCompatible(page, split, result);
   }
-  // Player-stat tables, all categories (thead th = columns, "-" = null).
-  const categories = ["top", "shots", "attack", "passes", "defense", "goalkeeping", "general"];
-  const playerStats = {};
-  for (const cat of categories) {
-    const url = pageUrl(split, `/summary/player-stats/${cat}/`);
-    if (!(await gotoWithRetry(page, url))) continue;
-    await page.waitForTimeout(2000).catch(() => {});
-    const dom = await page.evaluate(playerStatsEvaluate).catch(() => null);
-    const shaped = shapePlayerStats(dom);
-    if (shaped) playerStats[cat] = shaped;
+  if (result.statsHalves === undefined && result.marketValue === undefined && result.playerStats === undefined) {
+    console.warn(`forward-compatible fields all absent for ${fixture.home} vs ${fixture.away} (${fixture.date}); core data kept`);
   }
-  if (Object.keys(playerStats).length) result.playerStats = playerStats;
   // Finished-match odds: 1X2 full-time only (US books; 1xBet never appears).
   const odds = await extractOdds(page, matchUrl);
   if (odds) result.odds = odds;
@@ -955,7 +973,6 @@ async function main() {
             source: "flashscore",
             matchUrl: url,
             stats: null,
-            statsHalves: null,
             events: null,
             lineups: null,
             missing: null,
@@ -964,8 +981,6 @@ async function main() {
             venue: null,
             capacity: null,
             attendance: null,
-            playerStats: null,
-            marketValue: null,
             odds,
           });
         }

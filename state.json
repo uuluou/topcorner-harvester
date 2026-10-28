@@ -6,14 +6,16 @@
     "2026-10-28|parma|udinese": "https://www.flashscore.com/match/football/parma-6DxlaxHN/udinese-rXw8YKDE/?mid=McStfBxA",
     "2026-10-28|genoa|juventus": "https://www.flashscore.com/match/football/genoa-d0PJxeie/juventus-C06aJvIB/?mid=I7AFjxWH",
     "2026-10-28|monza|napoli": "https://www.flashscore.com/match/football/monza-4YSMlwj7/napoli-69Dxbc61/?mid=EXOYeX7c",
-    "2026-10-28|charlotte fc|cf montreal": "https://www.flashscore.com/match/football/cf-montreal-j9cigLCr/charlotte-fc-QJF7WTFB/?mid=KKLHG8eR"
+    "2026-10-28|charlotte fc|cf montreal": "https://www.flashscore.com/match/football/cf-montreal-j9cigLCr/charlotte-fc-QJF7WTFB/?mid=KKLHG8eR",
+    "2026-10-28|inter miami cf|fc cincinnati": "https://www.flashscore.com/match/football/fc-cincinnati-8btog05R/inter-miami-0AheRyBg/?mid=htpPj6JE",
+    "2026-10-28|new york city fc|atlanta united fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/new-york-city-vZraQYnO/?mid=Kf05WyYa"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
     "2026-10-27|abha|al faisaly",
     "2026-10-27|sassuolo|lazio"
   ],
-  "lastRun": "2026-10-28T08:55:14.835Z",
+  "lastRun": "2026-10-28T15:25:56.022Z",
   "pending": [
     {
       "date": "2026-10-27",
@@ -21,7 +23,16 @@
       "away": "Cagliari",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url (mapping + discovery missed)"
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "as roma",
+          "roma"
+        ],
+        "away": [
+          "cagliari"
+        ]
+      }
     },
     {
       "date": "2026-10-27",
@@ -29,7 +40,31 @@
       "away": "Como",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url (mapping + discovery missed)"
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "torino"
+        ],
+        "away": [
+          "como"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "home": "AC Milan",
+      "away": "Bologna",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-10-28",
+      "home": "Parma",
+      "away": "Udinese",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-28",
@@ -37,7 +72,39 @@
       "away": "Internazionale",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "venezia"
+        ],
+        "away": [
+          "internazionale"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "home": "Genoa",
+      "away": "Juventus",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-10-28",
+      "home": "Monza",
+      "away": "Napoli",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-10-28",
+      "home": "Charlotte FC",
+      "away": "CF Montréal",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-28",
@@ -45,7 +112,7 @@
       "away": "FC Cincinnati",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-28",
@@ -53,7 +120,15 @@
       "away": "Red Bull New York",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "new england revolution"
+        ],
+        "away": [
+          "red bull new york"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -61,7 +136,7 @@
       "away": "Atlanta United FC",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-28",
@@ -69,7 +144,16 @@
       "away": "D.C. United",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "toronto fc",
+          "toronto"
+        ],
+        "away": [
+          "d c united"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -77,7 +161,16 @@
       "away": "Real Salt Lake",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "austin fc",
+          "austin"
+        ],
+        "away": [
+          "real salt lake"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -85,7 +178,17 @@
       "away": "Orlando City SC",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "chicago fire fc",
+          "chicago fire"
+        ],
+        "away": [
+          "orlando city sc",
+          "orlando city"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -93,7 +196,16 @@
       "away": "Columbus Crew",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "fc dallas",
+          "dallas"
+        ],
+        "away": [
+          "columbus crew"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -101,7 +213,16 @@
       "away": "Sporting Kansas City",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "minnesota united fc",
+          "minnesota united"
+        ],
+        "away": [
+          "sporting kansas city"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -109,7 +230,16 @@
       "away": "Philadelphia Union",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "nashville sc",
+          "nashville"
+        ],
+        "away": [
+          "philadelphia union"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -117,7 +247,16 @@
       "away": "Portland Timbers",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "st louis city sc",
+          "st louis city"
+        ],
+        "away": [
+          "portland timbers"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -125,7 +264,15 @@
       "away": "Colorado Rapids",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "san jose earthquakes"
+        ],
+        "away": [
+          "colorado rapids"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -133,7 +280,17 @@
       "away": "Houston Dynamo FC",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "seattle sounders fc",
+          "seattle sounders"
+        ],
+        "away": [
+          "houston dynamo fc",
+          "houston dynamo"
+        ]
+      }
     },
     {
       "date": "2026-10-28",
@@ -141,8 +298,22 @@
       "away": "San Diego FC",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds"
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "vancouver whitecaps"
+        ],
+        "away": [
+          "san diego fc",
+          "san diego"
+        ]
+      }
     }
   ],
-  "version": 1
+  "version": 1,
+  "reharvestAttempts": {
+    "2026-10-27|abha|al faisaly": 1,
+    "2026-10-27|sassuolo|lazio": 1
+  },
+  "oddsHashes": {}
 }

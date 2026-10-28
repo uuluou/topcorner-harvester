@@ -42,7 +42,7 @@ import {
 } from "./lib.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const SITE_URL = process.env.SITE_URL || "https://topcorner.bricoamgoun.com";
+const SITE_URL = process.env.SITE_URL || "https://topcorner.pages.dev";
 const TIME_ZONE = process.env.TIME_ZONE || "Africa/Casablanca";
 const STATE_PATH = path.join(HERE, "state.json");
 const MAPPING_PATH = path.join(HERE, "mapping.json");
@@ -112,11 +112,12 @@ async function fetchBoard(date) {
     ? sessionRes.headers.getSetCookie()
     : [];
   const cookie = setCookie.map((c) => c.split(";")[0]).join("; ");
+  // No Origin/Referer headers: the worker gate rejects a pages.dev Origin
+  // (host not in ALLOWED_API_HOSTS) and passes on the cookie alone.
+  // This was the run #3 regression: the null fix reintroduced these headers.
   const res = await fetch(`${SITE_URL}/api/board?date=${date}`, {
     headers: {
       Cookie: cookie,
-      Origin: SITE_URL,
-      Referer: `${SITE_URL}/`,
     },
     signal: AbortSignal.timeout(40000),
   });

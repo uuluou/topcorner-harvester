@@ -22,68 +22,150 @@
     "2026-10-28|st louis city sc|portland timbers": "https://www.flashscore.com/match/football/portland-timbers-bm8usLzB/st-louis-city-4r4sKQud/?mid=COgmsgnI",
     "2026-10-28|san jose earthquakes|colorado rapids": "https://www.flashscore.com/match/football/colorado-rapids-jmBZNRn8/san-jose-earthquakes-x05z14ue/?mid=8jmduXGU",
     "2026-10-28|seattle sounders fc|houston dynamo fc": "https://www.flashscore.com/match/football/houston-dynamo-2i4sdl32/seattle-sounders-6P5S63Ah/?mid=bFS5az2n",
-    "2026-10-28|vancouver whitecaps|san diego fc": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/vancouver-whitecaps-K2dlua5N/?mid=CI0d9Qm1"
+    "2026-10-28|vancouver whitecaps|san diego fc": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/vancouver-whitecaps-K2dlua5N/?mid=CI0d9Qm1",
+    "2026-10-30|casa pia|sporting cp": "https://www.flashscore.com/match/football/casa-pia-QFHt9Zgs/sporting-cp-tljXuHBC/"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon"
   ],
-  "lastRun": "2026-10-29T19:24:18.683Z",
+  "lastRun": "2026-10-29T23:23:44.181Z",
   "pending": [
     {
-      "date": "2026-10-28",
-      "home": "Venezia",
-      "away": "Internazionale",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "no flashscore url (mapping + discovery missed)",
+      "date": "2026-10-30",
+      "home": "Abha",
+      "away": "Al Ittihad",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
+      "reason": "no flashscore url for odds",
       "tried": {
         "home": [
-          "venezia"
+          "abha"
         ],
         "away": [
-          "internazionale"
+          "al ittihad"
         ]
       }
     },
     {
-      "date": "2026-10-28",
-      "home": "New England Revolution",
-      "away": "Red Bull New York",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url (mapping + discovery missed)",
+      "date": "2026-10-30",
+      "home": "Al Diriyah",
+      "away": "Neom SC",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
+      "reason": "no flashscore url for odds",
       "tried": {
         "home": [
-          "new england revolution"
+          "al diriyah"
         ],
         "away": [
-          "red bull new york"
+          "neom sc",
+          "neom"
         ]
       }
     },
     {
-      "date": "2026-10-28",
-      "home": "Toronto FC",
-      "away": "D.C. United",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url (mapping + discovery missed)",
+      "date": "2026-10-30",
+      "home": "Le Havre AC",
+      "away": "Paris Saint-Germain",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "no flashscore url for odds",
       "tried": {
         "home": [
-          "toronto fc",
-          "toronto"
+          "le havre ac",
+          "le havre"
         ],
         "away": [
-          "d c united"
+          "paris saint germain"
         ]
       }
     },
     {
-      "date": "2026-10-29",
-      "home": "Fiorentina",
-      "away": "Atalanta",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
+      "date": "2026-10-30",
+      "home": "Nice",
+      "away": "Stade Rennais",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "nice"
+        ],
+        "away": [
+          "stade rennais"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "home": "Al Shabab",
+      "away": "Al Ahli",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "al shabab"
+        ],
+        "away": [
+          "al ahli"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "home": "SV Elversberg",
+      "away": "Mainz",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "sv elversberg"
+        ],
+        "away": [
+          "mainz"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "home": "Villarreal",
+      "away": "Espanyol",
+      "league": "esp.1",
+      "leagueName": "Spanish LALIGA",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "villarreal"
+        ],
+        "away": [
+          "espanyol"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "home": "Lille",
+      "away": "Lens",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "lille"
+        ],
+        "away": [
+          "lens"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "home": "Casa Pia",
+      "away": "Sporting CP",
+      "league": "por.1",
+      "leagueName": "Portuguese Primeira Liga",
       "reason": "odds page yielded no 1X2 table"
     }
   ],
@@ -118,28 +200,16 @@
     }
   ],
   "lastPost": {
-    "at": "2026-10-29T19:24:19.097Z",
-    "sent": 19,
+    "at": "2026-10-29T23:23:44.528Z",
+    "sent": 7,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
-      "2026-10-28|ac milan|bologna",
-      "2026-10-28|parma|udinese",
-      "2026-10-28|genoa|juventus",
-      "2026-10-28|monza|napoli",
-      "2026-10-28|charlotte fc|cf montreal",
-      "2026-10-28|inter miami cf|fc cincinnati",
-      "2026-10-28|new york city fc|atlanta united fc",
-      "2026-10-28|austin fc|real salt lake",
-      "2026-10-28|chicago fire fc|orlando city sc",
-      "2026-10-28|fc dallas|columbus crew",
-      "2026-10-28|minnesota united fc|sporting kansas city",
-      "2026-10-28|nashville sc|philadelphia union",
-      "2026-10-28|st louis city sc|portland timbers",
-      "2026-10-28|san jose earthquakes|colorado rapids",
-      "2026-10-28|seattle sounders fc|houston dynamo fc",
-      "2026-10-28|vancouver whitecaps|san diego fc",
       "2026-10-29|al khaleej|al hazem",
+      "2026-10-29|frosinone|lecce",
+      "2026-10-29|al nassr|al kholood",
+      "2026-10-29|al riyadh|al qadsiah",
+      "2026-10-29|fiorentina|atalanta",
       "2026-10-27|abha|al faisaly",
       "2026-10-27|sassuolo|lazio"
     ]

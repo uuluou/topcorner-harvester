@@ -69,6 +69,7 @@ import {
   reharvestDecision,
   requeueLegacyCapped,
   poolFixture,
+  buildSubPageUrl,
   classifyNavError,
   detectChallengePage,
   createLoadFailureRecorder,
@@ -268,7 +269,9 @@ function splitMatchUrl(matchUrl) {
 }
 
 function pageUrl(split, suffix) {
-  return `${split.base}${suffix}?mid=${split.mid}`;
+  // Single choke point: all 8 sub-page kinds flow through here, so the
+  // normalization in buildSubPageUrl fixes every kind at once.
+  return buildSubPageUrl(`${split.base}?mid=${split.mid}`, suffix);
 }
 
 // ---- DOM extractors (self-contained evaluate callbacks: DOM APIs +

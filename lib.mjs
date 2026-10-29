@@ -76,6 +76,22 @@ export function resolveMatchUrl(fixture, mapping, state) {
   return null;
 }
 
+// Build a Flashscore sub-page URL from a match URL. The match base ends
+// with a slash before ?mid=, and every suffix starts with one, so naive
+// concatenation produces a double slash (".../AsIgIB3d//summary/..."),
+// which Flashscore answers http:404 (run #14: 294 failures, ALL http:404,
+// zero challenge/timeout/403/429). Normalization: strip ALL trailing
+// slashes from the path, strip ALL leading slashes from the suffix, join
+// with exactly one slash, and re-attach ?mid= exactly. Works whether the
+// base has a trailing slash or not. Returns null for an unparseable URL.
+export function buildSubPageUrl(matchUrl, suffix) {
+  const m = String(matchUrl || "").match(/^(https:\/\/www\.flashscore\.com\/match\/[^?]+)\?mid=([^&]+)/);
+  if (!m) return null;
+  const base = m[1].replace(/\/+$/, "");
+  const clean = String(suffix || "").replace(/^\/+/, "");
+  return `${base}/${clean}?mid=${m[2]}`;
+}
+
 export function isFinished(match) {
   const s = match && match.status;
   return !!s && (s.state === "post" || s.completed === true);

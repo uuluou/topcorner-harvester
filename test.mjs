@@ -42,6 +42,7 @@ import {
   formatLoadFailure,
   createLoadFailureRecorder,
   gotoWithLogging,
+  buildSubPageUrl,
 } from "./lib.mjs";
 
 const MAPPING = {
@@ -864,5 +865,87 @@ describe("load-failure visibility + bounded retry (run #13)", () => {
     recorder.reset();
     assert.equal(recorder.summary().total, 0);
     assert.deepEqual(recorder.lines, []);
+  });
+});
+
+describe("sub-page URL double-slash fix (run #14 regression)", () => {
+  const ABHA = "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d/?mid=MumpnBeo";
+  const ABHA_BASE = "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d";
+  const SASSUOLO = "https://www.flashscore.com/match/football/lazio-URcSl02h/sassuolo-QDdvI0zl/?mid=QgHKnTUq";
+  const SASSUOLO_BASE = "https://www.flashscore.com/match/football/lazio-URcSl02h/sassuolo-QDdvI0zl";
+  // Every sub-page kind the harvester requests, with the exact suffix from
+  // the call sites in harvest.mjs.
+  const KINDS = [
+    ["stats-overall", "/summary/stats/overall/"],
+    ["stats-1st-half", "/summary/stats/1st-half/"],
+    ["stats-2nd-half", "/summary/stats/2nd-half/"],
+    ["market-value", "/summary/lineups/market-value/"],
+    ["player-stats:top", "/summary/player-stats/top/"],
+    ["player-stats:shots", "/summary/player-stats/shots/"],
+    ["player-stats:attack", "/summary/player-stats/attack/"],
+    ["player-stats:passes", "/summary/player-stats/passes/"],
+    ["player-stats:defense", "/summary/player-stats/defense/"],
+    ["player-stats:goalkeeping", "/summary/player-stats/goalkeeping/"],
+    ["player-stats:general", "/summary/player-stats/general/"],
+    ["lineups", "/summary/lineups/"],
+    ["avg-rating", "/summary/lineups/avg-rating/"],
+    ["odds-1x2", "/odds/1x2-odds/full-time/"],
+  ];
+  const noDoubleSlash = (url) => !url.replace("https://", "").includes("//");
+
+  it("Abha: every sub-page kind builds a single-slash URL with ?mid= preserved", () => {
+    for (const [kind, suffix] of KINDS) {
+      const url = buildSubPageUrl(ABHA, suffix);
+      assert.equal(url, `${ABHA_BASE}${suffix}?mid=MumpnBeo`, kind);
+      assert.ok(noDoubleSlash(url), kind);
+    }
+  });
+
+  it("Sassuolo stats-overall: single slash, ?mid= preserved", () => {
+    const url = buildSubPageUrl(SASSUOLO, "/summary/stats/overall/");
+    assert.equal(url, `${SASSUOLO_BASE}/summary/stats/overall/?mid=QgHKnTUq`);
+    assert.ok(noDoubleSlash(url));
+  });
+
+  it("base WITHOUT a trailing slash yields the same single-slash URL", () => {
+    const noSlash = "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d?mid=MumpnBeo";
+    assert.equal(
+      buildSubPageUrl(noSlash, "/summary/stats/overall/"),
+      `${ABHA_BASE}/summary/stats/overall/?mid=MumpnBeo`
+    );
+  });
+
+  it("base with MULTIPLE trailing slashes still yields one slash", () => {
+    const multi = "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d//?mid=MumpnBeo";
+    assert.equal(
+      buildSubPageUrl(multi, "/summary/stats/overall/"),
+      `${ABHA_BASE}/summary/stats/overall/?mid=MumpnBeo`
+    );
+  });
+
+  it("suffix without a leading slash, or with double leading slashes, still yields one slash", () => {
+    assert.equal(
+      buildSubPageUrl(ABHA, "summary/stats/overall/"),
+      `${ABHA_BASE}/summary/stats/overall/?mid=MumpnBeo`
+    );
+    assert.equal(
+      buildSubPageUrl(ABHA, "//summary/stats/overall/"),
+      `${ABHA_BASE}/summary/stats/overall/?mid=MumpnBeo`
+    );
+  });
+
+  it("a different ?mid= value is preserved exactly", () => {
+    const other = "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d/?mid=AbC123xYz";
+    assert.equal(
+      buildSubPageUrl(other, "/odds/1x2-odds/full-time/"),
+      `${ABHA_BASE}/odds/1x2-odds/full-time/?mid=AbC123xYz`
+    );
+  });
+
+  it("unparseable URLs return null (no invented URL)", () => {
+    assert.equal(buildSubPageUrl(null, "/summary/stats/overall/"), null);
+    assert.equal(buildSubPageUrl("", "/summary/stats/overall/"), null);
+    assert.equal(buildSubPageUrl("https://www.flashscore.com/match/football/abha-lnEqnhJf/al-faisaly-AsIgIB3d/", "/summary/stats/overall/"), null);
+    assert.equal(buildSubPageUrl("https://example.com/match/x/?mid=abc", "/summary/stats/overall/"), null);
   });
 });

@@ -8,46 +8,18 @@
     "2026-10-28|monza|napoli": "https://www.flashscore.com/match/football/monza-4YSMlwj7/napoli-69Dxbc61/?mid=EXOYeX7c",
     "2026-10-28|charlotte fc|cf montreal": "https://www.flashscore.com/match/football/cf-montreal-j9cigLCr/charlotte-fc-QJF7WTFB/?mid=KKLHG8eR",
     "2026-10-28|inter miami cf|fc cincinnati": "https://www.flashscore.com/match/football/fc-cincinnati-8btog05R/inter-miami-0AheRyBg/?mid=htpPj6JE",
-    "2026-10-28|new york city fc|atlanta united fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/new-york-city-vZraQYnO/?mid=Kf05WyYa"
+    "2026-10-28|new york city fc|atlanta united fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/new-york-city-vZraQYnO/?mid=Kf05WyYa",
+    "2026-10-29|al khaleej|al hazem": "https://www.flashscore.com/match/football/al-hazem-rass-YZFeqj3D/al-khaleej-UanWW9fq/?mid=KjBZ31wh",
+    "2026-10-29|frosinone|lecce": "https://www.flashscore.com/match/football/frosinone-pfo9H1Wp/lecce-G8lYsMgU/?mid=As77hb15",
+    "2026-10-29|al nassr|al kholood": "https://www.flashscore.com/match/football/al-kholood-Mqs1WbFK/al-nassr-h4I89ZuE/?mid=8UYgdAyq",
+    "2026-10-29|al riyadh|al qadsiah": "https://www.flashscore.com/match/football/al-qadsiah-tvQZtrTd/al-riyadh-l6Iu2w06/?mid=0rSl0JxH",
+    "2026-10-29|fiorentina|atalanta": "https://www.flashscore.com/match/football/atalanta-8C9JjMXu/fiorentina-Q3A3IbXH/?mid=xU8afKWh"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon"
   ],
-  "lastRun": "2026-10-28T21:54:06.158Z",
+  "lastRun": "2026-10-29T00:26:54.940Z",
   "pending": [
-    {
-      "date": "2026-10-27",
-      "home": "AS Roma",
-      "away": "Cagliari",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "no flashscore url (mapping + discovery missed)",
-      "tried": {
-        "home": [
-          "as roma",
-          "roma"
-        ],
-        "away": [
-          "cagliari"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-27",
-      "home": "Torino",
-      "away": "Como",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "no flashscore url (mapping + discovery missed)",
-      "tried": {
-        "home": [
-          "torino"
-        ],
-        "away": [
-          "como"
-        ]
-      }
-    },
     {
       "date": "2026-10-28",
       "home": "Venezia",
@@ -65,215 +37,44 @@
       }
     },
     {
-      "date": "2026-10-28",
-      "home": "Charlotte FC",
-      "away": "CF Montréal",
-      "league": "usa.1",
-      "leagueName": "MLS",
+      "date": "2026-10-29",
+      "home": "Al Khaleej",
+      "away": "Al Hazem",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
       "reason": "odds page yielded no 1X2 table"
     },
     {
-      "date": "2026-10-28",
-      "home": "Inter Miami CF",
-      "away": "FC Cincinnati",
-      "league": "usa.1",
-      "leagueName": "MLS",
+      "date": "2026-10-29",
+      "home": "Frosinone",
+      "away": "Lecce",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
       "reason": "odds page yielded no 1X2 table"
     },
     {
-      "date": "2026-10-28",
-      "home": "New England Revolution",
-      "away": "Red Bull New York",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "new england revolution"
-        ],
-        "away": [
-          "red bull new york"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "New York City FC",
-      "away": "Atlanta United FC",
-      "league": "usa.1",
-      "leagueName": "MLS",
+      "date": "2026-10-29",
+      "home": "Al Nassr",
+      "away": "Al Kholood",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
       "reason": "odds page yielded no 1X2 table"
     },
     {
-      "date": "2026-10-28",
-      "home": "Toronto FC",
-      "away": "D.C. United",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "toronto fc",
-          "toronto"
-        ],
-        "away": [
-          "d c united"
-        ]
-      }
+      "date": "2026-10-29",
+      "home": "Al Riyadh",
+      "away": "Al Qadsiah",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
+      "reason": "odds page yielded no 1X2 table"
     },
     {
-      "date": "2026-10-28",
-      "home": "Austin FC",
-      "away": "Real Salt Lake",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "austin fc",
-          "austin"
-        ],
-        "away": [
-          "real salt lake"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Chicago Fire FC",
-      "away": "Orlando City SC",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "chicago fire fc",
-          "chicago fire"
-        ],
-        "away": [
-          "orlando city sc",
-          "orlando city"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "FC Dallas",
-      "away": "Columbus Crew",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "fc dallas",
-          "dallas"
-        ],
-        "away": [
-          "columbus crew"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Minnesota United FC",
-      "away": "Sporting Kansas City",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "minnesota united fc",
-          "minnesota united"
-        ],
-        "away": [
-          "sporting kansas city"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Nashville SC",
-      "away": "Philadelphia Union",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "nashville sc",
-          "nashville"
-        ],
-        "away": [
-          "philadelphia union"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "St. Louis CITY SC",
-      "away": "Portland Timbers",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "st louis city sc",
-          "st louis city"
-        ],
-        "away": [
-          "portland timbers"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "San Jose Earthquakes",
-      "away": "Colorado Rapids",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "san jose earthquakes"
-        ],
-        "away": [
-          "colorado rapids"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Seattle Sounders FC",
-      "away": "Houston Dynamo FC",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "seattle sounders fc",
-          "seattle sounders"
-        ],
-        "away": [
-          "houston dynamo fc",
-          "houston dynamo"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-28",
-      "home": "Vancouver Whitecaps",
-      "away": "San Diego FC",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "vancouver whitecaps"
-        ],
-        "away": [
-          "san diego fc",
-          "san diego"
-        ]
-      }
+      "date": "2026-10-29",
+      "home": "Fiorentina",
+      "away": "Atalanta",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
     }
   ],
   "version": 1,

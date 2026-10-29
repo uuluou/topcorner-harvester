@@ -13,12 +13,21 @@
     "2026-10-29|frosinone|lecce": "https://www.flashscore.com/match/football/frosinone-pfo9H1Wp/lecce-G8lYsMgU/?mid=As77hb15",
     "2026-10-29|al nassr|al kholood": "https://www.flashscore.com/match/football/al-kholood-Mqs1WbFK/al-nassr-h4I89ZuE/?mid=8UYgdAyq",
     "2026-10-29|al riyadh|al qadsiah": "https://www.flashscore.com/match/football/al-qadsiah-tvQZtrTd/al-riyadh-l6Iu2w06/?mid=0rSl0JxH",
-    "2026-10-29|fiorentina|atalanta": "https://www.flashscore.com/match/football/atalanta-8C9JjMXu/fiorentina-Q3A3IbXH/?mid=xU8afKWh"
+    "2026-10-29|fiorentina|atalanta": "https://www.flashscore.com/match/football/atalanta-8C9JjMXu/fiorentina-Q3A3IbXH/?mid=xU8afKWh",
+    "2026-10-28|austin fc|real salt lake": "https://www.flashscore.com/match/football/austin-fc-IeT6JBE3/real-salt-lake-W0ealpQl/?mid=vcG6UF2C",
+    "2026-10-28|chicago fire fc|orlando city sc": "https://www.flashscore.com/match/football/chicago-fire-UwAwNo2E/orlando-city-rsHkUNCo/?mid=nNJESgXO",
+    "2026-10-28|fc dallas|columbus crew": "https://www.flashscore.com/match/football/columbus-crew-pQ8rarA7/fc-dallas-4GtbI4Q1/?mid=jypPncIt",
+    "2026-10-28|minnesota united fc|sporting kansas city": "https://www.flashscore.com/match/football/minnesota-united-zXFxsw2a/sporting-kansas-city-CURGfJWt/?mid=b1mXpymg",
+    "2026-10-28|nashville sc|philadelphia union": "https://www.flashscore.com/match/football/nashville-sc-84yIDQMe/philadelphia-union-Szrwix67/?mid=vBeuqFH5",
+    "2026-10-28|st louis city sc|portland timbers": "https://www.flashscore.com/match/football/portland-timbers-bm8usLzB/st-louis-city-4r4sKQud/?mid=COgmsgnI",
+    "2026-10-28|san jose earthquakes|colorado rapids": "https://www.flashscore.com/match/football/colorado-rapids-jmBZNRn8/san-jose-earthquakes-x05z14ue/?mid=8jmduXGU",
+    "2026-10-28|seattle sounders fc|houston dynamo fc": "https://www.flashscore.com/match/football/houston-dynamo-2i4sdl32/seattle-sounders-6P5S63Ah/?mid=bFS5az2n",
+    "2026-10-28|vancouver whitecaps|san diego fc": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/vancouver-whitecaps-K2dlua5N/?mid=CI0d9Qm1"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon"
   ],
-  "lastRun": "2026-10-29T00:26:54.940Z",
+  "lastRun": "2026-10-29T06:20:33.294Z",
   "pending": [
     {
       "date": "2026-10-28",
@@ -33,6 +42,39 @@
         ],
         "away": [
           "internazionale"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "home": "New England Revolution",
+      "away": "Red Bull New York",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "new england revolution"
+        ],
+        "away": [
+          "red bull new york"
+        ]
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "home": "Toronto FC",
+      "away": "D.C. United",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "toronto fc",
+          "toronto"
+        ],
+        "away": [
+          "d c united"
         ]
       }
     },

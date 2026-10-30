@@ -40,24 +40,8 @@
     "2026-10-27|abha|al faisaly",
     "2026-10-27|sassuolo|lazio"
   ],
-  "lastRun": "2026-10-30T09:05:07.971Z",
+  "lastRun": "2026-10-30T15:54:42.263Z",
   "pending": [
-    {
-      "date": "2026-10-30",
-      "home": "Abha",
-      "away": "Al Ittihad",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-30",
-      "home": "Al Diriyah",
-      "away": "Neom SC",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
     {
       "date": "2026-10-30",
       "home": "Le Havre AC",
@@ -158,11 +142,13 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-10-30T02:49:08.693Z",
-    "sent": 7,
-    "stored": 7,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-10-30T15:54:42.566Z",
+    "sent": 1,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-10-30|abha|al ittihad"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

@@ -40,7 +40,7 @@
     "2026-10-27|abha|al faisaly",
     "2026-10-27|sassuolo|lazio"
   ],
-  "lastRun": "2026-10-30T15:54:42.263Z",
+  "lastRun": "2026-10-30T20:33:23.647Z",
   "pending": [
     {
       "date": "2026-10-30",
@@ -48,7 +48,7 @@
       "away": "Paris Saint-Germain",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "le havre ac",
@@ -65,7 +65,7 @@
       "away": "Stade Rennais",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "nice"
@@ -74,54 +74,6 @@
           "stade rennais"
         ]
       }
-    },
-    {
-      "date": "2026-10-30",
-      "home": "Al Shabab",
-      "away": "Al Ahli",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-30",
-      "home": "SV Elversberg",
-      "away": "Mainz",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "sv elversberg"
-        ],
-        "away": [
-          "mainz"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-30",
-      "home": "Villarreal",
-      "away": "Espanyol",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-30",
-      "home": "Lille",
-      "away": "Lens",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-30",
-      "home": "Casa Pia",
-      "away": "Sporting CP",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
     }
   ],
   "version": 1,
@@ -142,12 +94,14 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-10-30T15:54:42.566Z",
-    "sent": 1,
+    "at": "2026-10-30T20:33:23.938Z",
+    "sent": 3,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
-      "2026-10-30|abha|al ittihad"
+      "2026-10-30|abha|al ittihad",
+      "2026-10-30|al diriyah|neom sc",
+      "2026-10-30|al shabab|al ahli"
     ]
   },
   "verifiedStored": {

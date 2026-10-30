@@ -23,12 +23,24 @@
     "2026-10-28|san jose earthquakes|colorado rapids": "https://www.flashscore.com/match/football/colorado-rapids-jmBZNRn8/san-jose-earthquakes-x05z14ue/?mid=8jmduXGU",
     "2026-10-28|seattle sounders fc|houston dynamo fc": "https://www.flashscore.com/match/football/houston-dynamo-2i4sdl32/seattle-sounders-6P5S63Ah/?mid=bFS5az2n",
     "2026-10-28|vancouver whitecaps|san diego fc": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/vancouver-whitecaps-K2dlua5N/?mid=CI0d9Qm1",
-    "2026-10-30|casa pia|sporting cp": "https://www.flashscore.com/match/football/casa-pia-QFHt9Zgs/sporting-cp-tljXuHBC/"
+    "2026-10-30|casa pia|sporting cp": "https://www.flashscore.com/match/football/casa-pia-QFHt9Zgs/sporting-cp-tljXuHBC/",
+    "2026-10-30|abha|al ittihad": "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-ittihad-QmsyAjWh/?mid=vehUuki2",
+    "2026-10-30|al diriyah|neom sc": "https://www.flashscore.com/match/football/al-diriyah-URqHJiim/neom-sc-SOrkawEs/?mid=hIOt2u84",
+    "2026-10-30|al shabab|al ahli": "https://www.flashscore.com/match/football/al-ahli-sc-0MHmoCY0/al-shabab-Gzqmz0ya/?mid=4YqG3hq9",
+    "2026-10-30|villarreal|espanyol": "https://www.flashscore.com/match/football/espanyol-QFfPdh1J/villarreal-lUatW5jE/?mid=xdLoJd4b",
+    "2026-10-30|lille|lens": "https://www.flashscore.com/match/football/lens-IBmris38/lille-pfDZL71o/?mid=hfEHGyCE"
   },
   "harvested": [
-    "2026-10-26|paris saint germain|lyon"
+    "2026-10-26|paris saint germain|lyon",
+    "2026-10-29|al khaleej|al hazem",
+    "2026-10-29|frosinone|lecce",
+    "2026-10-29|al nassr|al kholood",
+    "2026-10-29|al riyadh|al qadsiah",
+    "2026-10-29|fiorentina|atalanta",
+    "2026-10-27|abha|al faisaly",
+    "2026-10-27|sassuolo|lazio"
   ],
-  "lastRun": "2026-10-29T23:23:44.181Z",
+  "lastRun": "2026-10-30T02:49:06.541Z",
   "pending": [
     {
       "date": "2026-10-30",
@@ -36,15 +48,7 @@
       "away": "Al Ittihad",
       "league": "ksa.1",
       "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "abha"
-        ],
-        "away": [
-          "al ittihad"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-30",
@@ -52,16 +56,7 @@
       "away": "Neom SC",
       "league": "ksa.1",
       "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "al diriyah"
-        ],
-        "away": [
-          "neom sc",
-          "neom"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-30",
@@ -102,15 +97,7 @@
       "away": "Al Ahli",
       "league": "ksa.1",
       "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "al shabab"
-        ],
-        "away": [
-          "al ahli"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-30",
@@ -134,15 +121,7 @@
       "away": "Espanyol",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "villarreal"
-        ],
-        "away": [
-          "espanyol"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-30",
@@ -150,15 +129,7 @@
       "away": "Lens",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "lille"
-        ],
-        "away": [
-          "lens"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-10-30",
@@ -185,44 +156,30 @@
       "requeuedAt": "2026-10-28T18:30:47.122Z"
     }
   },
-  "requeuePool": [
-    {
-      "key": "2026-10-27|abha|al faisaly",
-      "date": "2026-10-27",
-      "home": "abha",
-      "away": "al faisaly"
-    },
-    {
-      "key": "2026-10-27|sassuolo|lazio",
-      "date": "2026-10-27",
-      "home": "sassuolo",
-      "away": "lazio"
-    }
-  ],
+  "requeuePool": [],
   "lastPost": {
-    "at": "2026-10-29T23:23:44.528Z",
+    "at": "2026-10-30T02:49:08.693Z",
     "sent": 7,
-    "stored": 0,
-    "keptHarvested": false,
-    "prunedKeys": [
+    "stored": 7,
+    "keptHarvested": true,
+    "prunedKeys": []
+  },
+  "verifiedStored": {
+    "2026-10-29|al khaleej|al hazem": true,
+    "2026-10-29|frosinone|lecce": true,
+    "2026-10-29|al nassr|al kholood": true,
+    "2026-10-29|al riyadh|al qadsiah": true,
+    "2026-10-29|fiorentina|atalanta": true
+  },
+  "lastVerify": {
+    "at": "2026-10-30T02:49:12.533Z",
+    "verified": [
       "2026-10-29|al khaleej|al hazem",
       "2026-10-29|frosinone|lecce",
       "2026-10-29|al nassr|al kholood",
       "2026-10-29|al riyadh|al qadsiah",
-      "2026-10-29|fiorentina|atalanta",
-      "2026-10-27|abha|al faisaly",
-      "2026-10-27|sassuolo|lazio"
-    ]
-  },
-  "verifiedStored": {},
-  "lastVerify": {
-    "at": "2026-10-28T20:42:47.360Z",
-    "verified": [],
-    "failed": {
-      "2026-10-27|abha|al faisaly": "read failed",
-      "2026-10-27|sassuolo|lazio": "read failed",
-      "2026-10-28|ac milan|bologna": "read failed",
-      "2026-10-28|parma|udinese": "read failed"
-    }
+      "2026-10-29|fiorentina|atalanta"
+    ],
+    "failed": {}
   }
 }

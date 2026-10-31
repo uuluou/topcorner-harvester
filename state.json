@@ -67,7 +67,7 @@
     "2026-10-30|villarreal|espanyol",
     "2026-10-30|lille|lens"
   ],
-  "lastRun": "2026-10-31T11:16:31.889Z",
+  "lastRun": "2026-10-31T16:16:00.396Z",
   "pending": [
     {
       "date": "2026-10-30",
@@ -120,218 +120,17 @@
     },
     {
       "date": "2026-10-31",
-      "home": "Chelsea",
-      "away": "Manchester United",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Levante",
-      "away": "Atlético Madrid",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
       "home": "Al Taawoun",
       "away": "Al Ettifaq",
       "league": "ksa.1",
       "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "al taawoun"
         ],
         "away": [
           "al ettifaq"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Bologna",
-      "away": "Monza",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Bayer Leverkusen",
-      "away": "VfB Stuttgart",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Borussia Mönchengladbach",
-      "away": "SC Paderborn 07",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "borussia monchengladbach"
-        ],
-        "away": [
-          "sc paderborn 07",
-          "paderborn 07"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "FC Augsburg",
-      "away": "SC Freiburg",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Schalke 04",
-      "away": "RB Leipzig",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "schalke 04"
-        ],
-        "away": [
-          "rb leipzig"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Werder Bremen",
-      "away": "TSG Hoffenheim",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "werder bremen"
-        ],
-        "away": [
-          "tsg hoffenheim"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Al Fayha",
-      "away": "Al Faisaly",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "AFC Bournemouth",
-      "away": "Leeds United",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "afc bournemouth"
-        ],
-        "away": [
-          "leeds united"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Brentford",
-      "away": "Nottingham Forest",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Coventry City",
-      "away": "Sunderland",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "coventry city"
-        ],
-        "away": [
-          "sunderland"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Hull City",
-      "away": "Ipswich Town",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "hull city"
-        ],
-        "away": [
-          "ipswich town"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Manchester City",
-      "away": "Brighton & Hove Albion",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "manchester city"
-        ],
-        "away": [
-          "brighton hove albion"
-        ]
-      }
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Rayo Vallecano",
-      "away": "Celta Vigo",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Moreirense",
-      "away": "Estrela",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-10-31",
-      "home": "Feyenoord Rotterdam",
-      "away": "Fortuna Sittard",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "feyenoord rotterdam"
-        ],
-        "away": [
-          "fortuna sittard"
         ]
       }
     },
@@ -622,11 +421,14 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-10-31T00:10:59.772Z",
-    "sent": 5,
-    "stored": 5,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-10-31T16:16:00.710Z",
+    "sent": 2,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-10-31|chelsea|manchester united",
+      "2026-10-31|bologna|monza"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

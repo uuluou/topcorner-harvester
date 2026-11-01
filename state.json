@@ -70,7 +70,8 @@
     "2026-11-01|braga|fc famalicao": "https://www.flashscore.com/match/football/braga-dpUer7ht/famalicao-ABBgitC3/?mid=UqJrHjbM",
     "2026-11-01|vancouver whitecaps|seattle sounders fc": "https://www.flashscore.com/match/football/seattle-sounders-6P5S63Ah/vancouver-whitecaps-K2dlua5N/?mid=0thEbUjt",
     "2026-11-01|atlanta united fc|toronto fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/toronto-fc-zsdfgnmL/?mid=ncjMd8Lh",
-    "2026-10-31|colorado rapids|chicago fire fc": "https://www.flashscore.com/match/football/chicago-fire-UwAwNo2E/colorado-rapids-jmBZNRn8/?mid=rXF2hvCG"
+    "2026-10-31|colorado rapids|chicago fire fc": "https://www.flashscore.com/match/football/chicago-fire-UwAwNo2E/colorado-rapids-jmBZNRn8/?mid=rXF2hvCG",
+    "2026-11-01|new england revolution|inter miami cf": "https://www.flashscore.com/match/football/inter-miami-0AheRyBg/new-england-revolution-tr3oe8I8/"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -106,7 +107,7 @@
     "2026-10-31|fc porto|estoril",
     "2026-10-31|san jose earthquakes|real salt lake"
   ],
-  "lastRun": "2026-11-01T16:36:18.880Z",
+  "lastRun": "2026-11-01T20:56:09.553Z",
   "pending": [
     {
       "date": "2026-10-31",
@@ -434,27 +435,36 @@
     },
     {
       "date": "2026-11-01",
-      "home": "Lyon",
-      "away": "Angers",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
+      "home": "1. FC Union Berlin",
+      "away": "FC Cologne",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "1 fc union berlin"
+        ],
+        "away": [
+          "fc cologne",
+          "cologne"
+        ]
+      }
     },
     {
       "date": "2026-11-01",
-      "home": "Paris FC",
-      "away": "AS Monaco",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Liverpool",
-      "away": "Arsenal",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
+      "home": "Arouca",
+      "away": "C.D. Nacional",
+      "league": "por.1",
+      "leagueName": "Portuguese Primeira Liga",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "arouca"
+        ],
+        "away": [
+          "c d nacional"
+        ]
+      }
     },
     {
       "date": "2026-11-01",
@@ -462,7 +472,7 @@
       "away": "Hamburg SV",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "eintracht frankfurt"
@@ -474,27 +484,11 @@
     },
     {
       "date": "2026-11-01",
-      "home": "Lecce",
-      "away": "Genoa",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Elche",
-      "away": "Valencia",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
       "home": "Académico de Viseu",
       "away": "Rio Ave",
       "league": "por.1",
       "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "academico de viseu"
@@ -503,54 +497,6 @@
           "rio ave"
         ]
       }
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Maritimo",
-      "away": "Santa Clara",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Juventus",
-      "away": "Napoli",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Marseille",
-      "away": "Toulouse",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Athletic Club",
-      "away": "Real Sociedad",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "athletic club"
-        ],
-        "away": [
-          "real sociedad"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Braga",
-      "away": "FC Famalicao",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -591,16 +537,7 @@
       "away": "Inter Miami CF",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "new england revolution"
-        ],
-        "away": [
-          "inter miami cf",
-          "inter miami"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -655,8 +592,8 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-01T16:36:19.207Z",
-    "sent": 7,
+    "at": "2026-11-01T20:56:09.929Z",
+    "sent": 13,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
@@ -666,7 +603,13 @@
       "2026-11-01|excelsior|fc twente",
       "2026-11-01|telstar|fc utrecht",
       "2026-11-01|frosinone|torino",
-      "2026-11-01|lazio|cagliari"
+      "2026-11-01|lazio|cagliari",
+      "2026-11-01|fc groningen|sparta rotterdam",
+      "2026-11-01|lyon|angers",
+      "2026-11-01|paris fc|as monaco",
+      "2026-11-01|lecce|genoa",
+      "2026-11-01|elche|valencia",
+      "2026-11-01|maritimo|santa clara"
     ]
   },
   "verifiedStored": {

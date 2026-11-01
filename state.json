@@ -69,7 +69,8 @@
     "2026-11-01|marseille|toulouse": "https://www.flashscore.com/match/football/marseille-SblU3Hee/toulouse-MLmY2yB1/?mid=4G637XY0",
     "2026-11-01|braga|fc famalicao": "https://www.flashscore.com/match/football/braga-dpUer7ht/famalicao-ABBgitC3/?mid=UqJrHjbM",
     "2026-11-01|vancouver whitecaps|seattle sounders fc": "https://www.flashscore.com/match/football/seattle-sounders-6P5S63Ah/vancouver-whitecaps-K2dlua5N/?mid=0thEbUjt",
-    "2026-11-01|atlanta united fc|toronto fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/toronto-fc-zsdfgnmL/?mid=ncjMd8Lh"
+    "2026-11-01|atlanta united fc|toronto fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/toronto-fc-zsdfgnmL/?mid=ncjMd8Lh",
+    "2026-10-31|colorado rapids|chicago fire fc": "https://www.flashscore.com/match/football/chicago-fire-UwAwNo2E/colorado-rapids-jmBZNRn8/?mid=rXF2hvCG"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -105,7 +106,7 @@
     "2026-10-31|fc porto|estoril",
     "2026-10-31|san jose earthquakes|real salt lake"
   ],
-  "lastRun": "2026-11-01T02:49:09.197Z",
+  "lastRun": "2026-11-01T09:42:10.472Z",
   "pending": [
     {
       "date": "2026-10-31",
@@ -751,11 +752,13 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-01T02:49:14.387Z",
-    "sent": 19,
-    "stored": 19,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-01T09:42:10.687Z",
+    "sent": 1,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-10-31|colorado rapids|chicago fire fc"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

@@ -53,7 +53,23 @@
     "2026-10-31|san jose earthquakes|real salt lake": "https://www.flashscore.com/match/football/real-salt-lake-W0ealpQl/san-jose-earthquakes-x05z14ue/?mid=As0sod4j",
     "2026-11-01|racing santander|real madrid": "https://www.flashscore.com/match/football/racing-santander-nVpEwOrl/real-madrid-W8mj7MDD/",
     "2026-11-01|liverpool|arsenal": "https://www.flashscore.com/match/football/arsenal-hA1Zm19f/liverpool-lId4TMwf/",
-    "2026-11-01|juventus|napoli": "https://www.flashscore.com/match/football/juventus-C06aJvIB/napoli-69Dxbc61/"
+    "2026-11-01|juventus|napoli": "https://www.flashscore.com/match/football/juventus-C06aJvIB/napoli-69Dxbc61/",
+    "2026-11-01|como|venezia": "https://www.flashscore.com/match/football/como-ttyLthOA/venezia-MkPmVv50/?mid=zLEaa6Ek",
+    "2026-11-01|getafe|sevilla": "https://www.flashscore.com/match/football/getafe-dboeiWOt/sevilla-h8oAv4Ts/?mid=EoME4ck5",
+    "2026-11-01|excelsior|fc twente": "https://www.flashscore.com/match/football/excelsior-nNlLsRUr/twente-dhOKTHGA/?mid=j50YaAxn",
+    "2026-11-01|telstar|fc utrecht": "https://www.flashscore.com/match/football/telstar-Aw0qTPat/utrecht-p6QXMgOj/?mid=OIbtbl7b",
+    "2026-11-01|frosinone|torino": "https://www.flashscore.com/match/football/frosinone-pfo9H1Wp/torino-MZFZnvX4/?mid=8YC7cpq2",
+    "2026-11-01|lazio|cagliari": "https://www.flashscore.com/match/football/cagliari-SCGVmKHb/lazio-URcSl02h/?mid=r581JR5L",
+    "2026-11-01|fc groningen|sparta rotterdam": "https://www.flashscore.com/match/football/groningen-MBUGcjb9/sparta-rotterdam-KK4FaFV3/?mid=AZdldSyB",
+    "2026-11-01|lyon|angers": "https://www.flashscore.com/match/football/angers-SAlF91iL/lyon-2akflumR/?mid=dj3e9g4l",
+    "2026-11-01|paris fc|as monaco": "https://www.flashscore.com/match/football/monaco-2PIvr8o4/paris-fc-0OEHEprs/?mid=lIBdTEeK",
+    "2026-11-01|lecce|genoa": "https://www.flashscore.com/match/football/genoa-d0PJxeie/lecce-G8lYsMgU/?mid=vyfXD5Tr",
+    "2026-11-01|elche|valencia": "https://www.flashscore.com/match/football/elche-4jl02tPF/valencia-CQeaytrD/?mid=Y7Kb8ujt",
+    "2026-11-01|maritimo|santa clara": "https://www.flashscore.com/match/football/maritimo-noguvetP/santa-clara-YmQyLBJf/?mid=vwe8XBr3",
+    "2026-11-01|marseille|toulouse": "https://www.flashscore.com/match/football/marseille-SblU3Hee/toulouse-MLmY2yB1/?mid=4G637XY0",
+    "2026-11-01|braga|fc famalicao": "https://www.flashscore.com/match/football/braga-dpUer7ht/famalicao-ABBgitC3/?mid=UqJrHjbM",
+    "2026-11-01|vancouver whitecaps|seattle sounders fc": "https://www.flashscore.com/match/football/seattle-sounders-6P5S63Ah/vancouver-whitecaps-K2dlua5N/?mid=0thEbUjt",
+    "2026-11-01|atlanta united fc|toronto fc": "https://www.flashscore.com/match/football/atlanta-united-EPngUvhk/toronto-fc-zsdfgnmL/?mid=ncjMd8Lh"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -68,9 +84,28 @@
     "2026-10-30|al diriyah|neom sc",
     "2026-10-30|al shabab|al ahli",
     "2026-10-30|villarreal|espanyol",
-    "2026-10-30|lille|lens"
+    "2026-10-30|lille|lens",
+    "2026-10-31|chelsea|manchester united",
+    "2026-10-31|bologna|monza",
+    "2026-10-31|bayer leverkusen|vfb stuttgart",
+    "2026-10-31|fc augsburg|sc freiburg",
+    "2026-10-31|al fayha|al faisaly",
+    "2026-10-31|rayo vallecano|celta vigo",
+    "2026-10-31|moreirense|estrela",
+    "2026-10-31|udinese|as roma",
+    "2026-10-31|charlotte fc|orlando city sc",
+    "2026-10-31|al hilal|al fateh",
+    "2026-10-31|fc cincinnati|philadelphia union",
+    "2026-10-31|new york city fc|cf montreal",
+    "2026-10-31|sporting kansas city|fc dallas",
+    "2026-10-31|st louis city sc|san diego fc",
+    "2026-10-31|troyes|le mans",
+    "2026-10-31|aston villa|fulham",
+    "2026-10-31|barcelona|alaves",
+    "2026-10-31|fc porto|estoril",
+    "2026-10-31|san jose earthquakes|real salt lake"
   ],
-  "lastRun": "2026-10-31T23:40:34.145Z",
+  "lastRun": "2026-11-01T02:49:09.197Z",
   "pending": [
     {
       "date": "2026-10-31",
@@ -386,15 +421,7 @@
       "away": "Venezia",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "como"
-        ],
-        "away": [
-          "venezia"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -402,15 +429,7 @@
       "away": "Sevilla",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "getafe"
-        ],
-        "away": [
-          "sevilla"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -418,16 +437,7 @@
       "away": "FC Twente",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "excelsior"
-        ],
-        "away": [
-          "fc twente",
-          "twente"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -435,16 +445,7 @@
       "away": "FC Utrecht",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "telstar"
-        ],
-        "away": [
-          "fc utrecht",
-          "utrecht"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -452,15 +453,7 @@
       "away": "Torino",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "frosinone"
-        ],
-        "away": [
-          "torino"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -468,15 +461,7 @@
       "away": "Cagliari",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "lazio"
-        ],
-        "away": [
-          "cagliari"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -541,16 +526,7 @@
       "away": "Sparta Rotterdam",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "fc groningen",
-          "groningen"
-        ],
-        "away": [
-          "sparta rotterdam"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -558,15 +534,7 @@
       "away": "Angers",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "lyon"
-        ],
-        "away": [
-          "angers"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -574,17 +542,7 @@
       "away": "AS Monaco",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "paris fc",
-          "paris"
-        ],
-        "away": [
-          "as monaco",
-          "monaco"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -616,15 +574,7 @@
       "away": "Genoa",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "lecce"
-        ],
-        "away": [
-          "genoa"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -632,15 +582,7 @@
       "away": "Valencia",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "elche"
-        ],
-        "away": [
-          "valencia"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -664,15 +606,7 @@
       "away": "Santa Clara",
       "league": "por.1",
       "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "maritimo"
-        ],
-        "away": [
-          "santa clara"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -688,15 +622,7 @@
       "away": "Toulouse",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "marseille"
-        ],
-        "away": [
-          "toulouse"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -720,16 +646,7 @@
       "away": "FC Famalicao",
       "league": "por.1",
       "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "braga"
-        ],
-        "away": [
-          "fc famalicao",
-          "famalicao"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -737,16 +654,7 @@
       "away": "Seattle Sounders FC",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "vancouver whitecaps"
-        ],
-        "away": [
-          "seattle sounders fc",
-          "seattle sounders"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -754,17 +662,7 @@
       "away": "Toronto FC",
       "league": "usa.1",
       "leagueName": "MLS",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "atlanta united fc",
-          "atlanta united"
-        ],
-        "away": [
-          "toronto fc",
-          "toronto"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -853,11 +751,46 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-10-31T23:40:34.638Z",
+    "at": "2026-11-01T02:49:14.387Z",
     "sent": 19,
-    "stored": 0,
-    "keptHarvested": false,
-    "prunedKeys": [
+    "stored": 19,
+    "keptHarvested": true,
+    "prunedKeys": []
+  },
+  "verifiedStored": {
+    "2026-10-29|al khaleej|al hazem": true,
+    "2026-10-29|frosinone|lecce": true,
+    "2026-10-29|al nassr|al kholood": true,
+    "2026-10-29|al riyadh|al qadsiah": true,
+    "2026-10-29|fiorentina|atalanta": true,
+    "2026-10-30|abha|al ittihad": true,
+    "2026-10-30|al diriyah|neom sc": true,
+    "2026-10-30|al shabab|al ahli": true,
+    "2026-10-30|villarreal|espanyol": true,
+    "2026-10-30|lille|lens": true,
+    "2026-10-31|chelsea|manchester united": true,
+    "2026-10-31|bologna|monza": true,
+    "2026-10-31|bayer leverkusen|vfb stuttgart": true,
+    "2026-10-31|fc augsburg|sc freiburg": true,
+    "2026-10-31|al fayha|al faisaly": true,
+    "2026-10-31|rayo vallecano|celta vigo": true,
+    "2026-10-31|moreirense|estrela": true,
+    "2026-10-31|udinese|as roma": true,
+    "2026-10-31|charlotte fc|orlando city sc": true,
+    "2026-10-31|al hilal|al fateh": true,
+    "2026-10-31|fc cincinnati|philadelphia union": true,
+    "2026-10-31|new york city fc|cf montreal": true,
+    "2026-10-31|sporting kansas city|fc dallas": true,
+    "2026-10-31|st louis city sc|san diego fc": true,
+    "2026-10-31|troyes|le mans": true,
+    "2026-10-31|aston villa|fulham": true,
+    "2026-10-31|barcelona|alaves": true,
+    "2026-10-31|fc porto|estoril": true,
+    "2026-10-31|san jose earthquakes|real salt lake": true
+  },
+  "lastVerify": {
+    "at": "2026-11-01T02:49:29.709Z",
+    "verified": [
       "2026-10-31|chelsea|manchester united",
       "2026-10-31|bologna|monza",
       "2026-10-31|bayer leverkusen|vfb stuttgart",
@@ -877,28 +810,6 @@
       "2026-10-31|barcelona|alaves",
       "2026-10-31|fc porto|estoril",
       "2026-10-31|san jose earthquakes|real salt lake"
-    ]
-  },
-  "verifiedStored": {
-    "2026-10-29|al khaleej|al hazem": true,
-    "2026-10-29|frosinone|lecce": true,
-    "2026-10-29|al nassr|al kholood": true,
-    "2026-10-29|al riyadh|al qadsiah": true,
-    "2026-10-29|fiorentina|atalanta": true,
-    "2026-10-30|abha|al ittihad": true,
-    "2026-10-30|al diriyah|neom sc": true,
-    "2026-10-30|al shabab|al ahli": true,
-    "2026-10-30|villarreal|espanyol": true,
-    "2026-10-30|lille|lens": true
-  },
-  "lastVerify": {
-    "at": "2026-10-31T00:11:05.761Z",
-    "verified": [
-      "2026-10-30|abha|al ittihad",
-      "2026-10-30|al diriyah|neom sc",
-      "2026-10-30|al shabab|al ahli",
-      "2026-10-30|villarreal|espanyol",
-      "2026-10-30|lille|lens"
     ],
     "failed": {}
   }

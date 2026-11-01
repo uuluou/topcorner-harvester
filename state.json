@@ -106,7 +106,7 @@
     "2026-10-31|fc porto|estoril",
     "2026-10-31|san jose earthquakes|real salt lake"
   ],
-  "lastRun": "2026-11-01T09:42:10.472Z",
+  "lastRun": "2026-11-01T16:36:18.880Z",
   "pending": [
     {
       "date": "2026-10-31",
@@ -406,7 +406,7 @@
       "away": "ADO Den Haag",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "pec zwolle"
@@ -418,59 +418,11 @@
     },
     {
       "date": "2026-11-01",
-      "home": "Como",
-      "away": "Venezia",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Getafe",
-      "away": "Sevilla",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Excelsior",
-      "away": "FC Twente",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Telstar",
-      "away": "FC Utrecht",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Frosinone",
-      "away": "Torino",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Lazio",
-      "away": "Cagliari",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
       "home": "Strasbourg",
       "away": "AJ Auxerre",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "strasbourg"
@@ -479,55 +431,6 @@
           "aj auxerre"
         ]
       }
-    },
-    {
-      "date": "2026-11-01",
-      "home": "1. FC Union Berlin",
-      "away": "FC Cologne",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "1 fc union berlin"
-        ],
-        "away": [
-          "fc cologne",
-          "cologne"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Racing Santander",
-      "away": "Real Madrid",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-01",
-      "home": "Arouca",
-      "away": "C.D. Nacional",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "arouca"
-        ],
-        "away": [
-          "c d nacional"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-01",
-      "home": "FC Groningen",
-      "away": "Sparta Rotterdam",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-01",
@@ -752,12 +655,18 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-01T09:42:10.687Z",
-    "sent": 1,
+    "at": "2026-11-01T16:36:19.207Z",
+    "sent": 7,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
-      "2026-10-31|colorado rapids|chicago fire fc"
+      "2026-10-31|colorado rapids|chicago fire fc",
+      "2026-11-01|como|venezia",
+      "2026-11-01|getafe|sevilla",
+      "2026-11-01|excelsior|fc twente",
+      "2026-11-01|telstar|fc utrecht",
+      "2026-11-01|frosinone|torino",
+      "2026-11-01|lazio|cagliari"
     ]
   },
   "verifiedStored": {

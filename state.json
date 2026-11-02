@@ -128,7 +128,7 @@
     "2026-11-01|vancouver whitecaps|seattle sounders fc",
     "2026-11-01|atlanta united fc|toronto fc"
   ],
-  "lastRun": "2026-11-02T13:55:10.049Z",
+  "lastRun": "2026-11-02T22:43:17.089Z",
   "pending": [
     {
       "date": "2026-11-01",
@@ -279,35 +279,11 @@
     },
     {
       "date": "2026-11-02",
-      "home": "Sassuolo",
-      "away": "Fiorentina",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-02",
-      "home": "Atalanta",
-      "away": "Parma",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-02",
-      "home": "Lorient",
-      "away": "Brest",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-02",
       "home": "Newcastle United",
       "away": "Everton",
       "league": "eng.1",
       "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "newcastle united"
@@ -323,7 +299,7 @@
       "away": "Osasuna",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "deportivo"
@@ -335,19 +311,11 @@
     },
     {
       "date": "2026-11-02",
-      "home": "Benfica",
-      "away": "Alverca",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-02",
       "home": "Gil Vicente",
       "away": "Vitória de Guimaraes",
       "league": "por.1",
       "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "gil vicente"
@@ -376,12 +344,16 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-02T13:55:10.297Z",
-    "sent": 1,
+    "at": "2026-11-02T22:43:17.388Z",
+    "sent": 5,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
-      "2026-11-01|portland timbers|houston dynamo fc"
+      "2026-11-01|portland timbers|houston dynamo fc",
+      "2026-11-02|sassuolo|fiorentina",
+      "2026-11-02|atalanta|parma",
+      "2026-11-02|lorient|brest",
+      "2026-11-02|benfica|alverca"
     ]
   },
   "verifiedStored": {

@@ -75,7 +75,8 @@
     "2026-11-02|sassuolo|fiorentina": "https://www.flashscore.com/match/football/fiorentina-Q3A3IbXH/sassuolo-QDdvI0zl/?mid=YHemANS7",
     "2026-11-02|atalanta|parma": "https://www.flashscore.com/match/football/atalanta-8C9JjMXu/parma-6DxlaxHN/?mid=buLL6lMF",
     "2026-11-02|lorient|brest": "https://www.flashscore.com/match/football/brest-Cr4VGaUl/lorient-jgNAYRGi/?mid=0KHPEFtR",
-    "2026-11-02|benfica|alverca": "https://www.flashscore.com/match/football/alverca-roaMksQg/benfica-zBkyuyRI/?mid=zs2gO75k"
+    "2026-11-02|benfica|alverca": "https://www.flashscore.com/match/football/alverca-roaMksQg/benfica-zBkyuyRI/?mid=zs2gO75k",
+    "2026-11-01|portland timbers|houston dynamo fc": "https://www.flashscore.com/match/football/houston-dynamo-2i4sdl32/portland-timbers-bm8usLzB/?mid=Emp1lVAr"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -127,7 +128,7 @@
     "2026-11-01|vancouver whitecaps|seattle sounders fc",
     "2026-11-01|atlanta united fc|toronto fc"
   ],
-  "lastRun": "2026-11-02T00:11:13.416Z",
+  "lastRun": "2026-11-02T05:45:34.559Z",
   "pending": [
     {
       "date": "2026-11-01",
@@ -243,6 +244,40 @@
       }
     },
     {
+      "date": "2026-11-01",
+      "home": "Nashville SC",
+      "away": "Red Bull New York",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "nashville sc",
+          "nashville"
+        ],
+        "away": [
+          "red bull new york"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-01",
+      "home": "LAFC",
+      "away": "Minnesota United FC",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "lafc"
+        ],
+        "away": [
+          "minnesota united fc",
+          "minnesota united"
+        ]
+      }
+    },
+    {
       "date": "2026-11-02",
       "home": "Sassuolo",
       "away": "Fiorentina",
@@ -341,9 +376,9 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-02T00:11:17.566Z",
-    "sent": 16,
-    "stored": 16,
+    "at": "2026-11-02T05:45:34.933Z",
+    "sent": 1,
+    "stored": 1,
     "keptHarvested": true,
     "prunedKeys": []
   },
@@ -395,25 +430,10 @@
     "2026-11-01|atlanta united fc|toronto fc": true
   },
   "lastVerify": {
-    "at": "2026-11-02T00:11:28.254Z",
-    "verified": [
-      "2026-11-01|como|venezia",
-      "2026-11-01|getafe|sevilla",
-      "2026-11-01|excelsior|fc twente",
-      "2026-11-01|telstar|fc utrecht",
-      "2026-11-01|frosinone|torino",
-      "2026-11-01|lazio|cagliari",
-      "2026-11-01|fc groningen|sparta rotterdam",
-      "2026-11-01|lyon|angers",
-      "2026-11-01|paris fc|as monaco",
-      "2026-11-01|lecce|genoa",
-      "2026-11-01|elche|valencia",
-      "2026-11-01|maritimo|santa clara",
-      "2026-11-01|marseille|toulouse",
-      "2026-11-01|braga|fc famalicao",
-      "2026-11-01|vancouver whitecaps|seattle sounders fc",
-      "2026-11-01|atlanta united fc|toronto fc"
-    ],
-    "failed": {}
+    "at": "2026-11-02T05:45:35.682Z",
+    "verified": [],
+    "failed": {
+      "2026-11-01|portland timbers|houston dynamo fc": "not stored"
+    }
   }
 }

@@ -128,7 +128,7 @@
     "2026-11-01|vancouver whitecaps|seattle sounders fc",
     "2026-11-01|atlanta united fc|toronto fc"
   ],
-  "lastRun": "2026-11-02T05:45:34.559Z",
+  "lastRun": "2026-11-02T13:55:10.049Z",
   "pending": [
     {
       "date": "2026-11-01",
@@ -376,11 +376,13 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-02T05:45:34.933Z",
+    "at": "2026-11-02T13:55:10.297Z",
     "sent": 1,
-    "stored": 1,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-01|portland timbers|houston dynamo fc"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

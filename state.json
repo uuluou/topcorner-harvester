@@ -139,7 +139,7 @@
     "2026-11-02|lorient|brest",
     "2026-11-02|benfica|alverca"
   ],
-  "lastRun": "2026-11-03T11:25:42.901Z",
+  "lastRun": "2026-11-03T18:36:24.205Z",
   "pending": [
     {
       "date": "2026-11-02",
@@ -188,22 +188,6 @@
           "vitoria de guimaraes"
         ]
       }
-    },
-    {
-      "date": "2026-11-03",
-      "home": "Galatasaray",
-      "away": "VfB Stuttgart",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-03",
-      "home": "Shakhtar Donetsk",
-      "away": "Sporting CP",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-03",

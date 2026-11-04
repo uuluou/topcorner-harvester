@@ -88,7 +88,8 @@
     "2026-11-04|fenerbahce|liverpool": "https://www.flashscore.com/match/football/fenerbahce-MsbmracL/liverpool-lId4TMwf/",
     "2026-11-04|fc porto|napoli": "https://www.flashscore.com/match/football/fc-porto-S2NmScGp/napoli-69Dxbc61/",
     "2026-11-04|rb leipzig|manchester city": "https://www.flashscore.com/match/football/manchester-city-Wtn9Stg0/rb-leipzig-KbS1suSm/",
-    "2026-11-04|slavia prague|arsenal": "https://www.flashscore.com/match/football/arsenal-hA1Zm19f/slavia-prague-viXGgnyB/"
+    "2026-11-04|slavia prague|arsenal": "https://www.flashscore.com/match/football/arsenal-hA1Zm19f/slavia-prague-viXGgnyB/",
+    "2026-11-04|lens|como": "https://www.flashscore.com/match/football/como-ttyLthOA/lens-IBmris38/?mid=QVtE7T8m"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -142,9 +143,14 @@
     "2026-11-02|sassuolo|fiorentina",
     "2026-11-02|atalanta|parma",
     "2026-11-02|lorient|brest",
-    "2026-11-02|benfica|alverca"
+    "2026-11-02|benfica|alverca",
+    "2026-11-03|galatasaray|vfb stuttgart",
+    "2026-11-03|barcelona|aston villa",
+    "2026-11-03|bodo glimt|lille",
+    "2026-11-03|lask linz|slovan bratislava",
+    "2026-11-03|manchester united|as roma"
   ],
-  "lastRun": "2026-11-03T23:45:41.064Z",
+  "lastRun": "2026-11-04T03:24:54.507Z",
   "pending": [
     {
       "date": "2026-11-03",
@@ -240,15 +246,7 @@
       "away": "Como",
       "league": "uefa.champions",
       "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "lens"
-        ],
-        "away": [
-          "como"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-04",
@@ -365,17 +363,11 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-03T23:45:41.530Z",
+    "at": "2026-11-04T03:24:56.154Z",
     "sent": 5,
-    "stored": 0,
-    "keptHarvested": false,
-    "prunedKeys": [
-      "2026-11-03|galatasaray|vfb stuttgart",
-      "2026-11-03|barcelona|aston villa",
-      "2026-11-03|bodo glimt|lille",
-      "2026-11-03|lask linz|slovan bratislava",
-      "2026-11-03|manchester united|as roma"
-    ]
+    "stored": 5,
+    "keptHarvested": true,
+    "prunedKeys": []
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,
@@ -426,15 +418,21 @@
     "2026-11-02|sassuolo|fiorentina": true,
     "2026-11-02|atalanta|parma": true,
     "2026-11-02|lorient|brest": true,
-    "2026-11-02|benfica|alverca": true
+    "2026-11-02|benfica|alverca": true,
+    "2026-11-03|galatasaray|vfb stuttgart": true,
+    "2026-11-03|barcelona|aston villa": true,
+    "2026-11-03|bodo glimt|lille": true,
+    "2026-11-03|lask linz|slovan bratislava": true,
+    "2026-11-03|manchester united|as roma": true
   },
   "lastVerify": {
-    "at": "2026-11-03T03:47:58.953Z",
+    "at": "2026-11-04T03:25:00.695Z",
     "verified": [
-      "2026-11-02|sassuolo|fiorentina",
-      "2026-11-02|atalanta|parma",
-      "2026-11-02|lorient|brest",
-      "2026-11-02|benfica|alverca"
+      "2026-11-03|galatasaray|vfb stuttgart",
+      "2026-11-03|barcelona|aston villa",
+      "2026-11-03|bodo glimt|lille",
+      "2026-11-03|lask linz|slovan bratislava",
+      "2026-11-03|manchester united|as roma"
     ],
     "failed": {}
   }

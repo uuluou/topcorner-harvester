@@ -150,7 +150,7 @@
     "2026-11-03|lask linz|slovan bratislava",
     "2026-11-03|manchester united|as roma"
   ],
-  "lastRun": "2026-11-04T03:24:54.507Z",
+  "lastRun": "2026-11-04T18:46:38.452Z",
   "pending": [
     {
       "date": "2026-11-03",
@@ -190,7 +190,7 @@
       "away": "Olympiacos",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "stade rennais"
@@ -199,22 +199,6 @@
           "olympiacos"
         ]
       }
-    },
-    {
-      "date": "2026-11-04",
-      "home": "AEK Athens",
-      "away": "Real Madrid",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-04",
-      "home": "Fenerbahce",
-      "away": "Liverpool",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-04",
@@ -298,22 +282,6 @@
     },
     {
       "date": "2026-11-05",
-      "home": "Al Kholood",
-      "away": "Al Khaleej",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url (mapping + discovery missed)",
-      "tried": {
-        "home": [
-          "al kholood"
-        ],
-        "away": [
-          "al khaleej"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-05",
       "home": "Abha",
       "away": "Al Shabab",
       "league": "ksa.1",
@@ -325,6 +293,22 @@
         ],
         "away": [
           "al shabab"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-05",
+      "home": "Al Kholood",
+      "away": "Al Khaleej",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "al kholood"
+        ],
+        "away": [
+          "al khaleej"
         ]
       }
     },

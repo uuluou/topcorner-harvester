@@ -94,7 +94,12 @@
     "2026-11-05|az alkmaar|juventus": "https://www.flashscore.com/match/football/az-alkmaar-2RxOow1i/juventus-C06aJvIB/",
     "2026-11-05|bayer leverkusen|marseille": "https://www.flashscore.com/match/football/bayer-leverkusen-4jcj2zMd/marseille-SblU3Hee/",
     "2026-11-05|benfica|lech poznan": "https://www.flashscore.com/match/football/benfica-zBkyuyRI/lech-poznan-OpNH7Ouf/",
-    "2026-11-05|torreense|ararat armenia": "https://www.flashscore.com/match/football/ararat-armenia-xlT9cL89/torreense-8jQErKhN/?mid=0SqH5U9s"
+    "2026-11-05|torreense|ararat armenia": "https://www.flashscore.com/match/football/ararat-armenia-xlT9cL89/torreense-8jQErKhN/?mid=0SqH5U9s",
+    "2026-11-05|real sociedad|lyon": "https://www.flashscore.com/match/football/lyon-2akflumR/real-sociedad-jNvak2f3/?mid=Ob6SjhQO",
+    "2026-11-05|abha|al shabab": "https://www.flashscore.com/match/football/abha-lnEqnhJf/al-shabab-Gzqmz0ya/?mid=bZXl55KD",
+    "2026-11-05|al kholood|al khaleej": "https://www.flashscore.com/match/football/al-khaleej-UanWW9fq/al-kholood-Mqs1WbFK/?mid=2VQ3E9cR",
+    "2026-11-05|al qadsiah|al fayha": "https://www.flashscore.com/match/football/al-fayha-Meknfpi2/al-qadsiah-tvQZtrTd/?mid=6RFs7Rk1",
+    "2026-11-05|celtic|besiktas": "https://www.flashscore.com/match/football/besiktas-IDmErJCR/celtic-QFKRRD8M/?mid=Oteki5EU"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -156,7 +161,7 @@
     "2026-11-03|manchester united|as roma",
     "2026-11-04|lens|como"
   ],
-  "lastRun": "2026-11-05T00:00:35.767Z",
+  "lastRun": "2026-11-05T06:31:51.900Z",
   "pending": [
     {
       "date": "2026-11-04",
@@ -316,15 +321,7 @@
       "away": "Lyon",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "real sociedad"
-        ],
-        "away": [
-          "lyon"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-05",
@@ -339,54 +336,6 @@
         ],
         "away": [
           "afc bournemouth"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-05",
-      "home": "Abha",
-      "away": "Al Shabab",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url (mapping + discovery missed)",
-      "tried": {
-        "home": [
-          "abha"
-        ],
-        "away": [
-          "al shabab"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-05",
-      "home": "Al Kholood",
-      "away": "Al Khaleej",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url (mapping + discovery missed)",
-      "tried": {
-        "home": [
-          "al kholood"
-        ],
-        "away": [
-          "al khaleej"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-05",
-      "home": "Al Qadsiah",
-      "away": "Al Fayha",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "no flashscore url (mapping + discovery missed)",
-      "tried": {
-        "home": [
-          "al qadsiah"
-        ],
-        "away": [
-          "al fayha"
         ]
       }
     },
@@ -436,15 +385,7 @@
       "away": "Besiktas",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "celtic"
-        ],
-        "away": [
-          "besiktas"
-        ]
-      }
+      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-05",

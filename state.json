@@ -171,7 +171,7 @@
     "2026-11-05|celtic|besiktas",
     "2026-11-05|torreense|ararat armenia"
   ],
-  "lastRun": "2026-11-06T16:24:18.526Z",
+  "lastRun": "2026-11-06T21:45:28.950Z",
   "pending": [
     {
       "date": "2026-11-05",
@@ -339,7 +339,7 @@
       "away": "PEC Zwolle",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "willem ii"
@@ -355,7 +355,7 @@
       "away": "Borussia Mönchengladbach",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "hamburg sv"
@@ -364,54 +364,6 @@
           "borussia monchengladbach"
         ]
       }
-    },
-    {
-      "date": "2026-11-06",
-      "home": "Venezia",
-      "away": "Udinese",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-06",
-      "home": "Toulouse",
-      "away": "Strasbourg",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-06",
-      "home": "Everton",
-      "away": "Coventry City",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "everton"
-        ],
-        "away": [
-          "coventry city"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-06",
-      "home": "Sevilla",
-      "away": "Alavés",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-06",
-      "home": "FC Famalicao",
-      "away": "Arouca",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-07",

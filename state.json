@@ -196,7 +196,7 @@
     "2026-11-06|sevilla|alaves",
     "2026-11-06|fc famalicao|arouca"
   ],
-  "lastRun": "2026-11-07T07:28:11.534Z",
+  "lastRun": "2026-11-07T14:21:17.547Z",
   "pending": [
     {
       "date": "2026-11-06",
@@ -245,30 +245,6 @@
           "coventry city"
         ]
       }
-    },
-    {
-      "date": "2026-11-07",
-      "home": "Leeds United",
-      "away": "Tottenham Hotspur",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "leeds united"
-        ],
-        "away": [
-          "tottenham hotspur"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-07",
-      "home": "Málaga",
-      "away": "Racing Santander",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-07",

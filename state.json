@@ -196,7 +196,7 @@
     "2026-11-06|sevilla|alaves",
     "2026-11-06|fc famalicao|arouca"
   ],
-  "lastRun": "2026-11-07T14:21:17.547Z",
+  "lastRun": "2026-11-07T19:05:08.291Z",
   "pending": [
     {
       "date": "2026-11-06",
@@ -248,19 +248,19 @@
     },
     {
       "date": "2026-11-07",
-      "home": "Cagliari",
-      "away": "Frosinone",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-07",
-      "home": "Torino",
-      "away": "Lecce",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
+      "home": "Leeds United",
+      "away": "Tottenham Hotspur",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "leeds united"
+        ],
+        "away": [
+          "tottenham hotspur"
+        ]
+      }
     },
     {
       "date": "2026-11-07",
@@ -268,7 +268,7 @@
       "away": "SV Elversberg",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "borussia dortmund"
@@ -280,27 +280,11 @@
     },
     {
       "date": "2026-11-07",
-      "home": "Mainz",
-      "away": "Bayern Munich",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-07",
-      "home": "RB Leipzig",
-      "away": "FC Augsburg",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-07",
       "home": "SC Paderborn 07",
       "away": "Eintracht Frankfurt",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "sc paderborn 07",
@@ -313,19 +297,11 @@
     },
     {
       "date": "2026-11-07",
-      "home": "Arsenal",
-      "away": "Hull City",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-07",
       "home": "Fulham",
       "away": "Newcastle United",
       "league": "eng.1",
       "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "fulham"
@@ -341,7 +317,7 @@
       "away": "Deportivo",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "espanyol"
@@ -357,7 +333,7 @@
       "away": "Académico de Viseu",
       "league": "por.1",
       "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "c d nacional"
@@ -373,7 +349,7 @@
       "away": "Telstar",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "fortuna sittard"
@@ -382,87 +358,6 @@
           "telstar"
         ]
       }
-    },
-    {
-      "date": "2026-11-07",
-      "home": "Parma",
-      "away": "Bologna",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-07",
-      "home": "Nottingham Forest",
-      "away": "Manchester City",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-07",
-      "home": "Osasuna",
-      "away": "Athletic Club",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "osasuna"
-        ],
-        "away": [
-          "athletic club"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-07",
-      "home": "VfB Stuttgart",
-      "away": "Werder Bremen",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-07",
-      "home": "ADO Den Haag",
-      "away": "Sparta Rotterdam",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "ado den haag"
-        ],
-        "away": [
-          "sparta rotterdam"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-07",
-      "home": "AJ Auxerre",
-      "away": "Paris FC",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "aj auxerre"
-        ],
-        "away": [
-          "paris fc",
-          "paris"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-07",
-      "home": "Alverca",
-      "away": "Casa Pia",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-07",
@@ -756,11 +651,18 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-07T01:26:26.602Z",
-    "sent": 4,
-    "stored": 4,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-07T19:05:08.819Z",
+    "sent": 6,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-07|malaga|racing santander",
+      "2026-11-07|cagliari|frosinone",
+      "2026-11-07|torino|lecce",
+      "2026-11-07|mainz|bayern munich",
+      "2026-11-07|rb leipzig|fc augsburg",
+      "2026-11-07|arsenal|hull city"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

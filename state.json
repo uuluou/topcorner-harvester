@@ -240,7 +240,7 @@
     "2026-11-07|orlando city sc|new england revolution",
     "2026-11-07|philadelphia union|toronto fc"
   ],
-  "lastRun": "2026-11-08T08:17:02.476Z",
+  "lastRun": "2026-11-08T15:19:36.824Z",
   "pending": [
     {
       "date": "2026-11-07",
@@ -509,7 +509,7 @@
       "away": "Feyenoord Rotterdam",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "heerenveen"
@@ -521,139 +521,17 @@
     },
     {
       "date": "2026-11-08",
-      "home": "Napoli",
-      "away": "Lazio",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
       "home": "Elche",
       "away": "Real Betis",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "elche"
         ],
         "away": [
           "real betis"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "FC Twente",
-      "away": "Ajax Amsterdam",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "fc twente",
-          "twente"
-        ],
-        "away": [
-          "ajax amsterdam"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Brighton & Hove Albion",
-      "away": "Brentford",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "brighton hove albion"
-        ],
-        "away": [
-          "brentford"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Crystal Palace",
-      "away": "Liverpool",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Ipswich Town",
-      "away": "AFC Bournemouth",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "ipswich town"
-        ],
-        "away": [
-          "afc bournemouth"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Sunderland",
-      "away": "Chelsea",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Genoa",
-      "away": "AC Milan",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Monza",
-      "away": "Atalanta",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Stade Rennais",
-      "away": "Lille",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "stade rennais"
-        ],
-        "away": [
-          "lille"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "FC Cologne",
-      "away": "Bayer Leverkusen",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "fc cologne",
-          "cologne"
-        ],
-        "away": [
-          "bayer leverkusen"
         ]
       }
     },
@@ -912,11 +790,18 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-08T08:17:04.405Z",
-    "sent": 5,
-    "stored": 5,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-08T15:19:37.189Z",
+    "sent": 6,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-07|austin fc|portland timbers",
+      "2026-11-07|fc dallas|colorado rapids",
+      "2026-11-07|houston dynamo fc|st louis city sc",
+      "2026-11-07|minnesota united fc|san jose earthquakes",
+      "2026-11-07|san diego fc|sporting kansas city",
+      "2026-11-08|napoli|lazio"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

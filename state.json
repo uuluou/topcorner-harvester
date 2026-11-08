@@ -240,7 +240,7 @@
     "2026-11-07|orlando city sc|new england revolution",
     "2026-11-07|philadelphia union|toronto fc"
   ],
-  "lastRun": "2026-11-08T15:19:36.824Z",
+  "lastRun": "2026-11-08T20:01:33.535Z",
   "pending": [
     {
       "date": "2026-11-07",
@@ -537,11 +537,85 @@
     },
     {
       "date": "2026-11-08",
-      "home": "Real Sociedad",
-      "away": "Rayo Vallecano",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
+      "home": "FC Twente",
+      "away": "Ajax Amsterdam",
+      "league": "ned.1",
+      "leagueName": "Dutch Eredivisie",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "fc twente",
+          "twente"
+        ],
+        "away": [
+          "ajax amsterdam"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "home": "Brighton & Hove Albion",
+      "away": "Brentford",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "brighton hove albion"
+        ],
+        "away": [
+          "brentford"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "home": "Ipswich Town",
+      "away": "AFC Bournemouth",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "ipswich town"
+        ],
+        "away": [
+          "afc bournemouth"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "home": "Stade Rennais",
+      "away": "Lille",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "stade rennais"
+        ],
+        "away": [
+          "lille"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "home": "FC Cologne",
+      "away": "Bayer Leverkusen",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "fc cologne",
+          "cologne"
+        ],
+        "away": [
+          "bayer leverkusen"
+        ]
+      }
     },
     {
       "date": "2026-11-08",
@@ -549,7 +623,7 @@
       "away": "Académico de Viseu",
       "league": "por.1",
       "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "c d nacional"
@@ -561,27 +635,11 @@
     },
     {
       "date": "2026-11-08",
-      "home": "Santa Clara",
-      "away": "Gil Vicente",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "AZ Alkmaar",
-      "away": "FC Groningen",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
       "home": "SC Cambuur",
       "away": "PSV Eindhoven",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "sc cambuur",
@@ -594,51 +652,11 @@
     },
     {
       "date": "2026-11-08",
-      "home": "Angers",
-      "away": "Nice",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Brest",
-      "away": "Lyon",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Le Havre AC",
-      "away": "Lorient",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Le Mans",
-      "away": "AS Monaco",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Manchester United",
-      "away": "Aston Villa",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
       "home": "SC Freiburg",
       "away": "1. FC Union Berlin",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "sc freiburg",
@@ -655,79 +673,13 @@
       "away": "Como",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "internazionale"
         ],
         "away": [
           "como"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Celta Vigo",
-      "away": "Levante",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Villarreal",
-      "away": "Getafe",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Vitória de Guimaraes",
-      "away": "FC Porto",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "vitoria de guimaraes"
-        ],
-        "away": [
-          "fc porto",
-          "porto"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "TSG Hoffenheim",
-      "away": "Schalke 04",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "tsg hoffenheim"
-        ],
-        "away": [
-          "schalke 04"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "FC Utrecht",
-      "away": "NEC Nijmegen",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "fc utrecht",
-          "utrecht"
-        ],
-        "away": [
-          "nec nijmegen"
         ]
       }
     },
@@ -790,8 +742,8 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-08T15:19:37.189Z",
-    "sent": 6,
+    "at": "2026-11-08T20:01:33.975Z",
+    "sent": 20,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
@@ -800,7 +752,21 @@
       "2026-11-07|houston dynamo fc|st louis city sc",
       "2026-11-07|minnesota united fc|san jose earthquakes",
       "2026-11-07|san diego fc|sporting kansas city",
-      "2026-11-08|napoli|lazio"
+      "2026-11-08|napoli|lazio",
+      "2026-11-08|crystal palace|liverpool",
+      "2026-11-08|sunderland|chelsea",
+      "2026-11-08|genoa|ac milan",
+      "2026-11-08|monza|atalanta",
+      "2026-11-08|real sociedad|rayo vallecano",
+      "2026-11-08|santa clara|gil vicente",
+      "2026-11-08|az alkmaar|fc groningen",
+      "2026-11-08|angers|nice",
+      "2026-11-08|brest|lyon",
+      "2026-11-08|le havre ac|lorient",
+      "2026-11-08|le mans|as monaco",
+      "2026-11-08|manchester united|aston villa",
+      "2026-11-08|celta vigo|levante",
+      "2026-11-08|villarreal|getafe"
     ]
   },
   "verifiedStored": {

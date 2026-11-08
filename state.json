@@ -148,7 +148,12 @@
     "2026-11-08|lens|marseille": "https://www.flashscore.com/match/football/lens-IBmris38/marseille-SblU3Hee/?mid=OfnOWm2C",
     "2026-11-08|atletico madrid|barcelona": "https://www.flashscore.com/match/football/atl-madrid-jaarqpLQ/barcelona-SKbpVP5K/",
     "2026-11-08|estrela|benfica": "https://www.flashscore.com/match/football/benfica-zBkyuyRI/estrela-da-amadora-hrYABE5k/?mid=ADcmpkS8",
-    "2026-11-08|rio ave|braga": "https://www.flashscore.com/match/football/braga-dpUer7ht/rio-ave-jPzXLi4l/?mid=8fKrMxtJ"
+    "2026-11-08|rio ave|braga": "https://www.flashscore.com/match/football/braga-dpUer7ht/rio-ave-jPzXLi4l/?mid=8fKrMxtJ",
+    "2026-11-07|austin fc|portland timbers": "https://www.flashscore.com/match/football/austin-fc-IeT6JBE3/portland-timbers-bm8usLzB/?mid=OrwnLToK",
+    "2026-11-07|fc dallas|colorado rapids": "https://www.flashscore.com/match/football/colorado-rapids-jmBZNRn8/fc-dallas-4GtbI4Q1/?mid=rTJIF79s",
+    "2026-11-07|houston dynamo fc|st louis city sc": "https://www.flashscore.com/match/football/houston-dynamo-2i4sdl32/st-louis-city-4r4sKQud/?mid=GtIQDovf",
+    "2026-11-07|minnesota united fc|san jose earthquakes": "https://www.flashscore.com/match/football/minnesota-united-zXFxsw2a/san-jose-earthquakes-x05z14ue/?mid=C8BZBP86",
+    "2026-11-07|san diego fc|sporting kansas city": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/sporting-kansas-city-CURGfJWt/?mid=pC6TX6VP"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -235,7 +240,7 @@
     "2026-11-07|orlando city sc|new england revolution",
     "2026-11-07|philadelphia union|toronto fc"
   ],
-  "lastRun": "2026-11-08T02:09:21.346Z",
+  "lastRun": "2026-11-08T08:17:02.476Z",
   "pending": [
     {
       "date": "2026-11-07",
@@ -466,6 +471,39 @@
       }
     },
     {
+      "date": "2026-11-07",
+      "home": "Real Salt Lake",
+      "away": "LA Galaxy",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "real salt lake"
+        ],
+        "away": [
+          "la galaxy"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-07",
+      "home": "Seattle Sounders FC",
+      "away": "LAFC",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "seattle sounders fc",
+          "seattle sounders"
+        ],
+        "away": [
+          "lafc"
+        ]
+      }
+    },
+    {
       "date": "2026-11-08",
       "home": "Heerenveen",
       "away": "Feyenoord Rotterdam",
@@ -642,14 +680,6 @@
           "academico de viseu"
         ]
       }
-    },
-    {
-      "date": "2026-11-08",
-      "home": "Estoril",
-      "away": "Maritimo",
-      "league": "por.1",
-      "leagueName": "Portuguese Primeira Liga",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-08",
@@ -882,9 +912,9 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-08T02:09:25.674Z",
-    "sent": 18,
-    "stored": 18,
+    "at": "2026-11-08T08:17:04.405Z",
+    "sent": 5,
+    "stored": 5,
     "keptHarvested": true,
     "prunedKeys": []
   },
@@ -971,27 +1001,14 @@
     "2026-11-07|philadelphia union|toronto fc": true
   },
   "lastVerify": {
-    "at": "2026-11-08T02:09:36.623Z",
-    "verified": [
-      "2026-11-07|malaga|racing santander",
-      "2026-11-07|cagliari|frosinone",
-      "2026-11-07|torino|lecce",
-      "2026-11-07|mainz|bayern munich",
-      "2026-11-07|rb leipzig|fc augsburg",
-      "2026-11-07|arsenal|hull city",
-      "2026-11-07|parma|bologna",
-      "2026-11-07|vfb stuttgart|werder bremen",
-      "2026-11-07|alverca|casa pia",
-      "2026-11-07|as roma|sassuolo",
-      "2026-11-07|valencia|real madrid",
-      "2026-11-07|sporting cp|moreirense",
-      "2026-11-07|cf montreal|vancouver whitecaps",
-      "2026-11-07|chicago fire fc|columbus crew",
-      "2026-11-07|fc cincinnati|nashville sc",
-      "2026-11-07|inter miami cf|charlotte fc",
-      "2026-11-07|orlando city sc|new england revolution",
-      "2026-11-07|philadelphia union|toronto fc"
-    ],
-    "failed": {}
+    "at": "2026-11-08T08:17:09.426Z",
+    "verified": [],
+    "failed": {
+      "2026-11-07|austin fc|portland timbers": "not stored",
+      "2026-11-07|fc dallas|colorado rapids": "not stored",
+      "2026-11-07|houston dynamo fc|st louis city sc": "not stored",
+      "2026-11-07|minnesota united fc|san jose earthquakes": "not stored",
+      "2026-11-07|san diego fc|sporting kansas city": "not stored"
+    }
   }
 }

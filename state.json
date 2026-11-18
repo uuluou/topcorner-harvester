@@ -259,8 +259,44 @@
     "2026-11-08|estrela|benfica",
     "2026-11-08|rio ave|braga"
   ],
-  "lastRun": "2026-11-18T16:35:49.243Z",
-  "pending": [],
+  "lastRun": "2026-11-18T23:08:06.863Z",
+  "pending": [
+    {
+      "date": "2026-11-19",
+      "home": "Orlando City SC",
+      "away": "FC Cincinnati",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "orlando city sc",
+          "orlando city"
+        ],
+        "away": [
+          "fc cincinnati",
+          "cincinnati"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-19",
+      "home": "Seattle Sounders FC",
+      "away": "Real Salt Lake",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "seattle sounders fc",
+          "seattle sounders"
+        ],
+        "away": [
+          "real salt lake"
+        ]
+      }
+    }
+  ],
   "version": 1,
   "reharvestAttempts": {
     "2026-10-27|abha|al faisaly": 0,

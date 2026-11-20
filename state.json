@@ -263,16 +263,8 @@
     "2026-11-08|estrela|benfica",
     "2026-11-08|rio ave|braga"
   ],
-  "lastRun": "2026-11-20T10:38:20.428Z",
+  "lastRun": "2026-11-20T18:51:45.555Z",
   "pending": [
-    {
-      "date": "2026-11-20",
-      "home": "Al Ahli",
-      "away": "Al Nassr",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
     {
       "date": "2026-11-20",
       "home": "Bayern Munich",
@@ -333,7 +325,7 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-20T10:38:21.036Z",
+    "at": "2026-11-20T18:51:46.346Z",
     "sent": 2,
     "stored": 2,
     "keptHarvested": true,
@@ -441,7 +433,7 @@
     "2026-11-08|rio ave|braga": true
   },
   "lastVerify": {
-    "at": "2026-11-20T10:38:22.181Z",
+    "at": "2026-11-20T18:51:48.636Z",
     "verified": [],
     "failed": {
       "2026-11-19|orlando city sc|fc cincinnati": "not stored",

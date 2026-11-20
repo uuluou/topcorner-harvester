@@ -153,7 +153,9 @@
     "2026-11-07|fc dallas|colorado rapids": "https://www.flashscore.com/match/football/colorado-rapids-jmBZNRn8/fc-dallas-4GtbI4Q1/?mid=rTJIF79s",
     "2026-11-07|houston dynamo fc|st louis city sc": "https://www.flashscore.com/match/football/houston-dynamo-2i4sdl32/st-louis-city-4r4sKQud/?mid=GtIQDovf",
     "2026-11-07|minnesota united fc|san jose earthquakes": "https://www.flashscore.com/match/football/minnesota-united-zXFxsw2a/san-jose-earthquakes-x05z14ue/?mid=C8BZBP86",
-    "2026-11-07|san diego fc|sporting kansas city": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/sporting-kansas-city-CURGfJWt/?mid=pC6TX6VP"
+    "2026-11-07|san diego fc|sporting kansas city": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/sporting-kansas-city-CURGfJWt/?mid=pC6TX6VP",
+    "2026-11-20|al ahli|al nassr": "https://www.flashscore.com/match/football/al-ahli-sc-0MHmoCY0/al-nassr-h4I89ZuE/?mid=O6A2ezjd",
+    "2026-11-20|troyes|le havre ac": "https://www.flashscore.com/match/football/le-havre-CIEe04GT/troyes-fsfAHubD/?mid=pOTao8Y2"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -259,40 +261,54 @@
     "2026-11-08|estrela|benfica",
     "2026-11-08|rio ave|braga"
   ],
-  "lastRun": "2026-11-19T21:45:28.208Z",
+  "lastRun": "2026-11-20T02:41:08.563Z",
   "pending": [
     {
-      "date": "2026-11-19",
-      "home": "Orlando City SC",
-      "away": "FC Cincinnati",
-      "league": "usa.1",
-      "leagueName": "MLS",
+      "date": "2026-11-20",
+      "home": "Al Ahli",
+      "away": "Al Nassr",
+      "league": "ksa.1",
+      "leagueName": "Saudi Pro League",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-20",
+      "home": "Bayern Munich",
+      "away": "FC Cologne",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
       "reason": "no flashscore url for odds",
       "tried": {
         "home": [
-          "orlando city sc",
-          "orlando city"
+          "bayern munich"
         ],
         "away": [
-          "fc cincinnati",
-          "cincinnati"
+          "fc cologne",
+          "cologne"
         ]
       }
     },
     {
-      "date": "2026-11-19",
-      "home": "Seattle Sounders FC",
-      "away": "Real Salt Lake",
-      "league": "usa.1",
-      "leagueName": "MLS",
+      "date": "2026-11-20",
+      "home": "Troyes",
+      "away": "Le Havre AC",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-20",
+      "home": "Athletic Club",
+      "away": "Espanyol",
+      "league": "esp.1",
+      "leagueName": "Spanish LALIGA",
       "reason": "no flashscore url for odds",
       "tried": {
         "home": [
-          "seattle sounders fc",
-          "seattle sounders"
+          "athletic club"
         ],
         "away": [
-          "real salt lake"
+          "espanyol"
         ]
       }
     }

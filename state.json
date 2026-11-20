@@ -155,7 +155,9 @@
     "2026-11-07|minnesota united fc|san jose earthquakes": "https://www.flashscore.com/match/football/minnesota-united-zXFxsw2a/san-jose-earthquakes-x05z14ue/?mid=C8BZBP86",
     "2026-11-07|san diego fc|sporting kansas city": "https://www.flashscore.com/match/football/san-diego-fc-EuGkBf33/sporting-kansas-city-CURGfJWt/?mid=pC6TX6VP",
     "2026-11-20|al ahli|al nassr": "https://www.flashscore.com/match/football/al-ahli-sc-0MHmoCY0/al-nassr-h4I89ZuE/?mid=O6A2ezjd",
-    "2026-11-20|troyes|le havre ac": "https://www.flashscore.com/match/football/le-havre-CIEe04GT/troyes-fsfAHubD/?mid=pOTao8Y2"
+    "2026-11-20|troyes|le havre ac": "https://www.flashscore.com/match/football/le-havre-CIEe04GT/troyes-fsfAHubD/?mid=pOTao8Y2",
+    "2026-11-19|orlando city sc|fc cincinnati": "https://www.flashscore.com/match/football/fc-cincinnati-8btog05R/orlando-city-rsHkUNCo/?mid=AHmOxWfB",
+    "2026-11-19|seattle sounders fc|real salt lake": "https://www.flashscore.com/match/football/real-salt-lake-W0ealpQl/seattle-sounders-6P5S63Ah/?mid=Kzu56GXb"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -261,7 +263,7 @@
     "2026-11-08|estrela|benfica",
     "2026-11-08|rio ave|braga"
   ],
-  "lastRun": "2026-11-20T02:41:08.563Z",
+  "lastRun": "2026-11-20T10:38:20.428Z",
   "pending": [
     {
       "date": "2026-11-20",
@@ -331,9 +333,9 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-09T03:01:19.992Z",
-    "sent": 19,
-    "stored": 19,
+    "at": "2026-11-20T10:38:21.036Z",
+    "sent": 2,
+    "stored": 2,
     "keptHarvested": true,
     "prunedKeys": []
   },
@@ -439,28 +441,11 @@
     "2026-11-08|rio ave|braga": true
   },
   "lastVerify": {
-    "at": "2026-11-09T03:01:34.154Z",
-    "verified": [
-      "2026-11-08|napoli|lazio",
-      "2026-11-08|crystal palace|liverpool",
-      "2026-11-08|sunderland|chelsea",
-      "2026-11-08|genoa|ac milan",
-      "2026-11-08|monza|atalanta",
-      "2026-11-08|real sociedad|rayo vallecano",
-      "2026-11-08|santa clara|gil vicente",
-      "2026-11-08|az alkmaar|fc groningen",
-      "2026-11-08|angers|nice",
-      "2026-11-08|brest|lyon",
-      "2026-11-08|le havre ac|lorient",
-      "2026-11-08|le mans|as monaco",
-      "2026-11-08|manchester united|aston villa",
-      "2026-11-08|celta vigo|levante",
-      "2026-11-08|villarreal|getafe",
-      "2026-11-08|fiorentina|juventus",
-      "2026-11-08|lens|marseille",
-      "2026-11-08|estrela|benfica",
-      "2026-11-08|rio ave|braga"
-    ],
-    "failed": {}
+    "at": "2026-11-20T10:38:22.181Z",
+    "verified": [],
+    "failed": {
+      "2026-11-19|orlando city sc|fc cincinnati": "not stored",
+      "2026-11-19|seattle sounders fc|real salt lake": "not stored"
+    }
   }
 }

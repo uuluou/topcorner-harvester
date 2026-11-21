@@ -281,7 +281,7 @@
     "2026-11-20|al ahli|al nassr",
     "2026-11-20|troyes|le havre ac"
   ],
-  "lastRun": "2026-11-21T07:38:59.479Z",
+  "lastRun": "2026-11-21T15:39:19.947Z",
   "pending": [
     {
       "date": "2026-11-20",
@@ -318,19 +318,11 @@
     },
     {
       "date": "2026-11-21",
-      "home": "Manchester City",
-      "away": "Fulham",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-21",
       "home": "Alavés",
       "away": "Deportivo",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "alaves"
@@ -339,184 +331,6 @@
           "deportivo"
         ]
       }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Como",
-      "away": "Cagliari",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Lazio",
-      "away": "Lecce",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-21",
-      "home": "1. FC Union Berlin",
-      "away": "RB Leipzig",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "1 fc union berlin"
-        ],
-        "away": [
-          "rb leipzig"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Bayer Leverkusen",
-      "away": "SC Paderborn 07",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "bayer leverkusen"
-        ],
-        "away": [
-          "sc paderborn 07",
-          "paderborn 07"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Borussia Mönchengladbach",
-      "away": "Borussia Dortmund",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "borussia monchengladbach"
-        ],
-        "away": [
-          "borussia dortmund"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Eintracht Frankfurt",
-      "away": "TSG Hoffenheim",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "eintracht frankfurt"
-        ],
-        "away": [
-          "tsg hoffenheim"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "SV Elversberg",
-      "away": "SC Freiburg",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "sv elversberg"
-        ],
-        "away": [
-          "sc freiburg",
-          "freiburg"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "AFC Bournemouth",
-      "away": "Nottingham Forest",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "afc bournemouth"
-        ],
-        "away": [
-          "nottingham forest"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Aston Villa",
-      "away": "Sunderland",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Chelsea",
-      "away": "Leeds United",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "chelsea"
-        ],
-        "away": [
-          "leeds united"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Coventry City",
-      "away": "Crystal Palace",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "coventry city"
-        ],
-        "away": [
-          "crystal palace"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Tottenham Hotspur",
-      "away": "Ipswich Town",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "tottenham hotspur"
-        ],
-        "away": [
-          "ipswich town"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-21",
-      "home": "Rayo Vallecano",
-      "away": "Valencia",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-21",
@@ -754,11 +568,13 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-21T00:28:43.517Z",
-    "sent": 2,
-    "stored": 2,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-21T15:39:20.274Z",
+    "sent": 1,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-21|manchester city|fulham"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

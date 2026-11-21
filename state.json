@@ -157,7 +157,23 @@
     "2026-11-20|al ahli|al nassr": "https://www.flashscore.com/match/football/al-ahli-sc-0MHmoCY0/al-nassr-h4I89ZuE/?mid=O6A2ezjd",
     "2026-11-20|troyes|le havre ac": "https://www.flashscore.com/match/football/le-havre-CIEe04GT/troyes-fsfAHubD/?mid=pOTao8Y2",
     "2026-11-19|orlando city sc|fc cincinnati": "https://www.flashscore.com/match/football/fc-cincinnati-8btog05R/orlando-city-rsHkUNCo/?mid=AHmOxWfB",
-    "2026-11-19|seattle sounders fc|real salt lake": "https://www.flashscore.com/match/football/real-salt-lake-W0ealpQl/seattle-sounders-6P5S63Ah/?mid=Kzu56GXb"
+    "2026-11-19|seattle sounders fc|real salt lake": "https://www.flashscore.com/match/football/real-salt-lake-W0ealpQl/seattle-sounders-6P5S63Ah/?mid=Kzu56GXb",
+    "2026-11-21|manchester city|fulham": "https://www.flashscore.com/match/football/fulham-69ZiU2Om/manchester-city-Wtn9Stg0/?mid=MuVKeqEE",
+    "2026-11-21|como|cagliari": "https://www.flashscore.com/match/football/cagliari-SCGVmKHb/como-ttyLthOA/?mid=WSisyiXN",
+    "2026-11-21|lazio|lecce": "https://www.flashscore.com/match/football/lazio-URcSl02h/lecce-G8lYsMgU/?mid=dYHdwsEi",
+    "2026-11-21|aston villa|sunderland": "https://www.flashscore.com/match/football/aston-villa-W00wmLO0/sunderland-WSzc94ws/?mid=6VagL2x2",
+    "2026-11-21|rayo vallecano|valencia": "https://www.flashscore.com/match/football/rayo-vallecano-8bcjFy6O/valencia-CQeaytrD/?mid=Yq8ZYa0D",
+    "2026-11-21|parma|as roma": "https://www.flashscore.com/match/football/as-roma-zVqqL0ma/parma-6DxlaxHN/?mid=tMNkSG5j",
+    "2026-11-21|fc utrecht|sc cambuur": "https://www.flashscore.com/match/football/cambuur-QRyYgO7J/utrecht-p6QXMgOj/?mid=0GJYy4k3",
+    "2026-11-21|new england revolution|philadelphia union": "https://www.flashscore.com/match/football/new-england-revolution-tr3oe8I8/philadelphia-union-Szrwix67/?mid=IsiWzAPN",
+    "2026-11-21|napoli|torino": "https://www.flashscore.com/match/football/napoli-69Dxbc61/torino-MZFZnvX4/?mid=AwXJXxrT",
+    "2026-11-21|lens|toulouse": "https://www.flashscore.com/match/football/lens-IBmris38/toulouse-MLmY2yB1/?mid=2R2cY0wH",
+    "2026-11-21|lille|lyon": "https://www.flashscore.com/match/football/lille-pfDZL71o/lyon-2akflumR/?mid=zgG4Wv8T",
+    "2026-11-21|strasbourg|brest": "https://www.flashscore.com/match/football/brest-Cr4VGaUl/strasbourg-nP6UzIU1/?mid=GlkGwdFd",
+    "2026-11-21|real madrid|celta vigo": "https://www.flashscore.com/match/football/celta-vigo-8pvUZFhf/real-madrid-W8mj7MDD/?mid=QweLd3hK",
+    "2026-11-21|fc groningen|heerenveen": "https://www.flashscore.com/match/football/groningen-MBUGcjb9/heerenveen-EDjXSyWG/?mid=SCOvGMSq",
+    "2026-11-21|fc dallas|portland timbers": "https://www.flashscore.com/match/football/fc-dallas-4GtbI4Q1/portland-timbers-bm8usLzB/?mid=ModmlZHU",
+    "2026-11-21|inter miami cf|columbus crew": "https://www.flashscore.com/match/football/columbus-crew-pQ8rarA7/inter-miami-0AheRyBg/?mid=Q1qmgiuh"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -261,9 +277,11 @@
     "2026-11-08|fiorentina|juventus",
     "2026-11-08|lens|marseille",
     "2026-11-08|estrela|benfica",
-    "2026-11-08|rio ave|braga"
+    "2026-11-08|rio ave|braga",
+    "2026-11-20|al ahli|al nassr",
+    "2026-11-20|troyes|le havre ac"
   ],
-  "lastRun": "2026-11-20T18:51:45.555Z",
+  "lastRun": "2026-11-21T00:28:42.584Z",
   "pending": [
     {
       "date": "2026-11-20",
@@ -271,7 +289,7 @@
       "away": "FC Cologne",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "bayern munich"
@@ -284,19 +302,11 @@
     },
     {
       "date": "2026-11-20",
-      "home": "Troyes",
-      "away": "Le Havre AC",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-20",
       "home": "Athletic Club",
       "away": "Espanyol",
       "league": "esp.1",
       "leagueName": "Spanish LALIGA",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "athletic club"
@@ -305,6 +315,425 @@
           "espanyol"
         ]
       }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Manchester City",
+      "away": "Fulham",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Alavés",
+      "away": "Deportivo",
+      "league": "esp.1",
+      "leagueName": "Spanish LALIGA",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "alaves"
+        ],
+        "away": [
+          "deportivo"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Como",
+      "away": "Cagliari",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Lazio",
+      "away": "Lecce",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "1. FC Union Berlin",
+      "away": "RB Leipzig",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "1 fc union berlin"
+        ],
+        "away": [
+          "rb leipzig"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Bayer Leverkusen",
+      "away": "SC Paderborn 07",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "bayer leverkusen"
+        ],
+        "away": [
+          "sc paderborn 07",
+          "paderborn 07"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Borussia Mönchengladbach",
+      "away": "Borussia Dortmund",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "borussia monchengladbach"
+        ],
+        "away": [
+          "borussia dortmund"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Eintracht Frankfurt",
+      "away": "TSG Hoffenheim",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "eintracht frankfurt"
+        ],
+        "away": [
+          "tsg hoffenheim"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "SV Elversberg",
+      "away": "SC Freiburg",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "sv elversberg"
+        ],
+        "away": [
+          "sc freiburg",
+          "freiburg"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "AFC Bournemouth",
+      "away": "Nottingham Forest",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "afc bournemouth"
+        ],
+        "away": [
+          "nottingham forest"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Aston Villa",
+      "away": "Sunderland",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Chelsea",
+      "away": "Leeds United",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "chelsea"
+        ],
+        "away": [
+          "leeds united"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Coventry City",
+      "away": "Crystal Palace",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "coventry city"
+        ],
+        "away": [
+          "crystal palace"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Tottenham Hotspur",
+      "away": "Ipswich Town",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "tottenham hotspur"
+        ],
+        "away": [
+          "ipswich town"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Rayo Vallecano",
+      "away": "Valencia",
+      "league": "esp.1",
+      "leagueName": "Spanish LALIGA",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "NEC Nijmegen",
+      "away": "PSV Eindhoven",
+      "league": "ned.1",
+      "leagueName": "Dutch Eredivisie",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "nec nijmegen"
+        ],
+        "away": [
+          "psv eindhoven"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Nice",
+      "away": "Paris Saint-Germain",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "nice"
+        ],
+        "away": [
+          "paris saint germain"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Parma",
+      "away": "AS Roma",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Newcastle United",
+      "away": "Arsenal",
+      "league": "eng.1",
+      "leagueName": "English Premier League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "newcastle united"
+        ],
+        "away": [
+          "arsenal"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Sevilla",
+      "away": "Real Betis",
+      "league": "esp.1",
+      "leagueName": "Spanish LALIGA",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "sevilla"
+        ],
+        "away": [
+          "real betis"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Schalke 04",
+      "away": "VfB Stuttgart",
+      "league": "ger.1",
+      "leagueName": "German Bundesliga",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "schalke 04"
+        ],
+        "away": [
+          "vfb stuttgart"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "FC Utrecht",
+      "away": "SC Cambuur",
+      "league": "ned.1",
+      "leagueName": "Dutch Eredivisie",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Feyenoord Rotterdam",
+      "away": "Excelsior",
+      "league": "ned.1",
+      "leagueName": "Dutch Eredivisie",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "feyenoord rotterdam"
+        ],
+        "away": [
+          "excelsior"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "New England Revolution",
+      "away": "Philadelphia Union",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Napoli",
+      "away": "Torino",
+      "league": "ita.1",
+      "leagueName": "Italian Serie A",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "AS Monaco",
+      "away": "AJ Auxerre",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "as monaco",
+          "monaco"
+        ],
+        "away": [
+          "aj auxerre"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Lens",
+      "away": "Toulouse",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Lille",
+      "away": "Lyon",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Strasbourg",
+      "away": "Brest",
+      "league": "fra.1",
+      "leagueName": "French Ligue 1",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Real Madrid",
+      "away": "Celta Vigo",
+      "league": "esp.1",
+      "leagueName": "Spanish LALIGA",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "FC Groningen",
+      "away": "Heerenveen",
+      "league": "ned.1",
+      "leagueName": "Dutch Eredivisie",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Telstar",
+      "away": "PEC Zwolle",
+      "league": "ned.1",
+      "leagueName": "Dutch Eredivisie",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "telstar"
+        ],
+        "away": [
+          "pec zwolle"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-21",
+      "home": "FC Dallas",
+      "away": "Portland Timbers",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-21",
+      "home": "Inter Miami CF",
+      "away": "Columbus Crew",
+      "league": "usa.1",
+      "leagueName": "MLS",
+      "reason": "odds page yielded no 1X2 table"
     }
   ],
   "version": 1,
@@ -325,7 +754,7 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-20T18:51:46.346Z",
+    "at": "2026-11-21T00:28:43.517Z",
     "sent": 2,
     "stored": 2,
     "keptHarvested": true,
@@ -430,14 +859,16 @@
     "2026-11-08|fiorentina|juventus": true,
     "2026-11-08|lens|marseille": true,
     "2026-11-08|estrela|benfica": true,
-    "2026-11-08|rio ave|braga": true
+    "2026-11-08|rio ave|braga": true,
+    "2026-11-20|al ahli|al nassr": true,
+    "2026-11-20|troyes|le havre ac": true
   },
   "lastVerify": {
-    "at": "2026-11-20T18:51:48.636Z",
-    "verified": [],
-    "failed": {
-      "2026-11-19|orlando city sc|fc cincinnati": "not stored",
-      "2026-11-19|seattle sounders fc|real salt lake": "not stored"
-    }
+    "at": "2026-11-21T00:28:45.673Z",
+    "verified": [
+      "2026-11-20|al ahli|al nassr",
+      "2026-11-20|troyes|le havre ac"
+    ],
+    "failed": {}
   }
 }

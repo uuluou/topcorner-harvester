@@ -313,7 +313,7 @@
     "2026-11-21|fc dallas|portland timbers",
     "2026-11-21|inter miami cf|columbus crew"
   ],
-  "lastRun": "2026-11-22T16:33:10.177Z",
+  "lastRun": "2026-11-22T22:09:35.997Z",
   "pending": [
     {
       "date": "2026-11-21",
@@ -640,11 +640,27 @@
     },
     {
       "date": "2026-11-22",
+      "home": "Go Ahead Eagles",
+      "away": "Fortuna Sittard",
+      "league": "ned.1",
+      "leagueName": "Dutch Eredivisie",
+      "reason": "no flashscore url (mapping + discovery missed)",
+      "tried": {
+        "home": [
+          "go ahead eagles"
+        ],
+        "away": [
+          "fortuna sittard"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-22",
       "home": "Lorient",
       "away": "Stade Rennais",
       "league": "fra.1",
       "leagueName": "French Ligue 1",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "lorient"
@@ -656,19 +672,11 @@
     },
     {
       "date": "2026-11-22",
-      "home": "Liverpool",
-      "away": "Manchester United",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
       "home": "Werder Bremen",
       "away": "Hamburg SV",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "werder bremen"
@@ -680,27 +688,11 @@
     },
     {
       "date": "2026-11-22",
-      "home": "AC Milan",
-      "away": "Frosinone",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Osasuna",
-      "away": "Málaga",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
       "home": "Atalanta",
       "away": "Internazionale",
       "league": "ita.1",
       "leagueName": "Italian Serie A",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "atalanta"
@@ -709,30 +701,6 @@
           "internazionale"
         ]
       }
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Marseille",
-      "away": "Le Mans",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Getafe",
-      "away": "Atlético Madrid",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Nashville SC",
-      "away": "FC Cincinnati",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-22",
@@ -777,8 +745,8 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-22T16:33:10.573Z",
-    "sent": 7,
+    "at": "2026-11-22T22:09:36.288Z",
+    "sent": 13,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
@@ -788,7 +756,13 @@
       "2026-11-22|sparta rotterdam|az alkmaar",
       "2026-11-22|bologna|udinese",
       "2026-11-22|sassuolo|genoa",
-      "2026-11-22|paris fc|angers"
+      "2026-11-22|paris fc|angers",
+      "2026-11-22|fc augsburg|mainz",
+      "2026-11-22|racing santander|real sociedad",
+      "2026-11-22|liverpool|manchester united",
+      "2026-11-22|ac milan|frosinone",
+      "2026-11-22|osasuna|malaga",
+      "2026-11-22|marseille|le mans"
     ]
   },
   "verifiedStored": {

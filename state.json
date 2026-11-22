@@ -313,7 +313,7 @@
     "2026-11-21|fc dallas|portland timbers",
     "2026-11-21|inter miami cf|columbus crew"
   ],
-  "lastRun": "2026-11-22T08:18:26.939Z",
+  "lastRun": "2026-11-22T16:33:10.177Z",
   "pending": [
     {
       "date": "2026-11-21",
@@ -608,35 +608,11 @@
     },
     {
       "date": "2026-11-22",
-      "home": "FC Twente",
-      "away": "Willem II",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Juventus",
-      "away": "Venezia",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Barcelona",
-      "away": "Villarreal",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
       "home": "Ajax Amsterdam",
       "away": "ADO Den Haag",
       "league": "ned.1",
       "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "ajax amsterdam"
@@ -648,81 +624,17 @@
     },
     {
       "date": "2026-11-22",
-      "home": "Sparta Rotterdam",
-      "away": "AZ Alkmaar",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
       "home": "Hull City",
       "away": "Brighton & Hove Albion",
       "league": "eng.1",
       "leagueName": "English Premier League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "hull city"
         ],
         "away": [
           "brighton hove albion"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Bologna",
-      "away": "Udinese",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Sassuolo",
-      "away": "Genoa",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Paris FC",
-      "away": "Angers",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "FC Augsburg",
-      "away": "Mainz",
-      "league": "ger.1",
-      "leagueName": "German Bundesliga",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Racing Santander",
-      "away": "Real Sociedad",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-22",
-      "home": "Go Ahead Eagles",
-      "away": "Fortuna Sittard",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "go ahead eagles"
-        ],
-        "away": [
-          "fortuna sittard"
         ]
       }
     },
@@ -865,11 +777,19 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-22T01:36:26.014Z",
-    "sent": 16,
-    "stored": 16,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-22T16:33:10.573Z",
+    "sent": 7,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-22|fc twente|willem ii",
+      "2026-11-22|juventus|venezia",
+      "2026-11-22|barcelona|villarreal",
+      "2026-11-22|sparta rotterdam|az alkmaar",
+      "2026-11-22|bologna|udinese",
+      "2026-11-22|sassuolo|genoa",
+      "2026-11-22|paris fc|angers"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

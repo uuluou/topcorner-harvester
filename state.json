@@ -192,7 +192,8 @@
     "2026-11-22|chicago fire fc|charlotte fc": "https://www.flashscore.com/match/football/charlotte-fc-QJF7WTFB/chicago-fire-UwAwNo2E/?mid=thj3k9vH",
     "2026-11-23|monza|fiorentina": "https://www.flashscore.com/match/football/fiorentina-Q3A3IbXH/monza-4YSMlwj7/?mid=xQYBZbDG",
     "2026-11-23|brentford|everton": "https://www.flashscore.com/match/football/brentford-xYe7DwID/everton-KluSTr9s/?mid=CSnuq6U8",
-    "2026-11-23|levante|elche": "https://www.flashscore.com/match/football/elche-4jl02tPF/levante-G8FL0ShI/?mid=MNFmr4wR"
+    "2026-11-23|levante|elche": "https://www.flashscore.com/match/football/elche-4jl02tPF/levante-G8FL0ShI/?mid=MNFmr4wR",
+    "2026-11-22|vancouver whitecaps|real salt lake": "https://www.flashscore.com/match/football/real-salt-lake-W0ealpQl/vancouver-whitecaps-K2dlua5N/?mid=v1smwBSa"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -331,7 +332,7 @@
     "2026-11-22|nashville sc|fc cincinnati",
     "2026-11-22|chicago fire fc|charlotte fc"
   ],
-  "lastRun": "2026-11-23T02:38:44.459Z",
+  "lastRun": "2026-11-23T11:07:54.394Z",
   "pending": [
     {
       "date": "2026-11-22",
@@ -489,9 +490,9 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-23T02:38:47.918Z",
-    "sent": 15,
-    "stored": 15,
+    "at": "2026-11-23T11:07:54.879Z",
+    "sent": 1,
+    "stored": 1,
     "keptHarvested": true,
     "prunedKeys": []
   },
@@ -630,24 +631,10 @@
     "2026-11-22|chicago fire fc|charlotte fc": true
   },
   "lastVerify": {
-    "at": "2026-11-23T02:38:58.022Z",
-    "verified": [
-      "2026-11-22|fc twente|willem ii",
-      "2026-11-22|juventus|venezia",
-      "2026-11-22|barcelona|villarreal",
-      "2026-11-22|sparta rotterdam|az alkmaar",
-      "2026-11-22|bologna|udinese",
-      "2026-11-22|sassuolo|genoa",
-      "2026-11-22|paris fc|angers",
-      "2026-11-22|fc augsburg|mainz",
-      "2026-11-22|racing santander|real sociedad",
-      "2026-11-22|liverpool|manchester united",
-      "2026-11-22|ac milan|frosinone",
-      "2026-11-22|osasuna|malaga",
-      "2026-11-22|marseille|le mans",
-      "2026-11-22|nashville sc|fc cincinnati",
-      "2026-11-22|chicago fire fc|charlotte fc"
-    ],
-    "failed": {}
+    "at": "2026-11-23T11:07:55.703Z",
+    "verified": [],
+    "failed": {
+      "2026-11-22|vancouver whitecaps|real salt lake": "not stored"
+    }
   }
 }

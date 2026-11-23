@@ -332,7 +332,7 @@
     "2026-11-22|nashville sc|fc cincinnati",
     "2026-11-22|chicago fire fc|charlotte fc"
   ],
-  "lastRun": "2026-11-23T11:07:54.394Z",
+  "lastRun": "2026-11-23T22:40:39.414Z",
   "pending": [
     {
       "date": "2026-11-22",
@@ -432,30 +432,6 @@
     },
     {
       "date": "2026-11-23",
-      "home": "Monza",
-      "away": "Fiorentina",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-23",
-      "home": "Brentford",
-      "away": "Everton",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-23",
-      "home": "Levante",
-      "away": "Elche",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-23",
       "home": "St. Louis CITY SC",
       "away": "LAFC",
       "league": "usa.1",
@@ -490,11 +466,16 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-23T11:07:54.879Z",
-    "sent": 1,
-    "stored": 1,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-23T22:40:39.960Z",
+    "sent": 4,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-22|vancouver whitecaps|real salt lake",
+      "2026-11-23|monza|fiorentina",
+      "2026-11-23|brentford|everton",
+      "2026-11-23|levante|elche"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

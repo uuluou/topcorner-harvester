@@ -339,7 +339,7 @@
     "2026-11-23|brentford|everton",
     "2026-11-23|levante|elche"
   ],
-  "lastRun": "2026-11-24T06:32:11.137Z",
+  "lastRun": "2026-11-24T18:08:58.989Z",
   "pending": [
     {
       "date": "2026-11-23",
@@ -357,22 +357,6 @@
           "lafc"
         ]
       }
-    },
-    {
-      "date": "2026-11-24",
-      "home": "Bodo/Glimt",
-      "away": "LASK Linz",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-24",
-      "home": "Galatasaray",
-      "away": "Aston Villa",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
     },
     {
       "date": "2026-11-24",

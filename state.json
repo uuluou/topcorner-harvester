@@ -348,7 +348,7 @@
     "2026-11-24|manchester city|napoli",
     "2026-11-24|rb leipzig|lens"
   ],
-  "lastRun": "2026-11-25T11:38:28.055Z",
+  "lastRun": "2026-11-25T20:41:10.697Z",
   "pending": [
     {
       "date": "2026-11-24",
@@ -437,7 +437,7 @@
       "away": "Barcelona",
       "league": "uefa.champions",
       "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "sabah fk"
@@ -446,103 +446,6 @@
           "barcelona"
         ]
       }
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Slavia Prague",
-      "away": "Villarreal",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Atlético Madrid",
-      "away": "Viking FK",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "atletico madrid"
-        ],
-        "away": [
-          "viking fk"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Club Brugge",
-      "away": "Liverpool",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Internazionale",
-      "away": "VfB Stuttgart",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "internazionale"
-        ],
-        "away": [
-          "vfb stuttgart"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Lille",
-      "away": "Bayern Munich",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Paris Saint-Germain",
-      "away": "AS Roma",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "paris saint germain"
-        ],
-        "away": [
-          "as roma",
-          "roma"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Shakhtar Donetsk",
-      "away": "Fenerbahce",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "shakhtar donetsk"
-        ],
-        "away": [
-          "fenerbahce"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-25",
-      "home": "Sporting CP",
-      "away": "Manchester United",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
     }
   ],
   "version": 1,
@@ -563,11 +466,14 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-25T11:38:28.582Z",
-    "sent": 1,
-    "stored": 1,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-25T20:41:11.038Z",
+    "sent": 2,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-24|san jose earthquakes|houston dynamo fc",
+      "2026-11-25|slavia prague|villarreal"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

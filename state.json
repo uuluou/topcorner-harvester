@@ -197,7 +197,11 @@
     "2026-11-24|bodo glimt|lask linz": "https://www.flashscore.com/match/football/bodo-glimt-S0WZMUNG/lask-linz-MipWYeKQ/?mid=pItlFEBk",
     "2026-11-24|galatasaray|aston villa": "https://www.flashscore.com/match/football/aston-villa-W00wmLO0/galatasaray-riaqqurF/?mid=OCNDYmfK",
     "2026-11-24|manchester city|napoli": "https://www.flashscore.com/match/football/manchester-city-Wtn9Stg0/napoli-69Dxbc61/?mid=OxXVS94F",
-    "2026-11-24|rb leipzig|lens": "https://www.flashscore.com/match/football/lens-IBmris38/rb-leipzig-KbS1suSm/?mid=pxXsydY8"
+    "2026-11-24|rb leipzig|lens": "https://www.flashscore.com/match/football/lens-IBmris38/rb-leipzig-KbS1suSm/?mid=pxXsydY8",
+    "2026-11-25|slavia prague|villarreal": "https://www.flashscore.com/match/football/slavia-prague-viXGgnyB/villarreal-lUatW5jE/?mid=vJEGXMRG",
+    "2026-11-25|club brugge|liverpool": "https://www.flashscore.com/match/football/club-brugge-rgTHIK74/liverpool-lId4TMwf/?mid=6wSZISyp",
+    "2026-11-25|lille|bayern munich": "https://www.flashscore.com/match/football/bayern-munich-nVp0wiqd/lille-pfDZL71o/?mid=CfLLoIBm",
+    "2026-11-25|sporting cp|manchester united": "https://www.flashscore.com/match/football/manchester-united-ppjDR086/sporting-cp-tljXuHBC/?mid=CEDJzDKq"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -337,34 +341,21 @@
     "2026-11-22|chicago fire fc|charlotte fc",
     "2026-11-23|monza|fiorentina",
     "2026-11-23|brentford|everton",
-    "2026-11-23|levante|elche"
+    "2026-11-23|levante|elche",
+    "2026-11-24|bodo glimt|lask linz",
+    "2026-11-24|galatasaray|aston villa",
+    "2026-11-24|manchester city|napoli",
+    "2026-11-24|rb leipzig|lens"
   ],
-  "lastRun": "2026-11-24T18:08:58.989Z",
+  "lastRun": "2026-11-25T02:30:06.468Z",
   "pending": [
-    {
-      "date": "2026-11-23",
-      "home": "St. Louis CITY SC",
-      "away": "LAFC",
-      "league": "usa.1",
-      "leagueName": "MLS",
-      "reason": "no flashscore url (mapping + discovery missed)",
-      "tried": {
-        "home": [
-          "st louis city sc",
-          "st louis city"
-        ],
-        "away": [
-          "lafc"
-        ]
-      }
-    },
     {
       "date": "2026-11-24",
       "home": "Arsenal",
       "away": "Borussia Dortmund",
       "league": "uefa.champions",
       "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "arsenal"
@@ -380,7 +371,7 @@
       "away": "AEK Athens",
       "league": "uefa.champions",
       "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "como"
@@ -396,7 +387,7 @@
       "away": "FC Porto",
       "league": "uefa.champions",
       "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "feyenoord rotterdam"
@@ -409,27 +400,11 @@
     },
     {
       "date": "2026-11-24",
-      "home": "Manchester City",
-      "away": "Napoli",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-24",
-      "home": "RB Leipzig",
-      "away": "Lens",
-      "league": "uefa.champions",
-      "leagueName": "UEFA Champions League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-24",
       "home": "Real Madrid",
       "away": "PSV Eindhoven",
       "league": "uefa.champions",
       "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "real madrid"
@@ -445,7 +420,7 @@
       "away": "Real Betis",
       "league": "uefa.champions",
       "leagueName": "UEFA Champions League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "slovan bratislava"
@@ -456,21 +431,117 @@
       }
     },
     {
-      "date": "2026-11-24",
-      "home": "San Jose Earthquakes",
-      "away": "Houston Dynamo FC",
-      "league": "usa.1",
-      "leagueName": "MLS",
+      "date": "2026-11-25",
+      "home": "Sabah FK",
+      "away": "Barcelona",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
       "reason": "no flashscore url for odds",
       "tried": {
         "home": [
-          "san jose earthquakes"
+          "sabah fk"
         ],
         "away": [
-          "houston dynamo fc",
-          "houston dynamo"
+          "barcelona"
         ]
       }
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Slavia Prague",
+      "away": "Villarreal",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Atlético Madrid",
+      "away": "Viking FK",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "atletico madrid"
+        ],
+        "away": [
+          "viking fk"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Club Brugge",
+      "away": "Liverpool",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Internazionale",
+      "away": "VfB Stuttgart",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "internazionale"
+        ],
+        "away": [
+          "vfb stuttgart"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Lille",
+      "away": "Bayern Munich",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "odds page yielded no 1X2 table"
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Paris Saint-Germain",
+      "away": "AS Roma",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "paris saint germain"
+        ],
+        "away": [
+          "as roma",
+          "roma"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Shakhtar Donetsk",
+      "away": "Fenerbahce",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "no flashscore url for odds",
+      "tried": {
+        "home": [
+          "shakhtar donetsk"
+        ],
+        "away": [
+          "fenerbahce"
+        ]
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "home": "Sporting CP",
+      "away": "Manchester United",
+      "league": "uefa.champions",
+      "leagueName": "UEFA Champions League",
+      "reason": "odds page yielded no 1X2 table"
     }
   ],
   "version": 1,
@@ -491,9 +562,9 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-24T06:32:11.929Z",
-    "sent": 3,
-    "stored": 3,
+    "at": "2026-11-25T02:30:07.560Z",
+    "sent": 4,
+    "stored": 4,
     "keptHarvested": true,
     "prunedKeys": []
   },
@@ -632,14 +703,19 @@
     "2026-11-22|chicago fire fc|charlotte fc": true,
     "2026-11-23|monza|fiorentina": true,
     "2026-11-23|brentford|everton": true,
-    "2026-11-23|levante|elche": true
+    "2026-11-23|levante|elche": true,
+    "2026-11-24|bodo glimt|lask linz": true,
+    "2026-11-24|galatasaray|aston villa": true,
+    "2026-11-24|manchester city|napoli": true,
+    "2026-11-24|rb leipzig|lens": true
   },
   "lastVerify": {
-    "at": "2026-11-24T06:32:13.978Z",
+    "at": "2026-11-25T02:30:11.163Z",
     "verified": [
-      "2026-11-23|monza|fiorentina",
-      "2026-11-23|brentford|everton",
-      "2026-11-23|levante|elche"
+      "2026-11-24|bodo glimt|lask linz",
+      "2026-11-24|galatasaray|aston villa",
+      "2026-11-24|manchester city|napoli",
+      "2026-11-24|rb leipzig|lens"
     ],
     "failed": {}
   }

@@ -201,7 +201,8 @@
     "2026-11-25|slavia prague|villarreal": "https://www.flashscore.com/match/football/slavia-prague-viXGgnyB/villarreal-lUatW5jE/?mid=vJEGXMRG",
     "2026-11-25|club brugge|liverpool": "https://www.flashscore.com/match/football/club-brugge-rgTHIK74/liverpool-lId4TMwf/?mid=6wSZISyp",
     "2026-11-25|lille|bayern munich": "https://www.flashscore.com/match/football/bayern-munich-nVp0wiqd/lille-pfDZL71o/?mid=CfLLoIBm",
-    "2026-11-25|sporting cp|manchester united": "https://www.flashscore.com/match/football/manchester-united-ppjDR086/sporting-cp-tljXuHBC/?mid=CEDJzDKq"
+    "2026-11-25|sporting cp|manchester united": "https://www.flashscore.com/match/football/manchester-united-ppjDR086/sporting-cp-tljXuHBC/?mid=CEDJzDKq",
+    "2026-11-24|san jose earthquakes|houston dynamo fc": "https://www.flashscore.com/match/football/houston-dynamo-2i4sdl32/san-jose-earthquakes-x05z14ue/?mid=AmSjcCfo"
   },
   "harvested": [
     "2026-10-26|paris saint germain|lyon",
@@ -347,7 +348,7 @@
     "2026-11-24|manchester city|napoli",
     "2026-11-24|rb leipzig|lens"
   ],
-  "lastRun": "2026-11-25T02:30:06.468Z",
+  "lastRun": "2026-11-25T11:38:28.055Z",
   "pending": [
     {
       "date": "2026-11-24",
@@ -562,9 +563,9 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-25T02:30:07.560Z",
-    "sent": 4,
-    "stored": 4,
+    "at": "2026-11-25T11:38:28.582Z",
+    "sent": 1,
+    "stored": 1,
     "keptHarvested": true,
     "prunedKeys": []
   },
@@ -710,13 +711,10 @@
     "2026-11-24|rb leipzig|lens": true
   },
   "lastVerify": {
-    "at": "2026-11-25T02:30:11.163Z",
-    "verified": [
-      "2026-11-24|bodo glimt|lask linz",
-      "2026-11-24|galatasaray|aston villa",
-      "2026-11-24|manchester city|napoli",
-      "2026-11-24|rb leipzig|lens"
-    ],
-    "failed": {}
+    "at": "2026-11-25T11:38:30.189Z",
+    "verified": [],
+    "failed": {
+      "2026-11-24|san jose earthquakes|houston dynamo fc": "not stored"
+    }
   }
 }

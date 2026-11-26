@@ -362,7 +362,7 @@
     "2026-11-25|lille|bayern munich",
     "2026-11-25|sporting cp|manchester united"
   ],
-  "lastRun": "2026-11-26T12:31:22.990Z",
+  "lastRun": "2026-11-26T21:57:27.757Z",
   "pending": [
     {
       "date": "2026-11-25",
@@ -447,35 +447,11 @@
     },
     {
       "date": "2026-11-26",
-      "home": "Al Fateh",
-      "away": "Al Riyadh",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Abha",
-      "away": "Al Shabab",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Al Faisaly",
-      "away": "Al Diriyah",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
       "home": "Besiktas",
       "away": "Hapoel Be'er",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "besiktas"
@@ -491,7 +467,7 @@
       "away": "AFC Bournemouth",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "celta vigo"
@@ -507,7 +483,7 @@
       "away": "Bayer Leverkusen",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "dinamo zagreb"
@@ -519,27 +495,11 @@
     },
     {
       "date": "2026-11-26",
-      "home": "Marseille",
-      "away": "Levski Sofia",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Olympiacos",
-      "away": "AC Milan",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
       "home": "RB Salzburg",
       "away": "Ararat-Armenia",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "rb salzburg"
@@ -555,7 +515,7 @@
       "away": "Lech Poznan",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "union st gilloise"
@@ -571,133 +531,13 @@
       "away": "Benfica",
       "league": "uefa.europa",
       "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "viktoria plzen"
         ],
         "away": [
           "benfica"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Crystal Palace",
-      "away": "Real Sociedad",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Ferencvaros",
-      "away": "NK Celje",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "ferencvaros"
-        ],
-        "away": [
-          "nk celje"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Juventus",
-      "away": "Omonia Nicosia",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "juventus"
-        ],
-        "away": [
-          "omonia nicosia"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Lyon",
-      "away": "Lillestrom",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "NEC Nijmegen",
-      "away": "Stade Rennais",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "nec nijmegen"
-        ],
-        "away": [
-          "stade rennais"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-26",
-      "home": "OFI Crete",
-      "away": "Anderlecht",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Sparta Prague",
-      "away": "AZ Alkmaar",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Sunderland",
-      "away": "Jagiellonia Bialystok",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "sunderland"
-        ],
-        "away": [
-          "jagiellonia bialystok"
-        ]
-      }
-    },
-    {
-      "date": "2026-11-26",
-      "home": "Torreense",
-      "away": "Celtic",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-26",
-      "home": "TSG Hoffenheim",
-      "away": "SK Sturm Graz",
-      "league": "uefa.europa",
-      "leagueName": "UEFA Europa League",
-      "reason": "no flashscore url for odds",
-      "tried": {
-        "home": [
-          "tsg hoffenheim"
-        ],
-        "away": [
-          "sk sturm graz"
         ]
       }
     }
@@ -720,11 +560,17 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-26T03:14:13.253Z",
-    "sent": 4,
-    "stored": 4,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-26T21:57:27.996Z",
+    "sent": 5,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-26|al fateh|al riyadh",
+      "2026-11-26|abha|al shabab",
+      "2026-11-26|al faisaly|al diriyah",
+      "2026-11-26|marseille|levski sofia",
+      "2026-11-26|olympiacos|ac milan"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

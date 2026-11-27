@@ -377,7 +377,7 @@
     "2026-11-26|sparta prague|az alkmaar",
     "2026-11-26|torreense|celtic"
   ],
-  "lastRun": "2026-11-27T04:09:21.660Z",
+  "lastRun": "2026-11-27T13:47:13.159Z",
   "pending": [
     {
       "date": "2026-11-26",
@@ -557,14 +557,6 @@
     },
     {
       "date": "2026-11-27",
-      "home": "Al Kholood",
-      "away": "Al Khaleej",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
       "home": "Al Qadsiah",
       "away": "Al Fayha",
       "league": "ksa.1",
@@ -703,11 +695,15 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-27T04:09:24.837Z",
-    "sent": 10,
-    "stored": 10,
-    "keptHarvested": true,
-    "prunedKeys": []
+    "at": "2026-11-27T13:47:13.522Z",
+    "sent": 3,
+    "stored": 0,
+    "keptHarvested": false,
+    "prunedKeys": [
+      "2026-11-26|al fateh|al riyadh",
+      "2026-11-26|abha|al shabab",
+      "2026-11-26|al faisaly|al diriyah"
+    ]
   },
   "verifiedStored": {
     "2026-10-29|al khaleej|al hazem": true,

@@ -377,7 +377,7 @@
     "2026-11-26|sparta prague|az alkmaar",
     "2026-11-26|torreense|celtic"
   ],
-  "lastRun": "2026-11-27T13:47:13.159Z",
+  "lastRun": "2026-11-27T22:32:12.118Z",
   "pending": [
     {
       "date": "2026-11-26",
@@ -557,35 +557,11 @@
     },
     {
       "date": "2026-11-27",
-      "home": "Al Qadsiah",
-      "away": "Al Fayha",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
-      "home": "Al Ittihad",
-      "away": "Neom SC",
-      "league": "ksa.1",
-      "leagueName": "Saudi Pro League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
-      "home": "FC Groningen",
-      "away": "Willem II",
-      "league": "ned.1",
-      "leagueName": "Dutch Eredivisie",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
       "home": "Werder Bremen",
       "away": "Borussia Mönchengladbach",
       "league": "ger.1",
       "leagueName": "German Bundesliga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "werder bremen"
@@ -597,43 +573,11 @@
     },
     {
       "date": "2026-11-27",
-      "home": "Venezia",
-      "away": "Bologna",
-      "league": "ita.1",
-      "leagueName": "Italian Serie A",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
-      "home": "Brest",
-      "away": "Paris FC",
-      "league": "fra.1",
-      "leagueName": "French Ligue 1",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
-      "home": "Nottingham Forest",
-      "away": "Chelsea",
-      "league": "eng.1",
-      "leagueName": "English Premier League",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
-      "home": "Levante",
-      "away": "Racing Santander",
-      "league": "esp.1",
-      "leagueName": "Spanish LALIGA",
-      "reason": "odds page yielded no 1X2 table"
-    },
-    {
-      "date": "2026-11-27",
       "home": "Maritimo",
       "away": "C.D. Nacional",
       "league": "por.1",
       "leagueName": "Portuguese Primeira Liga",
-      "reason": "no flashscore url for odds",
+      "reason": "no flashscore url (mapping + discovery missed)",
       "tried": {
         "home": [
           "maritimo"
@@ -695,14 +639,21 @@
   },
   "requeuePool": [],
   "lastPost": {
-    "at": "2026-11-27T13:47:13.522Z",
-    "sent": 3,
+    "at": "2026-11-27T22:32:12.512Z",
+    "sent": 10,
     "stored": 0,
     "keptHarvested": false,
     "prunedKeys": [
       "2026-11-26|al fateh|al riyadh",
       "2026-11-26|abha|al shabab",
-      "2026-11-26|al faisaly|al diriyah"
+      "2026-11-26|al faisaly|al diriyah",
+      "2026-11-27|al kholood|al khaleej",
+      "2026-11-27|al qadsiah|al fayha",
+      "2026-11-27|al ittihad|neom sc",
+      "2026-11-27|fc groningen|willem ii",
+      "2026-11-27|venezia|bologna",
+      "2026-11-27|brest|paris fc",
+      "2026-11-27|levante|racing santander"
     ]
   },
   "verifiedStored": {
